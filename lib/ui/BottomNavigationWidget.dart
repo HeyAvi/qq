@@ -25,153 +25,185 @@ import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/DateTimeFormatter.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
-  late int bottomIndex;
+  final int bottomIndex;
 
-  BottomNavigationWidget(int _bottomIndex){
-    bottomIndex = _bottomIndex;
-  }
+  const BottomNavigationWidget(this.bottomIndex, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => HomeDashBoardBloc(HomeDashBoardRepository(Dio())),
-        ),
-        BlocProvider(
-            create: (context) => ProfileBloc(ProfileRepository(Dio()))
-        ),
-      ],
-      child: BottomNavigationWidgetStateful(bottomIndex)
-    );
+    return MultiBlocProvider(providers: [
+      BlocProvider(
+        create: (_) => HomeDashBoardBloc(HomeDashBoardRepository(Dio())),
+      ),
+      BlocProvider(create: (context) => ProfileBloc(ProfileRepository(Dio()))),
+    ], child: BottomNavigationWidgetStateful(bottomIndex));
   }
 }
 
-
 class BottomNavigationWidgetStateful extends StatefulWidget {
-  late int bottomIndex;
+  final int bottomIndex;
 
-  BottomNavigationWidgetStateful(int _bottomIndex){
-    bottomIndex = _bottomIndex;
-  }
+  const BottomNavigationWidgetStateful(this.bottomIndex, {Key? key})
+      : super(key: key);
 
   @override
   _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
 }
 
-
-
-class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful> with SingleTickerProviderStateMixin{
-
-
+class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
+    with SingleTickerProviderStateMixin {
   bool isMove = false;
-  ContestService contestService =  getIt<ContestService>();
-  int? _page ;
-  GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
-  UserDataService userDataService =  getIt<UserDataService>();
+  ContestService contestService = getIt<ContestService>();
+  int? _page;
+
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
+  UserDataService userDataService = getIt<UserDataService>();
   Contestdata? contestdata;
   Userdata? userData;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProfileBloc>(context).add(GetProfileDataEvent(context: context));
+    BlocProvider.of<ProfileBloc>(context)
+        .add(GetProfileDataEvent(context: context));
     BlocProvider.of<ProfileBloc>(context).stream.listen((event) {
       userData = userDataService.userData;
-      BlocProvider.of<HomeDashBoardBloc>(context).add(FetchContestEvent(context: context,userId: userData!.user_id));
-      setState(() {
-
-      });
+      BlocProvider.of<HomeDashBoardBloc>(context)
+          .add(FetchContestEvent(context: context, userId: userData!.user_id));
+      setState(() {});
     });
     BlocProvider.of<HomeDashBoardBloc>(context).stream.listen((event) {
       setState(() {
         contestdata = contestService.contestdata;
       });
     });
-    BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: widget.bottomIndex));
+    BlocProvider.of<HomeDashBoardBloc>(context).add(
+        BottomIndexChange(context: context, currentIndex: widget.bottomIndex));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HomeDashBoardBloc,HomeDashBoardState>(
-      listener: (context,state){
-        if(state is BottomIndexChangedState){
+    return BlocListener<HomeDashBoardBloc, HomeDashBoardState>(
+      listener: (context, state) {
+        if (state is BottomIndexChangedState) {
           setState(() {
             _page = state.bottomIndex;
           });
         }
       },
-      child: SizedBox(
-        height: 50.h,
-        child: Column(
-          children: [
-            (contestdata != null && contestdata!.start_date != "") ? CountdownTimer(
-              endTime: DateFormatter.getUTCRemainingTimeInMills(contestService.contestdata!.start_date),
-              widgetBuilder: (_, time) {
-                if (time == null) {
-                  isMove = true;
-                  return const SizedBox();
-                }
-                return const SizedBox();
-              },
-            ):const SizedBox.shrink(),
-            CurvedNavigationBar(
-              key: _bottomNavigationKey,
-              backgroundColor: Colors.transparent,
-              color: const Color(0x0f454745),
-              height: 50.h,
-              index: widget.bottomIndex,
-              items: <Widget>[
-                ImageIcon( const AssetImage("assets/home (2).png", ), color: Colors.black, size: 20.sp,),
-                ImageIcon( const AssetImage("assets/search-interface-symbol.png", ), color: Colors.black,size: 20.sp,),
-                (isMove) ? Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
-                    Padding(
-                        padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
-                        child: Icon(
-                          Icons.lock_open_sharp,
-                          color: ColorConstants.primaryColor,
-                          size: 18.sp,
-                        )
-                    ),
-                  ],
-                ) : Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
-                    Padding(
-                        padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
-                        child: Icon(
-                          Icons.lock_outline,
-                          color: ColorConstants.primaryColor,
-                          size: 18.sp,
-                        )
-                    ),
-                  ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          (contestdata != null && contestdata!.start_date != "")
+              ? CountdownTimer(
+                  endTime: DateFormatter.getUTCRemainingTimeInMills(
+                      contestService.contestdata!.start_date),
+                  widgetBuilder: (_, time) {
+                    if (time == null) {
+                      isMove = true;
+                      return const SizedBox();
+                    }
+                    return const SizedBox();
+                  },
+                )
+              : const SizedBox.shrink(),
+          CurvedNavigationBar(
+            key: _bottomNavigationKey,
+            backgroundColor: Colors.transparent,
+            color: const Color(0x0f454745),
+            height: 50.h,
+            index: widget.bottomIndex,
+            items: <Widget>[
+              ImageIcon(
+                const AssetImage(
+                  "assets/home (2).png",
                 ),
-                ImageIcon( const AssetImage("assets/notification.png", ), color: Colors.black,size: 20.sp,),
-                ImageIcon( const AssetImage("assets/userHome.png", ), color: Colors.black,size: 20.sp,),
-              ],
-              onTap: (index) async {
-                setState(() {
-                  changeNavigation(index);
-                });
-              },
-            )
-          ],
-        ),
-      )
+                color: Colors.black,
+                size: 20.sp,
+              ),
+              ImageIcon(
+                const AssetImage(
+                  "assets/search-interface-symbol.png",
+                ),
+                color: Colors.black,
+                size: 20.sp,
+              ),
+              (isMove)
+                  ? Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/qqLogo.png",
+                          height: 36.h,
+                          width: 36.w,
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, right: 10.0),
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: Icon(
+                                Icons.lock_open_sharp,
+                                color: ColorConstants.primaryColor,
+                                size: 18.sp,
+                              )),
+                        ),
+                      ],
+                    )
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/qqLogo.png",
+                          height: 36.h,
+                          width: 36.w,
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, right: 10.0),
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: Icon(
+                                Icons.lock_outline,
+                                color: ColorConstants.primaryColor,
+                                size: 18.sp,
+                              )),
+                        ),
+                      ],
+                    ),
+              ImageIcon(
+                const AssetImage(
+                  "assets/notification.png",
+                ),
+                color: Colors.black,
+                size: 20.sp,
+              ),
+              ImageIcon(
+                const AssetImage(
+                  "assets/userHome.png",
+                ),
+                color: Colors.black,
+                size: 20.sp,
+              ),
+            ],
+            onTap: (index) async {
+              setState(() {
+                changeNavigation(index);
+              });
+            },
+          )
+        ],
+      ),
     );
   }
 
   Future<void> changeNavigation(int index) async {
-    if(index==4){
+    if (index == 4) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {
         _page = index;
-        BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+        BlocProvider.of<HomeDashBoardBloc>(context)
+            .add(BottomIndexChange(context: context, currentIndex: _page!));
       });
       Navigator.push(
         context,
@@ -181,26 +213,31 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
         ),
       );
     }
-    if(index==3){
+    if (index == 3) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {
         _page = index;
-        BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+        BlocProvider.of<HomeDashBoardBloc>(context)
+            .add(BottomIndexChange(context: context, currentIndex: _page!));
       });
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const NotificationScreen(),
+          pageBuilder: (context, animation1, animation2) =>
+              const NotificationScreen(),
           transitionDuration: Duration.zero,
         ),
       );
     }
-    if(index==2){
+    if (index == 2) {
       await Future.delayed(const Duration(milliseconds: 500));
-      if(isMove && contestService.participated == false && (contestService.userBooked)){
+      if (isMove &&
+          contestService.participated == false &&
+          (contestService.userBooked)) {
         setState(() {
           _page = index;
-          BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .add(BottomIndexChange(context: context, currentIndex: _page!));
         });
         Navigator.push(
           context,
@@ -209,64 +246,66 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
             transitionDuration: Duration.zero,
           ),
         );
-      }
-      else if(!isMove && contestService.participated == false && (contestService.userBooked)){
+      } else if (!isMove &&
+          contestService.participated == false &&
+          (contestService.userBooked)) {
         setState(() {
           _page = index;
-          BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+          BlocProvider.of<HomeDashBoardBloc>(context)
+              .add(BottomIndexChange(context: context, currentIndex: _page!));
         });
         Navigator.push(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => ContestPlay(false),
+            pageBuilder: (context, animation1, animation2) =>
+                ContestPlay(false),
             transitionDuration: Duration.zero,
           ),
         );
-      }
-      else{
+      } else {
         setState(() {
           _page = 0;
           Navigator.push(
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation1, animation2) => Home(false,true),
+              pageBuilder: (context, animation1, animation2) =>
+                  Home(false, true),
               transitionDuration: Duration.zero,
             ),
           );
         });
       }
     }
-    if(index==1){
+    if (index == 1) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {
         _page = index;
-        BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+        BlocProvider.of<HomeDashBoardBloc>(context)
+            .add(BottomIndexChange(context: context, currentIndex: _page!));
       });
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => const CustomerSupport(),
+          pageBuilder: (context, animation1, animation2) =>
+              const CustomerSupport(),
           transitionDuration: Duration.zero,
         ),
       );
     }
-    if(index==0){
+    if (index == 0) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {
         _page = index;
-        BlocProvider.of<HomeDashBoardBloc>(context).add(BottomIndexChange(context: context,currentIndex: _page!));
+        BlocProvider.of<HomeDashBoardBloc>(context)
+            .add(BottomIndexChange(context: context, currentIndex: _page!));
       });
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => Home(false,false),
+          pageBuilder: (context, animation1, animation2) => Home(false, false),
           transitionDuration: Duration.zero,
         ),
       );
     }
   }
-
-
-
-
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -197,7 +198,7 @@ class _HomeState extends State<HomeStateful> {
                       ],
                     )
                   : homeShimmerEffect()),
-          bottomNavigationBar: BottomNavigationWidget(0)),
+          bottomNavigationBar: const BottomNavigationWidget(0)),
     );
   }
 
@@ -323,11 +324,10 @@ class _HomeState extends State<HomeStateful> {
                                                         userDataService
                                                             .totalTickets,
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.black,
+                                                            color: Colors.black,
                                                             fontSize: 17.sp),
                                                       )
-                                                    : Text(""),
+                                                    : const Text(""),
                                                 SizedBox(width: 5.h),
                                                 Container(
                                                   //margin: EdgeInsets.all(5.h),
@@ -391,7 +391,7 @@ class _HomeState extends State<HomeStateful> {
                           context,
                           PageRouteBuilder(
                             pageBuilder: (context, animation1, animation2) =>
-                                ProfileScreen(),
+                                const ProfileScreen(),
                             transitionDuration: Duration.zero,
                           ),
                         );
@@ -542,9 +542,9 @@ class _HomeState extends State<HomeStateful> {
                                 child: Container(
                                   width: 30.h,
                                   height: 30.h,
-                                  margin: EdgeInsets.all(2),
+                                  margin: const EdgeInsets.all(2),
                                   //padding: EdgeInsets.all(8),
-                                  color: Color(0xffce112c),
+                                  color: const Color(0xffce112c),
                                   child: Center(
                                     child: (time.min.toString() != "null")
                                         ? Text(
@@ -586,7 +586,7 @@ class _HomeState extends State<HomeStateful> {
                                   height: 30.h,
                                   margin: EdgeInsets.all(2.h),
                                   //padding: EdgeInsets.all(8.h),
-                                  color: Color(0xffC77D0A),
+                                  color: const Color(0xffC77D0A),
                                   child: Center(
                                     child: (time.sec.toString() != "null")
                                         ? Text(
@@ -667,7 +667,7 @@ class _HomeState extends State<HomeStateful> {
                                   fontWeight: FontWeight.bold),
                             ),
                             (userData != null && userData!.is_eligible == "yes")
-                                ? Text(
+                                ? const Text(
                                     " Eligible",
                                     style: TextStyle(
                                         color: Colors.white,
@@ -685,7 +685,7 @@ class _HomeState extends State<HomeStateful> {
                       )
                     ],
                   )
-                : Text(""),
+                : const Text(""),
             SizedBox(
               height: 18.h,
             ),
@@ -742,14 +742,14 @@ class _HomeState extends State<HomeStateful> {
                         height: 35.h,
                         width: 150.h,
                         decoration: BoxDecoration(
-                          color: Color(0xffce112c),
+                          color: const Color(0xffce112c),
                           borderRadius: BorderRadius.circular(40.h / 2.0),
                           border: Border.all(
                               color: ColorConstants.colorYellow, width: 3.w),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 16.0,
-                              offset: Offset(0.0, 6.0),
+                              offset: const Offset(0.0, 6.0),
                               color: Colors.black.withOpacity(0.20),
                             ),
                           ],
@@ -773,7 +773,7 @@ class _HomeState extends State<HomeStateful> {
                           ],
                         )),
                   )
-                : Text(""),
+                : const Text(""),
             SizedBox(
               height: 15.h,
             ),
@@ -813,7 +813,7 @@ class _HomeState extends State<HomeStateful> {
                               boxShadow: [
                                 BoxShadow(
                                   blurRadius: 16.0,
-                                  offset: Offset(0.0, 6.0),
+                                  offset: const Offset(0.0, 6.0),
                                   color: Colors.black.withOpacity(0.16),
                                 ),
                               ],
@@ -830,7 +830,7 @@ class _HomeState extends State<HomeStateful> {
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(30.h),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.check,
                                     color: ColorConstants.primaryColor2,
                                     size: 17,
@@ -872,7 +872,7 @@ class _HomeState extends State<HomeStateful> {
                           ),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(0.0),
+                          padding: const EdgeInsets.all(0.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -1030,7 +1030,7 @@ class _HomeState extends State<HomeStateful> {
                                               ),
                                               CircleAvatar(
                                                 radius: 20.h,
-                                                backgroundImage: AssetImage(
+                                                backgroundImage: const AssetImage(
                                                     "assets/userprofile.png"),
                                                 backgroundColor:
                                                     Colors.transparent,
@@ -1055,7 +1055,7 @@ class _HomeState extends State<HomeStateful> {
                         ),),*/
                                             ],
                                           )
-                                        : Text(""),
+                                        : const Text(""),
                                   ),
                                   Expanded(
                                     flex: 1,
@@ -1076,9 +1076,9 @@ class _HomeState extends State<HomeStateful> {
                                                   ),
                                                 ),
                                               ),
-                                              CircleAvatar(
+                                              const CircleAvatar(
                                                 radius: 35.0,
-                                                backgroundImage: AssetImage(
+                                                backgroundImage: const AssetImage(
                                                     "assets/userprofile.png"),
                                                 backgroundColor:
                                                     Colors.transparent,
@@ -1103,7 +1103,7 @@ class _HomeState extends State<HomeStateful> {
                         ),),*/
                                             ],
                                           )
-                                        : Text(""),
+                                        : const Text(""),
                                   ),
                                   Expanded(
                                     flex: 1,
@@ -1131,7 +1131,7 @@ class _HomeState extends State<HomeStateful> {
                                               ),
                                               CircleAvatar(
                                                 radius: 20.h,
-                                                backgroundImage: AssetImage(
+                                                backgroundImage: const AssetImage(
                                                     "assets/userprofile.png"),
                                                 backgroundColor:
                                                     Colors.transparent,
@@ -1156,7 +1156,7 @@ class _HomeState extends State<HomeStateful> {
                         ),),*/
                                             ],
                                           )
-                                        : Text(""),
+                                        : const Text(""),
                                   ),
                                 ],
                               ),
@@ -1166,8 +1166,9 @@ class _HomeState extends State<HomeStateful> {
                               (contestUserDataList != null &&
                                       contestUserDataList.length > 3)
                                   ? ListView.builder(
-                                      padding: EdgeInsets.all(0.0),
-                                      physics: NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.all(0.0),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemCount: contestUserDataList.length,
                                       itemBuilder:
@@ -1195,14 +1196,16 @@ class _HomeState extends State<HomeStateful> {
 
                                                   CircleAvatar(
                                                     radius: 18.h,
-                                                    backgroundImage: AssetImage(
-                                                        "assets/userprofile.png"),
+                                                    backgroundImage:
+                                                        const AssetImage(
+                                                            "assets/userprofile.png"),
                                                     backgroundColor:
                                                         Colors.transparent,
                                                   ),
-                                                  Padding(
+                                                  const Padding(
                                                       padding:
-                                                          EdgeInsets.all(2)),
+                                                          const EdgeInsets.all(
+                                                              2)),
                                                   Text(
                                                     contestUserDataList[
                                                             index + 3]
@@ -1219,12 +1222,12 @@ class _HomeState extends State<HomeStateful> {
                                                     child: SfSparkLineChart(
                                                       //Enable the trackball
                                                       trackball:
-                                                          SparkChartTrackball(
+                                                          const SparkChartTrackball(
                                                               activationMode:
                                                                   SparkChartActivationMode
                                                                       .tap),
                                                       //Enable marker
-                                                      marker: SparkChartMarker(
+                                                      marker: const SparkChartMarker(
                                                           displayMode:
                                                               SparkChartMarkerDisplayMode
                                                                   .all),
@@ -1253,7 +1256,7 @@ class _HomeState extends State<HomeStateful> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(20.h),
-                                                        color: Color(
+                                                        color: const Color(
                                                           0xffd8efe5,
                                                         )),
                                                     child: Center(
@@ -1278,7 +1281,7 @@ class _HomeState extends State<HomeStateful> {
                                         );
                                       },
                                     )
-                                  : Text("")
+                                  : const Text("")
                             ],
                           )
                         : Center(
@@ -1314,9 +1317,9 @@ class _HomeState extends State<HomeStateful> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(Constants.padding),
                   boxShadow: [
-                    BoxShadow(
+                    const BoxShadow(
                         color: Colors.black,
-                        offset: Offset(0, 10),
+                        offset: const Offset(0, 10),
                         blurRadius: 10),
                   ]),
               child: Column(
@@ -1331,7 +1334,7 @@ class _HomeState extends State<HomeStateful> {
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 16.0,
-                            offset: Offset(0.0, 6.0),
+                            offset: const Offset(0.0, 6.0),
                             color: Colors.black.withOpacity(0.16),
                           ),
                         ],
@@ -1348,7 +1351,7 @@ class _HomeState extends State<HomeStateful> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(30.h),
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.check,
                               color: ColorConstants.primaryColor2,
                               size: 17,

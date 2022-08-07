@@ -52,7 +52,7 @@ class _WalletStatefulState extends State<WalletStateful> {
   }
 
   Future<bool> _willPopCallback() async {
-    return Future.value(false);
+    return Future.value(true);
   }
 
   @override

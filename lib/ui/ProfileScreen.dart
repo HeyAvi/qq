@@ -23,11 +23,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (_) => ProfileBloc(ProfileRepository(Dio())),
-        child: const ProfileScreenStateFul(),
-      ),
+    return BlocProvider(
+      create: (_) => ProfileBloc(ProfileRepository(Dio())),
+      child: const ProfileScreenStateFul(),
     );
   }
 }
@@ -226,28 +224,36 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                             ),
                           ),
                         ),
-                        Card(
-                          color: ColorConstants.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Container(
-                            width: 180,
-                            padding: const EdgeInsets.all(13),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                    height: 25,
-                                    child:
-                                        Image.asset("assets/first-rank.png")),
-                                const Text(
-                                  'Rank',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
+                        InkWell(
+                          onTap: (){},
+                          borderRadius: BorderRadius.circular(50),
+
+                          child: Padding(
+                            padding: const EdgeInsets.all(0.1),
+                            child: Card(
+                              color: ColorConstants.primaryColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Container(
+                                width: 180,
+                                padding: const EdgeInsets.all(13),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                        height: 25,
+                                        child:
+                                            Image.asset("assets/first-rank.png")),
+                                    const Text(
+                                      'Rank',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
@@ -454,7 +460,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                   ))
             ],
           ),
-          bottomNavigationBar: BottomNavigationWidget(4)),
+          bottomNavigationBar: const BottomNavigationWidget(4)),
     );
   }
 
