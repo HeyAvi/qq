@@ -41,14 +41,6 @@ class EnterNumberBloc extends Bloc<EnterNumberEvent, EnterNumberState> {
           await repository.sendOTP(event.context, event.mobileNumber);
       DialogUtil.dismissProgressDialog(event.context);
       if (serverAPIResponseDto != null) {
-        Fluttertoast.showToast(
-            msg: serverAPIResponseDto.toString(),
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
         EnterNumberCompleteState completeState = EnterNumberCompleteState(
             context: event.context,
             version: state.version + 1,

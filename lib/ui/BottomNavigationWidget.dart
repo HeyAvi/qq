@@ -114,7 +114,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                 }
                 return const SizedBox();
               },
-            ):const SizedBox(),
+            ):const SizedBox.shrink(),
             CurvedNavigationBar(
               key: _bottomNavigationKey,
               backgroundColor: Colors.transparent,

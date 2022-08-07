@@ -1,16 +1,14 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:qq/models/Userdata.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
 import 'package:qq/ui/BottomNavigationWidget.dart';
-import 'package:qq/ui/enterNumber.dart';
 import 'package:qq/ui/home.dart';
-import 'package:qq/ui/notificationScreen.dart';
-import 'package:intl/intl.dart';
 import 'package:qq/ui/splashScreen.dart';
 import 'package:qq/utils/ApiConstants.dart';
 import 'package:qq/utils/ColorConstants.dart';
@@ -21,6 +19,8 @@ import '../bloc/ProfileBloc/ProfileBloc.dart';
 import '../repository/ProfileRepository.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +45,10 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
   late var prefs;
   DateTime selectedDate = DateTime.now();
 
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController mobileNumberController = new TextEditingController();
-  TextEditingController dateOfBirthController = new TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController mobileNumberController = TextEditingController();
+  TextEditingController dateOfBirthController = TextEditingController();
 
   String genderValue = "Male";
   String userId = "";
@@ -71,7 +71,6 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -95,7 +94,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (Context) =>
+                                      builder: (context) =>
                                           Home(false, false)));
                             },
                             child: Container(
@@ -155,7 +154,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (Context) =>
+                                    builder: (context) =>
                                         const SplashScreen()));
                           },
                           child: Column(
@@ -169,8 +168,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               const Padding(padding: EdgeInsets.all(2)),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  const ImageIcon(
+                                children: const [
+                                  ImageIcon(
                                     AssetImage("assets/logout.png"),
                                     size: 20,
                                     color: Colors.pink,
@@ -279,7 +278,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         ),
                         Tab(
                           child: Text(
-                            "Payment Method",
+                            "Settings",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: Colors.black),
                           ),
@@ -301,7 +300,154 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         alignment: Alignment.topCenter,
                         child: TabBarView(
                           physics: const ClampingScrollPhysics(),
-                          children: [basicInfo(context), const Text("")],
+                          children: [
+                            basicInfo(context),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: ListView(
+                                shrinkWrap: true,
+                                children: [
+                                  ListTile(
+                                    onTap: () {},
+                                    leading:
+                                        const Icon(Icons.notifications_active),
+                                    title: const Text('Notification'),
+                                    trailing: Switch(
+                                        value: notification,
+                                        activeColor:
+                                            ColorConstants.primaryColor,
+                                        onChanged: (v) {
+                                          setState(() {
+                                            notification = v;
+                                          });
+                                        }),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                  ListTile(
+                                    onTap: () {},
+                                    leading: const Icon(Icons.volume_up),
+                                    title: const Text('Sounds'),
+                                    trailing: Switch(
+                                        value: sound,
+                                        activeColor:
+                                            ColorConstants.primaryColor,
+                                        onChanged: (v) {
+                                          setState(() {
+                                            sound = v;
+                                          });
+                                        }),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                  Text(
+                                    'Do you like our App ?',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18.sp),
+                                  ),
+                                  ListTile(
+                                    onTap: () {},
+                                    title: Text(
+                                      'Be a part of our reviewing customers by rating our app.',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[600]),
+                                    ),
+                                    subtitle: SizedBox(
+                                      width: 200,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            primary:
+                                                ColorConstants.primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.h),
+                                            )),
+                                        onPressed: () {
+                                          setState(() {
+                                            Fluttertoast.showToast(
+                                                msg: 'Rate us');
+                                          });
+                                        },
+                                        child: const Text(
+                                          'RATE US',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                    leading: CircleAvatar(
+                                        backgroundColor: Colors.yellow[100],
+                                        radius: 30,
+                                        child: const Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 50,
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                  ),
+                                  const ListTile(
+                                    contentPadding: EdgeInsets.all(0),
+                                    leading: Text(
+                                      'Support',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                  const ListTile(
+                                    contentPadding: EdgeInsets.all(0),
+                                    leading: Text(
+                                      'Privacy Policy',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                  const ListTile(
+                                    contentPadding: EdgeInsets.all(0),
+                                    leading: Text(
+                                      'Terms and Conditions',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                  const ListTile(
+                                    contentPadding: EdgeInsets.all(0),
+                                    leading: Text(
+                                      'Delete Account',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red),
+                                    ),
+                                    trailing: Icon(Icons.navigate_next),
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ))
                     ],
@@ -311,6 +457,9 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
           bottomNavigationBar: BottomNavigationWidget(4)),
     );
   }
+
+  bool notification = true;
+  bool sound = true;
 
   basicInfo(BuildContext context) {
     return BlocListener<ProfileBloc, ProfileState>(
@@ -429,12 +578,12 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.h),
                               ),
-                              child: new Container(
+                              child: Container(
                                   height: 30.h,
                                   width: 100.w,
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
-                                    border: new Border.all(
+                                    border: Border.all(
                                       color: (genderValue == "Male")
                                           ? ColorConstants.primaryColor
                                           : Colors.white,
@@ -477,12 +626,12 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.h),
                               ),
-                              child: new Container(
+                              child: Container(
                                   height: 30.h,
                                   width: 100.w,
-                                  decoration: new BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.rectangle,
-                                    border: new Border.all(
+                                    border: Border.all(
                                       color: (genderValue == "FeMale")
                                           ? ColorConstants.primaryColor
                                           : Colors.white,
@@ -531,7 +680,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                   setState(() {
                     selectedDate = selected!;
                     if (selectedDate != null) {
-                      dateOfBirthController = new TextEditingController(
+                      dateOfBirthController = TextEditingController(
                           text: DateFormat("dd-MM-yyyy").format(selectedDate));
                     }
                   });
@@ -557,31 +706,35 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                   ],
                 ),
               )),
-          InkWell(
+          Container(
+            margin: EdgeInsets.only(top: 15.h),
             child: Container(
-              margin: EdgeInsets.only(top: 15.h),
               width: 170.w,
               padding: EdgeInsets.all(10.h),
-              decoration: BoxDecoration(
-                  color: ColorConstants.primaryColor,
-                  borderRadius: BorderRadius.circular(20.h)),
-              child: Center(
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(20.h)),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: ColorConstants.primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.h))),
+                onPressed: () {
+                  BlocProvider.of<ProfileBloc>(context).add(
+                      UpdateProfileDataEvent(
+                          context: context,
+                          name: nameController.text,
+                          gender: genderValue,
+                          dob: dateOfBirthController.text,
+                          email: emailController.text,
+                          image: "",
+                          userId: userId));
+                },
                 child: Text(
                   'UPDATE',
                   style: TextStyle(color: Colors.white, fontSize: 18.sp),
                 ),
               ),
             ),
-            onTap: () {
-              BlocProvider.of<ProfileBloc>(context).add(UpdateProfileDataEvent(
-                  context: context,
-                  name: nameController.text,
-                  gender: genderValue,
-                  dob: dateOfBirthController.text,
-                  email: emailController.text,
-                  image: "",
-                  userId: userId));
-            },
           ),
         ],
       ),

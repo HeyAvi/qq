@@ -7,7 +7,6 @@ import 'package:qq/ui/ContestDetails/JigsawPuzzle/ScoreWidget.dart';
 import 'package:qq/ui/splashScreen.dart';
 import 'package:qq/utils/ColorConstants.dart';
 
-
 void main() {
   runApp(const MyApp());
   setupServiceLocator();
@@ -23,10 +22,11 @@ class MyApp extends StatelessWidget {
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
-        builder: (_){
-          return  ScoreWidget(
-              child:MaterialApp(
+        builder: (context, screenUtil) {
+          return ScoreWidget(
+              child: MaterialApp(
             title: 'Flutter Demo',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               textTheme: GoogleFonts.robotoTextTheme(),
               // This is the theme of your application.
@@ -40,9 +40,8 @@ class MyApp extends StatelessWidget {
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home:  SplashScreen(),
+            home: SplashScreen(),
           ));
-        }
-    );
+        });
   }
 }

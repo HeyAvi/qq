@@ -139,8 +139,9 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                               setState(() {
                                 if (state is GetWalletDataCompleteState) {
                                   dataGet = true;
+                                  String val = state.sumAmount.toString();
                                   walletAmount =
-                                      double.parse(state.sumAmount.toString());
+                                      double.parse(val.isEmpty ? '0' : val);
                                 }
                               });
                             },
@@ -436,7 +437,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                         ),
                         Padding(padding: EdgeInsets.all(5.h)),
                         Text(
-                          "${ticketDataList!.length ?? 0} Ticket codes are left",
+                          "${ticketDataList?.length ?? 0} Ticket codes are left",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18.sp,
