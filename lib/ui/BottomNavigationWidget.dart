@@ -121,56 +121,41 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                 color: Colors.black,
                 size: 20.sp,
               ),
-              ImageIcon(
-                const AssetImage(
-                  "assets/search-interface-symbol.png",
-                ),
+              Icon(
+                Icons.list,
+                // const AssetImage(
+                //   "assets/search-interface-symbol.png",
+                // ),
                 color: Colors.black,
                 size: 20.sp,
               ),
-              (isMove)
-                  ? Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/qqLogo.png",
-                          height: 36.h,
-                          width: 36.w,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 10.0, right: 10.0),
-                          child: Align(
-                              alignment: Alignment.topRight,
-                              child: Icon(
-                                Icons.lock_open_sharp,
-                                color: ColorConstants.primaryColor,
-                                size: 18.sp,
-                              )),
-                        ),
-                      ],
-                    )
-                  : Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/qqLogo.png",
-                          height: 36.h,
-                          width: 36.w,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 10.0, right: 10.0),
-                          child: Align(
-                              alignment: Alignment.topRight,
-                              child: Icon(
-                                Icons.lock_outline,
-                                color: ColorConstants.primaryColor,
-                                size: 18.sp,
-                              )),
-                        ),
-                      ],
-                    ),
+              (isMove) ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
+                  Padding(
+                      padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
+                      child: Icon(
+                        Icons.lock_open_sharp,
+                        color: ColorConstants.primaryColor,
+                        size: 18.sp,
+                      )
+                  ),
+                ],
+              ) : Stack(
+                alignment: Alignment.center,
+                children: [
+                  Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
+                  Padding(
+                      padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
+                      child: Icon(
+                        Icons.lock_outline,
+                        color: ColorConstants.primaryColor,
+                        size: 18.sp,
+                      )
+                  ),
+                ],
+              ),
               ImageIcon(
                 const AssetImage(
                   "assets/notification.png",

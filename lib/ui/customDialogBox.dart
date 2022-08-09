@@ -95,7 +95,7 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
             }
           }
         },
-        child: Container(
+        child: SizedBox(
           //width: 300.w,
           height: 200.h,//MediaQuery.of(context).size.height.h,
           child: Stack(
@@ -108,7 +108,7 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                     shape: BoxShape.rectangle,
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(Constants.padding),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(color: Colors.black,offset: Offset(0,10),
                           blurRadius: 10
                       ),
@@ -148,7 +148,7 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                                 style: ElevatedButton.styleFrom(
                                     primary: ColorConstants.primaryColor,
                                     onPrimary: Colors.white,
-                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.h))
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.h))
                                 ),
                                 onPressed: () {
                                   widget.onCountSelected("cancel");
@@ -168,7 +168,7 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                                 style: ElevatedButton.styleFrom(
                                     primary: ColorConstants.primaryColor,
                                     onPrimary: Colors.white,
-                                    shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.h))
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.h))
                                 ),
                                 onPressed: () {
                                   widget.onCountSelected("agree");

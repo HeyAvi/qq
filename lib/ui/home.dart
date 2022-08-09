@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -67,12 +68,10 @@ class Home extends StatelessWidget {
 }
 
 class HomeStateful extends StatefulWidget {
-  bool? isContestCompleted, isContestOpen;
+  final bool? isContestCompleted, isContestOpen;
 
-  HomeStateful(bool _isContestCompleted, bool _isContestOpen) {
-    isContestCompleted = _isContestCompleted;
-    isContestOpen = _isContestOpen;
-  }
+  const HomeStateful(this.isContestCompleted, this.isContestOpen, {Key? key})
+      : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -94,6 +93,7 @@ class _HomeState extends State<HomeStateful> {
   int backIndex = 0;
   var positions;
 
+  @override
   void initState() {
     super.initState();
     BlocProvider.of<ProfileBloc>(context)
@@ -108,15 +108,26 @@ class _HomeState extends State<HomeStateful> {
       setState(() {});
     });
     Future.delayed(Duration.zero, () {
-      if (widget.isContestCompleted! && this.mounted) {
-        DialogUtil.showInfoDialog("Contest Completed.", context);
+      if (widget.isContestCompleted! && mounted) {
+        DialogUtil.showInfoDialog(
+            message: "Contest Submitted Successfully.",
+            title: 'Contest Submitted',
+            context: context,
+            dialogType: DialogType.SUCCES);
       }
       if (widget.isContestOpen == true && (contestService.userBooked)) {
-        DialogUtil.showInfoDialog("Contest is not live now.", context);
+        DialogUtil.showInfoDialog(
+            message: "Contest is not live now.",
+            title: 'Info',
+            context: context,
+            dialogType: DialogType.INFO);
       }
       if (widget.isContestOpen == true && !(contestService.userBooked)) {
         DialogUtil.showInfoDialog(
-            "You're not booked for this contest.", context);
+            message: "You're not booked for this contest.",
+            context: context,
+            title: 'Not Booked Yet',
+            dialogType: DialogType.ERROR);
       }
     });
     positions = SlidableButtonPosition.left;
@@ -230,7 +241,7 @@ class _HomeState extends State<HomeStateful> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (Context) => Wallet()));
+                                    builder: (context) => Wallet()));
                           },
                           child: (userDataService == null ||
                                   userDataService.walletAmount == "null")
@@ -274,112 +285,108 @@ class _HomeState extends State<HomeStateful> {
                                     ),
                                   ],
                                 )),
-                      Container(
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (Context) => BuyTickets()));
-                              },
-                              child: Stack(children: <Widget>[
-                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 85.w,
-                                        margin: EdgeInsets.only(
-                                            top: 0.h, left: 5.w, right: 10.w),
-                                        color: Colors.transparent,
-                                        child: Container(
-                                          margin: EdgeInsets.all(3.h),
-                                          height: 30.h,
-                                          width: 65.w,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(15.w),
-                                                bottomRight:
-                                                    Radius.circular(15.w),
-                                                topLeft: Radius.circular(15.w),
-                                                bottomLeft:
-                                                    Radius.circular(15.w)),
-                                          ),
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (Context) =>
-                                                          BuyTickets()));
-                                            },
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                (userDataService != null)
-                                                    ? Text(
-                                                        userDataService
-                                                            .totalTickets,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 17.sp),
-                                                      )
-                                                    : const Text(""),
-                                                SizedBox(width: 5.h),
-                                                Container(
-                                                  //margin: EdgeInsets.all(5.h),
-                                                  height: 24.h,
-                                                  width: 20.w,
-                                                  child: Image.asset(
-                                                      "assets/tokens.png",
-                                                      height: 15.h,
-                                                      width: 10.h),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            22.h),
-                                                  ),
-                                                ),
-                                              ],
+                      InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BuyTickets()));
+                          },
+                          child: Stack(children: <Widget>[
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 85.w,
+                                    margin: EdgeInsets.only(
+                                        top: 0.h, left: 5.w, right: 10.w),
+                                    color: Colors.transparent,
+                                    child: Container(
+                                      margin: EdgeInsets.all(3.h),
+                                      height: 30.h,
+                                      width: 65.w,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(15.w),
+                                            bottomRight: Radius.circular(15.w),
+                                            topLeft: Radius.circular(15.w),
+                                            bottomLeft: Radius.circular(15.w)),
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BuyTickets()));
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            (userDataService != null)
+                                                ? Text(
+                                                    userDataService
+                                                        .totalTickets,
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 17.sp),
+                                                  )
+                                                : const Text(""),
+                                            SizedBox(width: 5.h),
+                                            Container(
+                                              //margin: EdgeInsets.all(5.h),
+                                              height: 24.h,
+                                              width: 20.w,
+                                              child: Image.asset(
+                                                  "assets/tokens.png",
+                                                  height: 15.h,
+                                                  width: 10.h),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(22.h),
+                                              ),
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ]),
-                                Positioned(
-                                    left: 75.w,
-                                    top: 9.h,
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            width: 17.w,
-                                            height: 17.h,
-                                            decoration: BoxDecoration(
-                                                color: Colors.yellow,
-                                                borderRadius:
-                                                    BorderRadius.circular(20.h),
-                                                border: Border.all(
-                                                  color: Colors.black,
-                                                  width: 2.w,
-                                                )),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 2.h, left: 1.w),
-                                            child: Icon(
-                                              Icons.add,
-                                              size: 15.sp,
-                                            ),
-                                          )
-                                        ],
+                                    ),
+                                  ),
+                                ]),
+                            Positioned(
+                                left: 75.w,
+                                top: 9.h,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 17.w,
+                                        height: 17.h,
+                                        decoration: BoxDecoration(
+                                            color: Colors.yellow,
+                                            borderRadius:
+                                                BorderRadius.circular(20.h),
+                                            border: Border.all(
+                                              color: Colors.black,
+                                              width: 2.w,
+                                            )),
                                       ),
-                                    ))
-                              ]))),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 2.h, left: 1.w),
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 15.sp,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ))
+                          ])),
                     ],
                   ),
                 ),
@@ -707,7 +714,7 @@ class _HomeState extends State<HomeStateful> {
                   flex:1,
                   child:InkWell(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (Context) => Prices(contestdata.winner_zone)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Prices(contestdata.winner_zone)));
                       },
                       child:Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -735,7 +742,7 @@ class _HomeState extends State<HomeStateful> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (Context) =>
+                              builder: (context) =>
                                   Prices(contestdata.winner_zone)));
                     },
                     child: Container(
@@ -805,7 +812,7 @@ class _HomeState extends State<HomeStateful> {
                         },
                         child: Container(
                             height: buttonHeight,
-                            width: MediaQuery.of(context).size.width.w,
+                            width: MediaQuery.of(context).size.width.w / 1.4.w,
                             decoration: BoxDecoration(
                               color: ColorConstants.primaryColor2,
                               borderRadius:
@@ -915,7 +922,7 @@ class _HomeState extends State<HomeStateful> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (Context) =>
+                                                    builder: (context) =>
                                                         Home(false, false)));
                                           }
                                         });
@@ -952,14 +959,14 @@ class _HomeState extends State<HomeStateful> {
                       children: [
                         ToggleSwitch(
                           cornerRadius: 40.h,
-                          activeBgColors: [
+                          activeBgColors: const [
                             [ColorConstants.primaryColor],
                             [ColorConstants.primaryColor]
                           ],
                           activeFgColor: Colors.white,
                           inactiveBgColor: Colors.white,
                           inactiveFgColor: Colors.black,
-                          borderColor: [Colors.black26],
+                          borderColor: const [Colors.black26],
                           fontSize: 12.sp,
                           borderWidth: 1,
                           radiusStyle: true,
@@ -967,7 +974,7 @@ class _HomeState extends State<HomeStateful> {
                           minHeight: 35.h,
                           initialLabelIndex: initialLabelIndexs,
                           totalSwitches: 2,
-                          labels: ['Last Result', 'Date'],
+                          labels: const ['Last Result', 'Date'],
                           onToggle: (index) async {
                             initialLabelIndexs = index!;
                             if (index == 0) {
@@ -983,8 +990,10 @@ class _HomeState extends State<HomeStateful> {
                                 firstDate: DateTime(2010),
                                 lastDate: DateTime.now(),
                               );
-                              if (selected != null && selected != selectedDate)
+                              if (selected != null &&
+                                  selected != selectedDate) {
                                 selectedDate = selected;
+                              }
                               var arr = selectedDate.toString().split(" ");
                               BlocProvider.of<HomeDashBoardBloc>(context).add(
                                   GetLastContestDataEvent(
@@ -997,7 +1006,7 @@ class _HomeState extends State<HomeStateful> {
                       ],
                     ),
                     (contestUserDataList != null &&
-                            contestUserDataList.length > 0)
+                            contestUserDataList.isNotEmpty)
                         ? Column(
                             children: [
                               Row(
@@ -1060,7 +1069,7 @@ class _HomeState extends State<HomeStateful> {
                                   Expanded(
                                     flex: 1,
                                     child: (contestUserDataList != null &&
-                                            contestUserDataList.length >= 1)
+                                            contestUserDataList.isNotEmpty)
                                         ? Column(
                                             children: [
                                               Padding(
@@ -1235,7 +1244,7 @@ class _HomeState extends State<HomeStateful> {
                                                       labelDisplayMode:
                                                           SparkChartLabelDisplayMode
                                                               .all,
-                                                      data: <double>[
+                                                      data: const <double>[
                                                         1,
                                                         5,
                                                         -6,
@@ -1316,10 +1325,10 @@ class _HomeState extends State<HomeStateful> {
                   shape: BoxShape.rectangle,
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(Constants.padding),
-                  boxShadow: [
-                    const BoxShadow(
+                  boxShadow: const [
+                    BoxShadow(
                         color: Colors.black,
-                        offset: const Offset(0, 10),
+                        offset: Offset(0, 10),
                         blurRadius: 10),
                   ]),
               child: Column(
@@ -1390,11 +1399,14 @@ class _HomeState extends State<HomeStateful> {
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (Context) =>
+                                            builder: (context) =>
                                                 ContestMainPage()));
                                   } else {
                                     DialogUtil.showInfoDialog(
-                                        "Contest is not Live now.", context);
+                                        message: "Contest is not Live now.",
+                                        context: context,
+                                        title: 'Info',
+                                        dialogType: DialogType.INFO);
                                   }
                                 },
                                 child: Container(

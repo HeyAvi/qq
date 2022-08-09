@@ -231,14 +231,14 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Container(
+                                SizedBox(
                                   width: MediaQuery.of(context).size.width.w,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: MediaQuery.of(context)
                                                 .size
                                                 .width
@@ -267,6 +267,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                             },
                                             decoration: InputDecoration(
                                               labelText: "How many tickets?",
+                                              labelStyle: TextStyle(color: Colors.grey),
                                               //prefixIcon: Icon(Icons.people),
                                               border: OutlineInputBorder(
                                                   //Outline border type for TextFeild
@@ -328,12 +329,18 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                 ),
                                                 actions: <Widget>[
                                                   TextButton(
+                                                    child: const Text("No"),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  TextButton(
                                                     child: const Text("Yes"),
                                                     onPressed: () {
                                                       Navigator.pop(context);
                                                       Fluttertoast.showToast(
                                                           msg:
-                                                              'Applied Promo!');
+                                                          'Applied Promo!');
                                                       // Navigator.push(
                                                       //   context,
                                                       //   // PageRouteBuilder(
@@ -347,12 +354,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                       // );
                                                     },
                                                   ),
-                                                  TextButton(
-                                                    child: const Text("No"),
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
+
                                                 ],
                                               ));
                                     },
@@ -398,37 +400,37 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                           ],
                         ),
                         Padding(padding: EdgeInsets.all(5.h)),
-                        GestureDetector(
-                          onTap: () {
-                            BlocProvider.of<TicketsBloc>(context).add(
-                                BuyicketsDataEvent(
-                                    context: context,
-                                    userId: userId,
-                                    no_of_tickets: ticketController.text));
-                            ticketController.text = "";
-                          },
-                          child: Card(
-                            color: ColorConstants.primaryColor,
-                            child: Container(
-                                width:
-                                    MediaQuery.of(context).size.width.w / 1.3.w,
-                                height: 40.h,
+                        SizedBox(
+                            width:
+                                MediaQuery.of(context).size.width.w / 1.3.w,
+                            height: 40.h,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.only(top: 5.h, bottom: 5.h),
-                                child: Center(
-                                  child: Text(
-                                    'Buy Tickets',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                )),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.h),
-                            ),
-                          ),
-                        ),
+                                primary: ColorConstants.primaryColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50.h),
+                                ),
+                              ),
+                              onPressed: () {
+                                BlocProvider.of<TicketsBloc>(context).add(
+                                    BuyicketsDataEvent(
+                                        context: context,
+                                        userId: userId,
+                                        no_of_tickets: ticketController.text));
+                                ticketController.text = "";
+                              },
+                              child: Center(
+                                child: Text(
+                                  'Buy Tickets',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )),
                         Padding(padding: EdgeInsets.all(10.h)),
                         Container(
                           width: MediaQuery.of(context).size.width.w,
@@ -452,13 +454,13 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                               });
                             } else if (state is BuyTicketsCompleteState) {
                               if (state.isBook) {
-                                if (this.mounted) {
-                                  WidgetsBinding.instance!
+                                if (mounted) {
+                                  WidgetsBinding.instance
                                       .addPostFrameCallback((_) {
                                     Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (Context) =>
+                                            builder: (context) =>
                                                 Home(false, false)));
                                   });
                                 }
@@ -556,22 +558,6 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                     ],
                                                   ),
                                                 ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      Clipboard.setData(ClipboardData(
-                                                              text: ticketDataList?[
-                                                                      index]
-                                                                  .ticket_code))
-                                                          .then((value) =>
-                                                              Fluttertoast
-                                                                  .showToast(
-                                                                      msg:
-                                                                          'Copied ${ticketDataList?[index].ticket_code} to Clipboard'));
-                                                    });
-                                                  },
-                                                  icon: const Icon(Icons.copy),
-                                                )
                                                 /*InkWell(
                                         onTap: (){
                                             Clipboard.setData(ClipboardData(text: ticketDataList![index].ticket_code.toString()));

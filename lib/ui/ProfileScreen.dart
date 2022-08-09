@@ -225,9 +225,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           ),
                         ),
                         InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           borderRadius: BorderRadius.circular(50),
-
                           child: Padding(
                             padding: const EdgeInsets.all(0.1),
                             child: Card(
@@ -243,8 +242,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                   children: [
                                     SizedBox(
                                         height: 25,
-                                        child:
-                                            Image.asset("assets/first-rank.png")),
+                                        child: Image.asset(
+                                            "assets/first-rank.png")),
                                     const Text(
                                       'Rank',
                                       textAlign: TextAlign.center,

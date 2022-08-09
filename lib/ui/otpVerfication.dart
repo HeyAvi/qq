@@ -127,7 +127,7 @@ class _otpVerificationStatefulState extends State<otpVerificationStateful> {
                   SizedBox(
                     height: 200.h,
                     width: 280.w,
-                    child: Image.asset('assets/login.png'),
+                    child: Image.asset('assets/number.png'),
                   ),
                   SizedBox(
                     height: 20.h,
