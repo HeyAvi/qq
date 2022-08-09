@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -487,6 +488,7 @@ class _HomeState extends State<HomeStateful> {
                         contestService.contestdata!.start_date),
                     widgetBuilder: (_, time) {
                       if (time == null) {
+                        log('ljkkkkkkkkklaskjdflaskdjf ++++++++++++++++++');
                         isMove = true;
                         return Padding(
                           padding: EdgeInsets.only(top: 20.h, bottom: 20.h),

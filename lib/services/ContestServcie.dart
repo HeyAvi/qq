@@ -1,15 +1,15 @@
 import 'package:qq/models/Contestdata.dart';
 
-
-class ContestService{
-
-  Contestdata _contestdata = new Contestdata("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+class ContestService {
+  Contestdata _contestdata = Contestdata(
+      "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
   late String _walletAmount;
   late String _totalTicket;
   late bool _userBooked;
   late bool _isparticipated;
 
-  setContestdata(Contestdata contestdata ,  String walletAmount , String totalTicket ,bool userBooked,bool participated) {
+  setContestdata(Contestdata contestdata, String walletAmount,
+      String totalTicket, bool userBooked, bool participated) {
     _contestdata = contestdata;
     _walletAmount = walletAmount;
     _totalTicket = totalTicket;
@@ -18,8 +18,12 @@ class ContestService{
   }
 
   Contestdata? get contestdata => _contestdata;
+
   String get walletAmount => _walletAmount;
+
   String get totalTicket => _totalTicket;
+
   bool get userBooked => _userBooked;
-  bool get participated => _isparticipated;
+
+  bool get participated => _isparticipated; // todo crash here
 }

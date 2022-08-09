@@ -122,7 +122,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                 size: 20.sp,
               ),
               Icon(
-                Icons.list,
+                Icons.list_alt_outlined,
                 // const AssetImage(
                 //   "assets/search-interface-symbol.png",
                 // ),
@@ -136,7 +136,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                   Padding(
                       padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
                       child: Icon(
-                        Icons.lock_open_sharp,
+                        CupertinoIcons.lock_open_fill,
                         color: ColorConstants.primaryColor,
                         size: 18.sp,
                       )
@@ -149,7 +149,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                   Padding(
                       padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
                       child: Icon(
-                        Icons.lock_outline,
+                        CupertinoIcons.lock_fill,
                         color: ColorConstants.primaryColor,
                         size: 18.sp,
                       )
