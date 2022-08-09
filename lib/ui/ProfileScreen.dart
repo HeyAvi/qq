@@ -147,13 +147,16 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                 ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            prefs.setString("userDataKey", "");
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SplashScreen()));
+                          onTap: () async {
+                            var prefs = await SharedPreferences.getInstance();
+                            await prefs.clear();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SplashScreen(),
+                              ),
+                              (_) => false,
+                            );
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,

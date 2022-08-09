@@ -54,7 +54,7 @@ class DialogUtil {
       showCloseIcon: true,
       title: title,
       desc: message,
-      btnOkOnPress: onOkTap ?? () {},
+      btnOkOnPress: onOkTap,
       btnOkIcon: null,
       onDissmissCallback: (type) {},
     ).show();

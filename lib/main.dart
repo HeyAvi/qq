@@ -8,7 +8,11 @@ import 'package:qq/ui/splashScreen.dart';
 import 'package:qq/utils/ColorConstants.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(const MyApp());
+  });
   setupServiceLocator();
 }
 

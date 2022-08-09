@@ -52,7 +52,13 @@ class _WalletStatefulState extends State<WalletStateful> {
   }
 
   Future<bool> _willPopCallback() async {
-    return Future.value(true);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Home(false, false),
+        ),
+        (_) => false);
+    return Future.value(false);
   }
 
   @override
@@ -104,11 +110,14 @@ class _WalletStatefulState extends State<WalletStateful> {
               ),
               actions: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
+                  onTap: () async {
+                    await Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (Context) => AddMoneyToWallet()));
+                    setState(() {
+                      getSharedPreferencesData();
+                    });
                   },
                   child: Container(
                       padding: EdgeInsets.only(right: 20.w),
@@ -258,10 +267,11 @@ class _WalletStatefulState extends State<WalletStateful> {
                               borderRadius: BorderRadius.circular(50),
                               onTap: () {
                                 showMaterialModalBottomSheet(
-
                                     context: context,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(30),
+                                          topRight: Radius.circular(30)),
                                     ),
                                     builder: (context) {
                                       return StatefulBuilder(
@@ -283,7 +293,8 @@ class _WalletStatefulState extends State<WalletStateful> {
                                                       setState(() {
                                                         filteValue = value!;
                                                         Navigator.pop(context);
-                                                        BlocProvider.of<WalletBloc>(
+                                                        BlocProvider.of<
+                                                                    WalletBloc>(
                                                                 builderContext)
                                                             .add(RefreshWalletDataEvent(
                                                                 context:

@@ -247,9 +247,9 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                         child: TextField(
                                             keyboardType: TextInputType.number,
                                             controller: ticketController,
-                                            enabled: (walletAmount <= 0.0)
-                                                ? false
-                                                : true,
+                                            // enabled: (walletAmount <= 0.0)
+                                            //     ? false
+                                            //     : true,
                                             onChanged: (value) {
                                               setState(() {
                                                 ticketValue = value;
@@ -267,7 +267,8 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                             },
                                             decoration: InputDecoration(
                                               labelText: "How many tickets?",
-                                              labelStyle: TextStyle(color: Colors.grey),
+                                              labelStyle:
+                                                  TextStyle(color: Colors.grey),
                                               //prefixIcon: Icon(Icons.people),
                                               border: OutlineInputBorder(
                                                   //Outline border type for TextFeild
@@ -303,7 +304,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 5, right: 20.0),
+                                      top: 5, right: 26.0),
                                   child: GestureDetector(
                                     onTap: () {
                                       showDialog(
@@ -313,8 +314,11 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             20)),
-                                                title: const Text(
-                                                    "Apply Promo Code"),
+                                                title: Text(
+                                                  "Apply Promo Code",
+                                                  style: TextStyle(
+                                                      fontSize: 16.sp),
+                                                ),
                                                 content: const TextField(
                                                   decoration: InputDecoration(
                                                     border: OutlineInputBorder(
@@ -340,7 +344,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                       Navigator.pop(context);
                                                       Fluttertoast.showToast(
                                                           msg:
-                                                          'Applied Promo!');
+                                                              'Applied Promo!');
                                                       // Navigator.push(
                                                       //   context,
                                                       //   // PageRouteBuilder(
@@ -354,14 +358,13 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                                       // );
                                                     },
                                                   ),
-
                                                 ],
                                               ));
                                     },
-                                    child: const Text('Apply Promo Code',
+                                    child: Text('Apply Promo Code',
                                         style: TextStyle(
-                                          letterSpacing: 1.0,
-                                        )),
+                                            letterSpacing: 1.0,
+                                            fontSize: 11.sp)),
                                   ),
                                 ),
                               ],
@@ -401,8 +404,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                         ),
                         Padding(padding: EdgeInsets.all(5.h)),
                         SizedBox(
-                            width:
-                                MediaQuery.of(context).size.width.w / 1.3.w,
+                            width: MediaQuery.of(context).size.width.w / 1.3.w,
                             height: 40.h,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -413,11 +415,17 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                 ),
                               ),
                               onPressed: () {
+                                if (walletAmount <= 0.0) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Low wallet balance');
+                                  return;
+                                }
                                 BlocProvider.of<TicketsBloc>(context).add(
-                                    BuyicketsDataEvent(
-                                        context: context,
-                                        userId: userId,
-                                        no_of_tickets: ticketController.text));
+                                  BuyicketsDataEvent(
+                                      context: context,
+                                      userId: userId,
+                                      no_of_tickets: ticketController.text),
+                                );
                                 ticketController.text = "";
                               },
                               child: Center(
@@ -483,88 +491,63 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                               MediaQuery.of(context).size.width,
                                           height: 50.h,
                                           color: Colors.grey[100],
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 50.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceAround,
-                                                    children: [
-                                                      Text(
-                                                        ticketDataList![index]
-                                                            .ticket_code
-                                                            .substring(0, 1),
-                                                        style: TextStyle(
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            decorationColor:
-                                                                ColorConstants
-                                                                    .primaryColor),
-                                                      ),
-                                                      Text(
-                                                        ticketDataList![index]
-                                                            .ticket_code
-                                                            .substring(1, 2),
-                                                        style: TextStyle(
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            decorationColor:
-                                                                ColorConstants
-                                                                    .primaryColor),
-                                                      ),
-                                                      Text(
-                                                        ticketDataList![index]
-                                                            .ticket_code
-                                                            .substring(2, 3),
-                                                        style: TextStyle(
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            decorationColor:
-                                                                ColorConstants
-                                                                    .primaryColor),
-                                                      ),
-                                                      Text(
-                                                        ticketDataList![index]
-                                                            .ticket_code
-                                                            .substring(3, 4),
-                                                        style: TextStyle(
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                            decorationColor:
-                                                                ColorConstants
-                                                                    .primaryColor),
-                                                      ),
-                                                      const SizedBox.shrink(),
-                                                    ],
-                                                  ),
-                                                ),
-                                                /*InkWell(
-                                        onTap: (){
-                                            Clipboard.setData(ClipboardData(text: ticketDataList![index].ticket_code.toString()));
-                                        },
-                                        child: ImageIcon( AssetImage("assets/copy.png", ), color: Colors.black,size: 20.sp,))*/
-                                              ],
-                                            ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              Text(
+                                                ticketDataList![index]
+                                                    .ticket_code
+                                                    .substring(0, 1),
+                                                style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        ColorConstants
+                                                            .primaryColor),
+                                              ),
+                                              Text(
+                                                ticketDataList![index]
+                                                    .ticket_code
+                                                    .substring(1, 2),
+                                                style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        ColorConstants
+                                                            .primaryColor),
+                                              ),
+                                              Text(
+                                                ticketDataList![index]
+                                                    .ticket_code
+                                                    .substring(2, 3),
+                                                style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        ColorConstants
+                                                            .primaryColor),
+                                              ),
+                                              Text(
+                                                ticketDataList![index]
+                                                    .ticket_code
+                                                    .substring(3, 4),
+                                                style: TextStyle(
+                                                    fontSize: 18.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    decorationColor:
+                                                        ColorConstants
+                                                            .primaryColor),
+                                              ),
+                                            ],
                                           )),
                                     );
                                   },

@@ -238,11 +238,58 @@ class _HomeState extends State<HomeStateful> {
                   child: Row(
                     children: [
                       InkWell(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Wallet()));
+                            setState(() {
+                              BlocProvider.of<ProfileBloc>(context)
+                                  .add(GetProfileDataEvent(context: context));
+                              BlocProvider.of<ProfileBloc>(context)
+                                  .stream
+                                  .listen((event) {
+                                userData = userDataService.userData;
+                                context.read<HomeDashBoardBloc>().add(
+                                    FetchContestEvent(
+                                        context: context,
+                                        userId: userData!.user_id));
+                                context.read<HomeDashBoardBloc>().add(
+                                    GetLastContestDataEvent(
+                                        context: context,
+                                        date: "",
+                                        contestdata: null));
+                                setState(() {});
+                              });
+                              Future.delayed(Duration.zero, () {
+                                if (widget.isContestCompleted! && mounted) {
+                                  DialogUtil.showInfoDialog(
+                                      message:
+                                          "Contest Submitted Successfully.",
+                                      title: 'Contest Submitted',
+                                      context: context,
+                                      dialogType: DialogType.SUCCES);
+                                }
+                                if (widget.isContestOpen == true &&
+                                    (contestService.userBooked)) {
+                                  DialogUtil.showInfoDialog(
+                                      message: "Contest is not live now.",
+                                      title: 'Info',
+                                      context: context,
+                                      dialogType: DialogType.INFO);
+                                }
+                                if (widget.isContestOpen == true &&
+                                    !(contestService.userBooked)) {
+                                  DialogUtil.showInfoDialog(
+                                      message:
+                                          "You're not booked for this contest.",
+                                      context: context,
+                                      title: 'Not Booked Yet',
+                                      dialogType: DialogType.ERROR);
+                                }
+                              });
+                              positions = SlidableButtonPosition.left;
+                            });
                           },
                           child: (userDataService == null ||
                                   userDataService.walletAmount == "null")
@@ -637,13 +684,13 @@ class _HomeState extends State<HomeStateful> {
               height: 15.h,
             ),
             (contestdata != null)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Row(
+                ? Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
@@ -662,10 +709,7 @@ class _HomeState extends State<HomeStateful> {
                             ),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
@@ -690,10 +734,10 @@ class _HomeState extends State<HomeStateful> {
                                         fontWeight: FontWeight.bold),
                                   ),
                           ],
-                        ),
-                      )
-                    ],
-                  )
+                        )
+                      ],
+                    ),
+                )
                 : const Text(""),
             SizedBox(
               height: 18.h,
@@ -869,6 +913,7 @@ class _HomeState extends State<HomeStateful> {
                         width: MediaQuery.of(context).size.width.w / 1.4.w,
                         //buttonWidth: 60.h,
                         height: buttonHeight,
+                        isRestart: true,
                         initialPosition: positions,
                         color: ColorConstants.primaryColor2,
                         buttonColor: ColorConstants.primaryColor2,
@@ -921,11 +966,12 @@ class _HomeState extends State<HomeStateful> {
                                             positions =
                                                 SlidableButtonPosition.right;
                                           } else {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        Home(false, false)));
+                                            Navigator.pop(context);
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) =>
+                                            //             Home(false, false)));
                                           }
                                         });
                                       },

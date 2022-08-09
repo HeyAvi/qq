@@ -172,8 +172,7 @@ class SubmitButtonState extends State<SubmitButton> {
     return BlocListener<WalletBloc, WalletState>(
       listener: (context, state) {
         if (state is WalletCompleteState) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (Context) => Wallet()));
+          Navigator.pop(context);
         }
       },
       child: InkWell(
