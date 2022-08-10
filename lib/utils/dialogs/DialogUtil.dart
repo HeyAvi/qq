@@ -30,7 +30,7 @@ class DialogUtil {
       headerAnimationLoop: false,
       dialogType: DialogType.SUCCES,
       showCloseIcon: true,
-      title: 'Succes',
+      title: 'Success',
       desc: message,
       btnOkOnPress: () {
         debugPrint('OnClcik');
@@ -45,7 +45,8 @@ class DialogUtil {
       required String message,
       required BuildContext context,
       DialogType? dialogType,
-      Function()? onOkTap}) {
+      Function()? onOkTap,
+      Function(DismissType)? dismissTap}) {
     return AwesomeDialog(
       context: context,
       animType: AnimType.LEFTSLIDE,
@@ -56,7 +57,7 @@ class DialogUtil {
       desc: message,
       btnOkOnPress: onOkTap,
       btnOkIcon: null,
-      onDissmissCallback: (type) {},
+      onDissmissCallback: dismissTap,
     ).show();
   }
 

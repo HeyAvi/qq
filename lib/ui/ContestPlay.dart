@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -87,20 +89,25 @@ class _ContestUserState extends State<ContestUserStateful> {
                     setState(() {
                       ticketDataList = state.ticketDataList;
                     });
+                    log('${state.contestUserSubmit}');
+                    log('$isMove');
                     if (state.contestUserSubmit && isMove) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (Context) => ContestMainPage()));
                     } else if (state.contestUserSubmit && !isMove) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (Context) => Home(false, false)));
                       DialogUtil.showInfoDialog(
                           message: "You're booked for this contest.",
                           context: context,
                           title: 'Successfully Booked',
+                          onOkTap: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Home(false, false)),
+                                (_) => false);
+                          },
                           dialogType: DialogType.SUCCES);
                     }
                   }

@@ -129,33 +129,29 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                 color: Colors.black,
                 size: 20.sp,
               ),
-              (isMove) ? Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
-                  Padding(
-                      padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
-                      child: Icon(
-                        CupertinoIcons.lock_open_fill,
-                        color: ColorConstants.primaryColor,
-                        size: 18.sp,
-                      )
-                  ),
-                ],
-              ) : Stack(
-                alignment: Alignment.center,
-                children: [
-                  Image.asset("assets/qqLogo.png",height: 36.h,width: 36.w,),
-                  Padding(
-                      padding:  EdgeInsets.only(left: 40.w,bottom: 30.h),
-                      child: Icon(
-                        CupertinoIcons.lock_fill,
-                        color: ColorConstants.primaryColor,
-                        size: 18.sp,
-                      )
-                  ),
-                ],
-              ),
+              (isMove)
+                  ? Image.asset(
+                      "assets/qqLogo.png",
+                      height: 36.h,
+                      width: 36.w,
+                    )
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/qqLogo.png",
+                          height: 36.h,
+                          width: 36.w,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 40.w, bottom: 30.h),
+                            child: ImageIcon(
+                              const AssetImage('assets/lock.png'),
+                              color: ColorConstants.primaryColor,
+                              size: 18.sp,
+                            )),
+                      ],
+                    ),
               ImageIcon(
                 const AssetImage(
                   "assets/notification.png",
@@ -193,7 +189,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => ProfileScreen(),
+          pageBuilder: (context, animation1, animation2) =>
+              const ProfileScreen(),
           transitionDuration: Duration.zero,
         ),
       );

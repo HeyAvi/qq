@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:bloc/bloc.dart';
@@ -40,10 +42,10 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
       emit(completeState);
     } else {
       DialogUtil.showInfoDialog(
-          title: 'Info',
-          message: serverAPIResponseDto!.data["messages"].toString(),
-          context: event.context,
-          );
+        title: 'Info',
+        message: serverAPIResponseDto!.data["messages"].toString(),
+        context: event.context,
+      );
       TicketsState currentState = TicketsState(version: state.version + 1);
       emit(currentState);
     }
@@ -82,18 +84,19 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
         event.context, event.userId, event.contestId, event.ticketId);
     DialogUtil.dismissProgressDialog(event.context);
     if (serverAPIResponseDto != null) {
-      Navigator.of(event.context, rootNavigator: true).pop();
-      if (serverAPIResponseDto.data!["status"].toString() == "200") {
-        DialogUtil.showSuccessDialog("", event.context);
+      log('===$serverAPIResponseDto');
+      if (serverAPIResponseDto.data!["status"].toString() == "200" ||
+          serverAPIResponseDto.data!["status"].toString() == "201") {
+        TicketsCompleteState completeState = TicketsCompleteState(
+            context: event.context,
+            version: state.version + 1,
+            ticketDataList: event.ticketDataList,
+            contestUserSubmit: true);
+        emit(completeState);
       } else if (serverAPIResponseDto.data!["status"].toString() == "404") {
-        //DialogUtil.showSuccessDialog("error", event.context);
+        DialogUtil.showSuccessDialog(
+            "Already registered for contest", event.context);
       }
-      TicketsCompleteState completeState = TicketsCompleteState(
-          context: event.context,
-          version: state.version + 1,
-          ticketDataList: event.ticketDataList,
-          contestUserSubmit: true);
-      emit(completeState);
     }
   }
 }
