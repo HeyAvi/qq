@@ -45,7 +45,7 @@ class BuyTicketsStateful extends StatefulWidget {
 class _BuyTicketsState extends State<BuyTicketsStateful> {
   TextEditingController ticketController = TextEditingController();
   String userId = "";
-  List<Ticketdata>? ticketDataList = List.empty(growable: true);
+  List<Ticketdata>? ticketDataList = [];
   String ticketValue = "", ticketsMoney = "";
   double walletAmount = 0.0;
   bool dataGet = false;
@@ -268,7 +268,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                             decoration: InputDecoration(
                                               labelText: "How many tickets?",
                                               labelStyle:
-                                                  TextStyle(color: Colors.grey),
+                                                  const TextStyle(color: Colors.grey),
                                               //prefixIcon: Icon(Icons.people),
                                               border: OutlineInputBorder(
                                                   //Outline border type for TextFeild
@@ -459,6 +459,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                             if (state is TicketsCompleteState) {
                               setState(() {
                                 ticketDataList = state.ticketDataList;
+                                print('=------ tickets${ticketDataList?.length}');
                               });
                             } else if (state is BuyTicketsCompleteState) {
                               if (state.isBook) {

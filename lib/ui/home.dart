@@ -43,6 +43,7 @@ import 'package:qq/ui/customDialogBox.dart';
 import '../bloc/TicketsBloc/TicketsBloc.dart';
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
+import 'home_screen/home_screen.dart';
 
 class Home extends StatelessWidget {
   bool? isContestCompleted, isContestOpen;
@@ -215,16 +216,16 @@ class _HomeState extends State<HomeStateful> {
   }
 
   Widget _buildTopContainer(Contestdata? contestdata) => Flexible(
-      flex: 11,
+      flex: 12,
       child: Container(
         decoration: BoxDecoration(
-            color: ColorConstants.primaryColor,
+            color: ColorConstants.orangeColor,
             border: Border.all(
               color: ColorConstants.primaryColor,
             ),
             borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(15.h),
-                bottomRight: Radius.circular(15.h))),
+                bottomLeft: Radius.circular(30.h),
+                bottomRight: Radius.circular(30.h))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -232,7 +233,8 @@ class _HomeState extends State<HomeStateful> {
               height: 20.h,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 10.h, right: 10.h),
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+
               child: Row(children: [
                 Expanded(
                   child: Row(
@@ -355,11 +357,8 @@ class _HomeState extends State<HomeStateful> {
                                       width: 65.w,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(15.w),
-                                            bottomRight: Radius.circular(15.w),
-                                            topLeft: Radius.circular(15.w),
-                                            bottomLeft: Radius.circular(15.w)),
+                                        borderRadius: BorderRadius.all(
+                                             Radius.circular(10.w)),
                                       ),
                                       child: InkWell(
                                         onTap: () {
@@ -389,10 +388,13 @@ class _HomeState extends State<HomeStateful> {
                                               //margin: EdgeInsets.all(5.h),
                                               height: 24.h,
                                               width: 20.w,
-                                              child: Image.asset(
-                                                  "assets/tokens.png",
-                                                  height: 15.h,
-                                                  width: 10.h),
+                                              child: RotatedBox(
+                                                quarterTurns: 1,
+                                                child: Image.asset(
+                                                    "assets/tokens.png",
+                                                    height: 15.h,
+                                                    width: 10.h),
+                                              ),
                                               decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(22.h),
@@ -452,8 +454,8 @@ class _HomeState extends State<HomeStateful> {
                         );
                       },
                       child: SizedBox(
-                          height: 60.h,
-                          width: 60.w,
+                          height: 70.h,
+                          width: 70.w,
                           child: Image.asset("assets/accountMan.png")),
                     )
                   ],
@@ -467,9 +469,15 @@ class _HomeState extends State<HomeStateful> {
                 SizedBox(
                   width: 20.h,
                 ),
-                Image.asset(
-                  "assets/4-2-treasure-picture-thumb.png",
-                  height: 100.h,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const HomeScreen()));
+                  },
+                  child: Image.asset(
+                    "assets/4-2-treasure-picture-thumb.png",
+                    height: 100.h,
+                  ),
                 ),
                 /*Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -685,62 +693,136 @@ class _HomeState extends State<HomeStateful> {
             ),
             (contestdata != null)
                 ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Entries Till Open - ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Starting Time- ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  DateFormatter.getTime(contestdata.start_date),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                            Text(
-                              DateFormatter.getTime(contestdata.start_date),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.bold),
+                            SizedBox(
+                              height: 10.h,
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Winners- ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  contestdata.max_participants.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              " Status -",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13.sp,
-                                  fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Entry Status- ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                (userData != null && userData!.is_eligible == "yes")
+                                    ? const Text(
+                                        " Eligible",
+                                        style: TextStyle(
+                                            color: ColorConstants.primaryColor2,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    : Text(
+                                        " Not Eligible",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                              ],
                             ),
-                            (userData != null && userData!.is_eligible == "yes")
-                                ? const Text(
-                                    " Eligible",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                : Text(
-                                    " Not Eligible",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 13.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Prize- ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                (userData != null && userData!.is_eligible == "yes")
+                                    ? const Text(
+                                  "Calculating...",
+                                  style: TextStyle(
+                                      color: ColorConstants.primaryColor2,
+                                      fontWeight: FontWeight.bold),
+                                )
+                                    : Text(
+                                  "Calculating...",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )
+
                           ],
                         )
                       ],
                     ),
-                )
+                  )
                 : const Text(""),
+
             SizedBox(
-              height: 18.h,
+              height: 5.h,
+            ),
+            RotatedBox(
+              quarterTurns: 1,
+              child: Text(
+                '>',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.sp,
+                ),
+              ),
             ),
             /*(contestdata != null ) ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -782,66 +864,66 @@ class _HomeState extends State<HomeStateful> {
                 )
               ],
             ) : Text(""),*/
-            (contestdata != null)
-                ? GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  Prices(contestdata.winner_zone)));
-                    },
-                    child: Container(
-                        height: 35.h,
-                        width: 150.h,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffce112c),
-                          borderRadius: BorderRadius.circular(40.h / 2.0),
-                          border: Border.all(
-                              color: ColorConstants.colorYellow, width: 3.w),
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 16.0,
-                              offset: const Offset(0.0, 6.0),
-                              color: Colors.black.withOpacity(0.20),
-                            ),
-                          ],
-                        ),
-                        //padding: const EdgeInsets.fromLTRB(24.0, 3.0, 24.0, 0.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Image.asset("assets/trophyTall.png",
-                                height: 25.h, width: 25.w),
-                            SizedBox(width: 0.h),
-                            Text(
-                              "Winners  &  Prize",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(width: 5.h),
-                          ],
-                        )),
-                  )
-                : const Text(""),
-            SizedBox(
-              height: 15.h,
-            ),
+            // (contestdata != null)
+            //     ? GestureDetector(
+            //         onTap: () {
+            //           Navigator.push(
+            //               context,
+            //               MaterialPageRoute(
+            //                   builder: (context) =>
+            //                       Prices(contestdata.winner_zone)));
+            //         },
+            //         child: Container(
+            //             height: 35.h,
+            //             width: 150.h,
+            //             decoration: BoxDecoration(
+            //               color: const Color(0xffce112c),
+            //               borderRadius: BorderRadius.circular(40.h / 2.0),
+            //               border: Border.all(
+            //                   color: ColorConstants.colorYellow, width: 3.w),
+            //               boxShadow: [
+            //                 BoxShadow(
+            //                   blurRadius: 16.0,
+            //                   offset: const Offset(0.0, 6.0),
+            //                   color: Colors.black.withOpacity(0.20),
+            //                 ),
+            //               ],
+            //             ),
+            //             //padding: const EdgeInsets.fromLTRB(24.0, 3.0, 24.0, 0.0),
+            //             child: Row(
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               crossAxisAlignment: CrossAxisAlignment.center,
+            //               children: [
+            //                 Image.asset("assets/trophyTall.png",
+            //                     height: 25.h, width: 25.w),
+            //                 SizedBox(width: 0.h),
+            //                 Text(
+            //                   "Winners  &  Prize",
+            //                   style: TextStyle(
+            //                       color: Colors.white,
+            //                       fontSize: 15.sp,
+            //                       fontWeight: FontWeight.bold),
+            //                 ),
+            //                 SizedBox(width: 5.h),
+            //               ],
+            //             )),
+            //       )
+            //     : const Text(""),
+            // SizedBox(
+            //   height: 5.h,
+            // ),
           ],
         ),
       ));
 
   Widget _buildMidContainerWithButton() {
-    final buttonHeight = 50.0;
+    const buttonHeight = 60.0;
     return (contestdata != null)
         ? (contestService.userBooked)
             ? Stack(
                 children: [
                   Transform.translate(
-                    offset: Offset(0.0, -buttonHeight / 2.0),
+                    offset: const Offset(0.0, -buttonHeight / 2.0),
                     child: Center(
                       child: GestureDetector(
                         onTap: () {
@@ -907,7 +989,7 @@ class _HomeState extends State<HomeStateful> {
             : Stack(
                 children: [
                   Transform.translate(
-                    offset: Offset(0.0, -buttonHeight / 2.0),
+                    offset: const Offset(0.0, -buttonHeight / 2.0),
                     child: Center(
                       child: SlidableButton(
                         width: MediaQuery.of(context).size.width.w / 1.4.w,
@@ -985,7 +1067,7 @@ class _HomeState extends State<HomeStateful> {
                   ),
                 ],
               )
-        : SizedBox(
+        : const SizedBox(
             height: buttonHeight,
           );
   }
@@ -1006,10 +1088,10 @@ class _HomeState extends State<HomeStateful> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ToggleSwitch(
-                          cornerRadius: 40.h,
+                          cornerRadius: 8.h,
                           activeBgColors: const [
-                            [ColorConstants.primaryColor],
-                            [ColorConstants.primaryColor]
+                            [ColorConstants.orangeColor],
+                            [ColorConstants.orangeColor]
                           ],
                           activeFgColor: Colors.white,
                           inactiveBgColor: Colors.white,
@@ -1022,7 +1104,7 @@ class _HomeState extends State<HomeStateful> {
                           minHeight: 35.h,
                           initialLabelIndex: initialLabelIndexs,
                           totalSwitches: 2,
-                          labels: const ['Last Result', 'Date'],
+                          labels: const ['Last Result', 'Date Range'],
                           onToggle: (index) async {
                             initialLabelIndexs = index!;
                             if (index == 0) {

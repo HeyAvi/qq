@@ -1,9 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:qq/ui/BuyTickets.dart';
-import 'package:qq/ui/home.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/dialogs/ProgressDialog.dart';
 
