@@ -7,10 +7,12 @@ import 'package:qq/ui/ContestDetails/JigsawPuzzle/ScoreWidget.dart';
 import 'package:qq/ui/splashScreen.dart';
 import 'package:qq/utils/ColorConstants.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     runApp(const MyApp());
   });
   setupServiceLocator();
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
               // is not restarted.
               primarySwatch: Colors.blue,
             ),
-            home: SplashScreen(),
+            home: const SplashScreen(),
           ));
         });
   }

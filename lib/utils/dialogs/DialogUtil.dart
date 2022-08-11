@@ -1,5 +1,4 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qq/ui/BuyTickets.dart';
 import 'package:qq/utils/ColorConstants.dart';
@@ -11,6 +10,7 @@ class DialogUtil {
   static showProgressDialog(String message, BuildContext context) {
     return showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return ProgressDialog(message);
       },

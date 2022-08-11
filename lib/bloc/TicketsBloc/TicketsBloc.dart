@@ -53,8 +53,10 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
 
   void _handleGetTicketsDataEvent(
       GetTicketsDataEvent event, Emitter<TicketsState> emit) async {
+    DialogUtil.showProgressDialog("", event.context);
     Response? serverAPIResponseDto =
         await repository.getTicketsDataEvent(event.context, event.userId);
+    DialogUtil.dismissProgressDialog(event.context);
     print("serverAPIResponseDto===>>>" + serverAPIResponseDto.toString());
     if (serverAPIResponseDto != null) {
       List<Ticketdata>? ticketDataList =

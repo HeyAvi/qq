@@ -1,15 +1,12 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qq/bloc/HomeDashBoradBloc/HomeDashBoardBloc.dart';
 import 'package:qq/bloc/ProfileBloc/ProfileBloc.dart';
@@ -21,16 +18,11 @@ import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
 import 'package:qq/ui/BottomNavigationWidget.dart';
-import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
-import 'package:qq/ui/Wallet/Wallet.dart';
-import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/BuyTickets.dart';
-import 'package:qq/ui/customerSupport.dart';
-import 'package:qq/ui/notificationScreen.dart';
-import 'package:qq/ui/prices.dart';
-import 'package:qq/ui/puzzleGame.dart';
-import 'package:qq/ui/termsAndCondition.dart';
-import 'package:qq/utils/ApiConstants.dart';
+import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
+import 'package:qq/ui/ProfileScreen.dart';
+import 'package:qq/ui/Wallet/Wallet.dart';
+import 'package:qq/ui/customDialogBox.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
 import 'package:qq/utils/DataNotAvailable.dart';
@@ -39,19 +31,15 @@ import 'package:qq/utils/dialogs/DialogUtil.dart';
 import 'package:slidable_button/slidable_button.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
-import 'package:qq/ui/customDialogBox.dart';
-import '../bloc/TicketsBloc/TicketsBloc.dart';
+
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
 import 'home_screen/home_screen.dart';
 
 class Home extends StatelessWidget {
-  bool? isContestCompleted, isContestOpen;
+  final bool? isContestCompleted, isContestOpen;
 
-  Home(bool _isContestCompleted, bool _isContestOpen) {
-    isContestCompleted = _isContestCompleted;
-    isContestOpen = _isContestOpen;
-  }
+  const Home(this.isContestCompleted, this.isContestOpen, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +222,6 @@ class _HomeState extends State<HomeStateful> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-
               child: Row(children: [
                 Expanded(
                   child: Row(
@@ -358,7 +345,7 @@ class _HomeState extends State<HomeStateful> {
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.all(
-                                             Radius.circular(10.w)),
+                                            Radius.circular(10.w)),
                                       ),
                                       child: InkWell(
                                         onTap: () {
@@ -543,7 +530,6 @@ class _HomeState extends State<HomeStateful> {
                         contestService.contestdata!.start_date),
                     widgetBuilder: (_, time) {
                       if (time == null) {
-                        log('ljkkkkkkkkklaskjdflaskdjf ++++++++++++++++++');
                         isMove = true;
                         return Padding(
                           padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
@@ -742,7 +728,6 @@ class _HomeState extends State<HomeStateful> {
                                 ),
                               ],
                             ),
-
                           ],
                         ),
                         Column(
@@ -758,7 +743,8 @@ class _HomeState extends State<HomeStateful> {
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                (userData != null && userData!.is_eligible == "yes")
+                                (userData != null &&
+                                        userData!.is_eligible == "yes")
                                     ? const Text(
                                         " Eligible",
                                         style: TextStyle(
@@ -787,23 +773,23 @@ class _HomeState extends State<HomeStateful> {
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                (userData != null && userData!.is_eligible == "yes")
+                                (userData != null &&
+                                        userData!.is_eligible == "yes")
                                     ? const Text(
-                                  "Calculating...",
-                                  style: TextStyle(
-                                      color: ColorConstants.primaryColor2,
-                                      fontWeight: FontWeight.bold),
-                                )
+                                        "Calculating...",
+                                        style: TextStyle(
+                                            color: ColorConstants.primaryColor2,
+                                            fontWeight: FontWeight.bold),
+                                      )
                                     : Text(
-                                  "Calculating...",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                        "Calculating...",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                               ],
                             )
-
                           ],
                         )
                       ],
@@ -814,16 +800,17 @@ class _HomeState extends State<HomeStateful> {
             SizedBox(
               height: 5.h,
             ),
-            RotatedBox(
-              quarterTurns: 1,
-              child: Text(
-                '>',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.sp,
+            if (contestdata != null)
+              RotatedBox(
+                quarterTurns: 1,
+                child: Text(
+                  '>',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.sp,
+                  ),
                 ),
               ),
-            ),
             /*(contestdata != null ) ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

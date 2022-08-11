@@ -74,6 +74,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
 
   @override
   Widget build(BuildContext context) {
+    print(ticketDataList);
     return WillPopScope(
         child: GestureDetector(
           onTap: () {
@@ -459,7 +460,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                             if (state is TicketsCompleteState) {
                               setState(() {
                                 ticketDataList = state.ticketDataList;
-                                print('=------ tickets${ticketDataList?.length}');
+                                print('Thhhhh ${state.ticketDataList} ${ticketDataList?.length}');
                               });
                             } else if (state is BuyTicketsCompleteState) {
                               if (state.isBook) {
@@ -477,82 +478,84 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                             }
                           },
                           child: (ticketDataList != null &&
-                                  ticketDataList!.length > 0)
-                              ? ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: ticketDataList!.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return InkWell(
-                                      onTap: () {},
-                                      child: Container(
-                                          margin: EdgeInsets.only(bottom: 15.h),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 50.h,
-                                          color: Colors.grey[100],
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(
-                                                ticketDataList![index]
-                                                    .ticket_code
-                                                    .substring(0, 1),
-                                                style: TextStyle(
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    decorationColor:
-                                                        ColorConstants
-                                                            .primaryColor),
-                                              ),
-                                              Text(
-                                                ticketDataList![index]
-                                                    .ticket_code
-                                                    .substring(1, 2),
-                                                style: TextStyle(
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    decorationColor:
-                                                        ColorConstants
-                                                            .primaryColor),
-                                              ),
-                                              Text(
-                                                ticketDataList![index]
-                                                    .ticket_code
-                                                    .substring(2, 3),
-                                                style: TextStyle(
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    decorationColor:
-                                                        ColorConstants
-                                                            .primaryColor),
-                                              ),
-                                              Text(
-                                                ticketDataList![index]
-                                                    .ticket_code
-                                                    .substring(3, 4),
-                                                style: TextStyle(
-                                                    fontSize: 18.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    decorationColor:
-                                                        ColorConstants
-                                                            .primaryColor),
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  },
-                                )
+                                  ticketDataList!.isNotEmpty)
+                              ? SizedBox(
+                            height: MediaQuery.of(context).size.height.h / 1.6,
+                                child: ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: ticketDataList?.length ?? 0,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      print(ticketDataList?.length);
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: Container(
+                                                width:
+                                                    MediaQuery.of(context).size.width,
+                                                height: 50.h,
+                                                color: Colors.grey[100],
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.spaceEvenly,
+                                                  children: [
+                                                    Text(
+                                                      ticketDataList![index]
+                                                          .ticket_code
+                                                          .substring(0, 1),
+                                                      style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                          decoration: TextDecoration
+                                                              .underline,
+                                                          decorationColor:
+                                                              ColorConstants
+                                                                  .primaryColor),
+                                                    ),
+                                                    Text(
+                                                      ticketDataList![index]
+                                                          .ticket_code
+                                                          .substring(1, 2),
+                                                      style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                          decoration: TextDecoration
+                                                              .underline,
+                                                          decorationColor:
+                                                              ColorConstants
+                                                                  .primaryColor),
+                                                    ),
+                                                    Text(
+                                                      ticketDataList![index]
+                                                          .ticket_code
+                                                          .substring(2, 3),
+                                                      style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                          decoration: TextDecoration
+                                                              .underline,
+                                                          decorationColor:
+                                                              ColorConstants
+                                                                  .primaryColor),
+                                                    ),
+                                                    Text(
+                                                      ticketDataList![index]
+                                                          .ticket_code
+                                                          .substring(3, 4),
+                                                      style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          fontWeight: FontWeight.bold,
+                                                          decoration: TextDecoration
+                                                              .underline,
+                                                          decorationColor:
+                                                              ColorConstants
+                                                                  .primaryColor),
+                                                    ),
+                                                  ],
+                                                )),
+                                          );
+                                    },
+                                  ),
+                              )
                               : dataNotAvailable("No Tickets are Available."),
                         )
                       ],
