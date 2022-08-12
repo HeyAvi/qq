@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
@@ -23,23 +24,27 @@ import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
+import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
 import 'package:qq/utils/DataNotAvailable.dart';
 import 'package:qq/utils/ShimmerEffect/HomeShimmerEffect.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:slidable_button/slidable_button.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
+import 'ContestPlay.dart';
 import 'home_screen/home_screen.dart';
 
 class Home extends StatelessWidget {
   final bool? isContestCompleted, isContestOpen;
 
-  const Home(this.isContestCompleted, this.isContestOpen, {Key? key}) : super(key: key);
+  const Home(this.isContestCompleted, this.isContestOpen, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +87,26 @@ class _HomeState extends State<HomeStateful> {
   String btnName = "BOOKED";
   int backIndex = 0;
   var positions;
+  bool isRules = false;
+
+  Future<void> getRulesData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isRules = prefs.getBool('rules') ?? false;
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> setRulesData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('rules', isRules);
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
+    getRulesData();
     BlocProvider.of<ProfileBloc>(context)
         .add(GetProfileDataEvent(context: context));
     BlocProvider.of<ProfileBloc>(context).stream.listen((event) {
@@ -187,33 +208,37 @@ class _HomeState extends State<HomeStateful> {
                 }
               },
               child: (dataInitialized)
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // First pink container
-                        _buildTopContainer(contestdata),
-                        // Button with offset
-                        _buildMidContainerWithButton(),
-                        // Bottom white container
-                        _buildBottomContainer(contestUserDataList, contestdata),
-                      ],
+                  ? SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // First pink container
+                          _buildTopContainer(contestdata),
+                          // Button with offset
+                          _buildMidContainerWithButton(),
+                          // Bottom white container
+                          _buildBottomContainer(
+                              contestUserDataList, contestdata),
+                        ],
+                      ),
                     )
                   : homeShimmerEffect()),
           bottomNavigationBar: const BottomNavigationWidget(0)),
     );
   }
 
-  Widget _buildTopContainer(Contestdata? contestdata) => Flexible(
-      flex: 12,
-      child: Container(
+  Widget _buildTopContainer(Contestdata? contestdata) => Container(
+        padding: const EdgeInsets.only(bottom: 40),
         decoration: BoxDecoration(
-            color: ColorConstants.orangeColor,
-            border: Border.all(
-              color: ColorConstants.primaryColor,
-            ),
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30.h),
-                bottomRight: Radius.circular(30.h))),
+          color: ColorConstants.orangeColor,
+          border: Border.all(
+            color: ColorConstants.primaryColor,
+          ),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.h),
+            bottomRight: Radius.circular(30.h),
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -222,7 +247,8 @@ class _HomeState extends State<HomeStateful> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child: Row(children: [
+              child:
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
                   child: Row(
                     children: [
@@ -280,150 +306,78 @@ class _HomeState extends State<HomeStateful> {
                               positions = SlidableButtonPosition.left;
                             });
                           },
-                          child: (userDataService == null ||
-                                  userDataService.walletAmount == "null")
-                              ? Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/rupee.png",
-                                      height: 15.h,
-                                      width: 15.w,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      "0",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    )
-                                  ],
-                                )
-                              : Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/rupee.png",
-                                      height: 15.h,
-                                      width: 15.w,
-                                      color: Colors.white,
-                                    ),
-                                    Text(
-                                      userDataService.walletAmount,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold,
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                      InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BuyTickets()));
-                          },
-                          child: Stack(children: <Widget>[
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 85.w,
-                                    margin: EdgeInsets.only(
-                                        top: 0.h, left: 5.w, right: 10.w),
-                                    color: Colors.transparent,
-                                    child: Container(
-                                      margin: EdgeInsets.all(3.h),
-                                      height: 30.h,
-                                      width: 65.w,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10.w)),
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BuyTickets()));
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            (userDataService != null)
-                                                ? Text(
-                                                    userDataService
-                                                        .totalTickets,
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 17.sp),
-                                                  )
-                                                : const Text(""),
-                                            SizedBox(width: 5.h),
-                                            Container(
-                                              //margin: EdgeInsets.all(5.h),
-                                              height: 24.h,
-                                              width: 20.w,
-                                              child: RotatedBox(
-                                                quarterTurns: 1,
-                                                child: Image.asset(
-                                                    "assets/tokens.png",
-                                                    height: 15.h,
-                                                    width: 10.h),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(22.h),
-                                              ),
-                                            ),
-                                          ],
+                          child: (userDataService.walletAmount == "null")
+                              ? const TextWithUnderline(text: '₹ 0')
+                              : TextWithUnderline(
+                                  text: '₹ ${userDataService.walletAmount}')),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BuyTickets()));
+                        },
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        userDataService.totalTickets,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: ColorConstants.primaryColor2,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    ),
+                                      RotatedBox(
+                                        quarterTurns: 1,
+                                        child: Image.asset("assets/tokens.png",
+                                            height: 30, width: 30),
+                                      ),
+                                    ],
                                   ),
-                                ]),
+                                ),
+                              ),
+                            ),
                             Positioned(
-                                left: 75.w,
-                                top: 9.h,
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: Stack(
+                                    alignment: Alignment.center,
                                     children: [
                                       Container(
-                                        width: 17.w,
-                                        height: 17.h,
+                                        width: 17,
+                                        height: 17,
                                         decoration: BoxDecoration(
                                             color: Colors.yellow,
                                             borderRadius:
-                                                BorderRadius.circular(20.h),
+                                                BorderRadius.circular(20),
                                             border: Border.all(
                                               color: Colors.black,
-                                              width: 2.w,
+                                              width: 2,
                                             )),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 2.h, left: 1.w),
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 15.sp,
-                                        ),
-                                      )
+                                      const Text('+',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
                                     ],
                                   ),
                                 ))
-                          ])),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -441,10 +395,71 @@ class _HomeState extends State<HomeStateful> {
                         );
                       },
                       child: SizedBox(
-                          height: 70.h,
-                          width: 70.w,
+                          height: 68.h,
+                          width: 68.w,
                           child: Image.asset("assets/accountMan.png")),
-                    )
+                    ),
+                    Column(
+                      children: [
+                        const TextWithUnderline(
+                          text: 'Rules',
+                          lineHeight: 0,
+                          fontSize: 12,
+                        ),
+                        Stack(
+                          alignment: Alignment.centerRight,
+                          children: [
+                            CupertinoSwitch(
+                              value: isRules,
+                              trackColor: Colors.grey[800],
+                              onChanged: (val) {
+                                setState(() {
+                                  isRules = val;
+                                  setRulesData();
+                                });
+                                if (isRules) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return CustomDialogBox(
+                                          title: "Rules",
+                                          descriptions: rules,
+                                          text: "Yes",
+                                          onCountSelected: (string) {
+                                            setState(() {
+                                              if (string == "agree") {
+                                                positions =
+                                                    SlidableButtonPosition
+                                                        .right;
+                                              } else {
+                                                Navigator.pop(context);
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //         builder: (context) =>
+                                                //             Home(false, false)));
+                                              }
+                                            });
+                                          },
+                                        );
+                                      });
+                                }
+                              },
+                            ),
+                            Visibility(
+                              visible: !isRules,
+                              child: const Positioned(
+                                  right: 5.5,
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 18,
+                                    color: ColorConstants.primaryColor2,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 )
               ]),
@@ -456,50 +471,10 @@ class _HomeState extends State<HomeStateful> {
                 SizedBox(
                   width: 20.h,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const HomeScreen()));
-                  },
-                  child: Image.asset(
-                    "assets/4-2-treasure-picture-thumb.png",
-                    height: 100.h,
-                  ),
+                Image.asset(
+                  "assets/4-2-treasure-picture-thumb.png",
+                  height: 100.h,
                 ),
-                /*Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Rules", style: TextStyle(
-                        color: Colors.white, fontSize: 13.sp,
-                        decoration: TextDecoration.underline
-                    ),),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Container(
-                      height: 20.h,
-                      width: 40.w,
-                      child: FlutterSwitch(
-                          value: status,
-                          width: 50.w,
-                          height: 17.h,
-                          valueFontSize: 25.sp,
-                          toggleSize: 25.sp,
-                          toggleColor: ColorConstants.primaryColor,
-                          activeColor: ColorConstants.primaryColor2,
-                          inactiveColor: Colors.white,
-                          borderRadius: 30.h,
-                          padding: 1.h,
-                          onToggle: (value) {
-                            setState(() {
-                              status = value;
-                              print(status);
-                            });}
-                      ),
-                    )
-                  ],
-                ),*/
                 SizedBox(width: 15.w)
               ],
             ),
@@ -691,7 +666,7 @@ class _HomeState extends State<HomeStateful> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Starting Time- ",
+                                  "Entry open till - ",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.sp,
@@ -699,28 +674,6 @@ class _HomeState extends State<HomeStateful> {
                                 ),
                                 Text(
                                   DateFormatter.getTime(contestdata.start_date),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Winners- ",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  contestdata.max_participants.toString(),
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.sp,
@@ -737,7 +690,7 @@ class _HomeState extends State<HomeStateful> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Entry Status- ",
+                                  "Status - ",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12.sp,
@@ -748,7 +701,7 @@ class _HomeState extends State<HomeStateful> {
                                     ? const Text(
                                         " Eligible",
                                         style: TextStyle(
-                                            color: ColorConstants.primaryColor2,
+                                            color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       )
                                     : Text(
@@ -760,148 +713,60 @@ class _HomeState extends State<HomeStateful> {
                                       ),
                               ],
                             ),
-                            SizedBox(
-                              height: 10.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Prize- ",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                (userData != null &&
-                                        userData!.is_eligible == "yes")
-                                    ? const Text(
-                                        "Calculating...",
-                                        style: TextStyle(
-                                            color: ColorConstants.primaryColor2,
-                                            fontWeight: FontWeight.bold),
-                                      )
-                                    : Text(
-                                        "Calculating...",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                              ],
-                            )
                           ],
-                        )
+                        ),
                       ],
                     ),
                   )
                 : const Text(""),
-
             SizedBox(
               height: 5.h,
             ),
             if (contestdata != null)
-              RotatedBox(
-                quarterTurns: 1,
-                child: Text(
-                  '>',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp,
+              Center(
+                  child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Card(
+                          elevation: 0,
+                          color: Colors.red[800],
+                          child: const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Winners & Prizes',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  letterSpacing: 2.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )),
                   ),
-                ),
-              ),
-            /*(contestdata != null ) ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                    flex:1,
-                    child: Center(
-                      child:  Text("Winners - "+contestdata.max_winner, style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.bold
-                      ), ),
-                    )
-                ),
-                Expanded(
-                  flex:1,
-                  child:InkWell(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Prices(contestdata.winner_zone)));
-                      },
-                      child:Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text("Prize -", style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold
-                          ), ),
-                          Text(" calculation      ", style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.sp,
-                              fontWeight: FontWeight.bold
-                          ), ),
-                        ],
-                      )
+                  Positioned(
+                    top: 30,
+                    right: 0,
+                    left: 0,
+                    child: SizedBox(
+                      width: 30.w,
+                      height: 30.w,
+                      child: const Icon(
+                        Icons.arrow_drop_down_circle_outlined,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
                   ),
-                )
-              ],
-            ) : Text(""),*/
-            // (contestdata != null)
-            //     ? GestureDetector(
-            //         onTap: () {
-            //           Navigator.push(
-            //               context,
-            //               MaterialPageRoute(
-            //                   builder: (context) =>
-            //                       Prices(contestdata.winner_zone)));
-            //         },
-            //         child: Container(
-            //             height: 35.h,
-            //             width: 150.h,
-            //             decoration: BoxDecoration(
-            //               color: const Color(0xffce112c),
-            //               borderRadius: BorderRadius.circular(40.h / 2.0),
-            //               border: Border.all(
-            //                   color: ColorConstants.colorYellow, width: 3.w),
-            //               boxShadow: [
-            //                 BoxShadow(
-            //                   blurRadius: 16.0,
-            //                   offset: const Offset(0.0, 6.0),
-            //                   color: Colors.black.withOpacity(0.20),
-            //                 ),
-            //               ],
-            //             ),
-            //             //padding: const EdgeInsets.fromLTRB(24.0, 3.0, 24.0, 0.0),
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.center,
-            //               crossAxisAlignment: CrossAxisAlignment.center,
-            //               children: [
-            //                 Image.asset("assets/trophyTall.png",
-            //                     height: 25.h, width: 25.w),
-            //                 SizedBox(width: 0.h),
-            //                 Text(
-            //                   "Winners  &  Prize",
-            //                   style: TextStyle(
-            //                       color: Colors.white,
-            //                       fontSize: 15.sp,
-            //                       fontWeight: FontWeight.bold),
-            //                 ),
-            //                 SizedBox(width: 5.h),
-            //               ],
-            //             )),
-            //       )
-            //     : const Text(""),
-            // SizedBox(
-            //   height: 5.h,
-            // ),
+                ],
+              ))
           ],
         ),
-      ));
+      );
 
   Widget _buildMidContainerWithButton() {
     const buttonHeight = 60.0;
@@ -1019,36 +884,73 @@ class _HomeState extends State<HomeStateful> {
                             ],
                           ),
                         ),
-                        onChanged: (position) {
-                          setState(() {
-                            if (position == SlidableButtonPosition.right) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return CustomDialogBox(
-                                      title: "Rules",
-                                      descriptions: rules,
-                                      text: "Yes",
-                                      onCountSelected: (string) {
-                                        setState(() {
-                                          if (string == "agree") {
-                                            positions =
-                                                SlidableButtonPosition.right;
-                                          } else {
-                                            Navigator.pop(context);
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) =>
-                                            //             Home(false, false)));
-                                          }
-                                        });
-                                      },
-                                    );
+                        onChanged: isRules
+                            ? (position) {
+                                if (position == SlidableButtonPosition.right) {
+                                  setState(() {
+                                    positions = SlidableButtonPosition.right;
+                                    if (userDataService.totalTickets
+                                                .toString() ==
+                                            "" ||
+                                        userDataService.totalTickets
+                                                .toString() ==
+                                            "null" ||
+                                        userDataService.totalTickets
+                                                .toString() ==
+                                            "0") {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return DialogUtil.showTicketInfoDialog(
+                                                "Please purchase a ticket first.",
+                                                context);
+                                          });
+                                    } else {
+                                      Navigator.push(
+                                        context,
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation1,
+                                                  animation2) =>
+                                              ContestPlay(true),
+                                          transitionDuration: Duration.zero,
+                                        ),
+                                      );
+                                    }
                                   });
-                            } else {}
-                          });
-                        },
+                                }
+                              }
+                            : (position) {
+                                setState(() {
+                                  if (position ==
+                                      SlidableButtonPosition.right) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogBox(
+                                            title: "Rules",
+                                            descriptions: rules,
+                                            text: "Yes",
+                                            onCountSelected: (string) {
+                                              setState(() {
+                                                if (string == "agree") {
+                                                  positions =
+                                                      SlidableButtonPosition
+                                                          .right;
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  // Navigator.push(
+                                                  //     context,
+                                                  //     MaterialPageRoute(
+                                                  //         builder: (context) =>
+                                                  //             Home(false, false)));
+                                                }
+                                              });
+                                            },
+                                          );
+                                        });
+                                  } else {}
+                                });
+                              },
                       ),
                     ),
                   ),
@@ -1061,362 +963,342 @@ class _HomeState extends State<HomeStateful> {
 
   Widget _buildBottomContainer(List<ContestUserData>? contestUserDataList,
           Contestdata? contestdata) =>
-      Flexible(
-        flex: 6,
-        child: Container(
-            color: Colors.white,
-            child: SingleChildScrollView(
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ToggleSwitch(
-                          cornerRadius: 8.h,
-                          activeBgColors: const [
-                            [ColorConstants.orangeColor],
-                            [ColorConstants.orangeColor]
-                          ],
-                          activeFgColor: Colors.white,
-                          inactiveBgColor: Colors.white,
-                          inactiveFgColor: Colors.black,
-                          borderColor: const [Colors.black26],
-                          fontSize: 12.sp,
-                          borderWidth: 1,
-                          radiusStyle: true,
-                          minWidth: 125.w,
-                          minHeight: 35.h,
-                          initialLabelIndex: initialLabelIndexs,
-                          totalSwitches: 2,
-                          labels: const ['Last Result', 'Date Range'],
-                          onToggle: (index) async {
-                            initialLabelIndexs = index!;
-                            if (index == 0) {
-                              BlocProvider.of<HomeDashBoardBloc>(context).add(
-                                  GetLastContestDataEvent(
-                                      context: context,
-                                      date: "",
-                                      contestdata: contestdata));
-                            } else if (index == 1) {
-                              DateTime? selected = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDate,
-                                firstDate: DateTime(2010),
-                                lastDate: DateTime.now(),
-                              );
-                              if (selected != null &&
-                                  selected != selectedDate) {
-                                selectedDate = selected;
-                              }
-                              var arr = selectedDate.toString().split(" ");
-                              BlocProvider.of<HomeDashBoardBloc>(context).add(
-                                  GetLastContestDataEvent(
-                                      context: context,
-                                      date: arr[0].toString(),
-                                      contestdata: contestdata));
+      Container(
+          color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ToggleSwitch(
+                        cornerRadius: 30.h,
+                        activeBgColors: const [
+                          [ColorConstants.orangeColor],
+                          [ColorConstants.orangeColor]
+                        ],
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.white,
+                        inactiveFgColor: Colors.black,
+                        borderColor: const [Colors.black26],
+                        fontSize: 12.sp,
+                        borderWidth: 1,
+                        radiusStyle: true,
+                        minWidth: 90.w,
+                        minHeight: 35.h,
+                        initialLabelIndex: initialLabelIndexs,
+                        totalSwitches: 2,
+                        labels: const ['Last Result', 'Date Range'],
+                        onToggle: (index) async {
+                          initialLabelIndexs = index!;
+                          if (index == 0) {
+                            BlocProvider.of<HomeDashBoardBloc>(context).add(
+                                GetLastContestDataEvent(
+                                    context: context,
+                                    date: "",
+                                    contestdata: contestdata));
+                          } else if (index == 1) {
+                            DateTime? selected = await showDatePicker(
+                              context: context,
+                              initialDate: selectedDate,
+                              firstDate: DateTime(2010),
+                              lastDate: DateTime.now(),
+                            );
+                            if (selected != null && selected != selectedDate) {
+                              selectedDate = selected;
                             }
-                          },
+                            var arr = selectedDate.toString().split(" ");
+                            BlocProvider.of<HomeDashBoardBloc>(context).add(
+                                GetLastContestDataEvent(
+                                    context: context,
+                                    date: arr[0].toString(),
+                                    contestdata: contestdata));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  (contestUserDataList != null &&
+                          contestUserDataList.isNotEmpty)
+                      ? Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: (contestUserDataList.length >= 2)
+                                      ? Column(
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 20.h)),
+                                            SizedBox(
+                                              width: 15.w,
+                                              height: 15.h,
+                                              child: FittedBox(
+                                                child: Image.asset(
+                                                  'assets/arrow-up.png',
+                                                  color: ColorConstants
+                                                      .primaryColor2,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '2',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.sp),
+                                            ),
+                                            CircleAvatar(
+                                              radius: 20.h,
+                                              backgroundImage: const AssetImage(
+                                                  "assets/userprofile.png"),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            Text(
+                                              contestUserDataList[1].name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                            /*Text('@123', style: TextStyle(
+                          fontWeight: FontWeight.normal, fontSize: 12
+                      ),),
+                      Text('124', style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18
+                      ),),*/
+                                          ],
+                                        )
+                                      : const Text(""),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: (contestUserDataList.isNotEmpty)
+                                      ? Column(
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 0.h)),
+                                            SizedBox(
+                                              width: 35.w,
+                                              height: 30.h,
+                                              child: FittedBox(
+                                                child: Image.asset(
+                                                  'assets/crown.png',
+                                                  fit: BoxFit.fitHeight,
+                                                ),
+                                              ),
+                                            ),
+                                            const CircleAvatar(
+                                              radius: 35.0,
+                                              backgroundImage: AssetImage(
+                                                  "assets/userprofile.png"),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            Text(
+                                              contestUserDataList[0].name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : const Text(""),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: (contestUserDataList.length >= 3)
+                                      ? Column(
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    EdgeInsets.only(top: 20.h)),
+                                            Text(
+                                              '3',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.sp),
+                                            ),
+                                            SizedBox(
+                                              width: 15.w,
+                                              height: 15.h,
+                                              child: FittedBox(
+                                                child: Image.asset(
+                                                    'assets/arrow-down-filled-triangle.png',
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                            CircleAvatar(
+                                              radius: 20.h,
+                                              backgroundImage: const AssetImage(
+                                                  "assets/userprofile.png"),
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                            ),
+                                            SizedBox(
+                                              height: 2.h,
+                                            ),
+                                            Text(
+                                              contestUserDataList[2].name,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                            /*Text('@123', style: TextStyle(
+                          fontWeight: FontWeight.normal, fontSize: 12
+                      ),),
+                      Text('124', style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18
+                      ),),*/
+                                          ],
+                                        )
+                                      : const Text(""),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            (contestUserDataList.length > 3)
+                                ? ListView.builder(
+                                    padding: const EdgeInsets.all(0.0),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: contestUserDataList.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(top: 5.h),
+                                        child: InkWell(
+                                            onTap: () {},
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                SizedBox(
+                                                  width: 5.w,
+                                                ),
+                                                Text(
+                                                  (index + 3).toString() + ".",
+                                                  style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+
+                                                CircleAvatar(
+                                                  radius: 18.h,
+                                                  backgroundImage: const AssetImage(
+                                                      "assets/userprofile.png"),
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                ),
+                                                const Padding(
+                                                    padding: EdgeInsets.all(2)),
+                                                Text(
+                                                  contestUserDataList[index + 3]
+                                                      .name,
+                                                  style: TextStyle(
+                                                      fontSize: 12.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.h)),
+                                                SizedBox(
+                                                  child: SfSparkLineChart(
+                                                    //Enable the trackball
+                                                    trackball:
+                                                        const SparkChartTrackball(
+                                                            activationMode:
+                                                                SparkChartActivationMode
+                                                                    .tap),
+                                                    //Enable marker
+                                                    marker: const SparkChartMarker(
+                                                        displayMode:
+                                                            SparkChartMarkerDisplayMode
+                                                                .all),
+                                                    //Enable data label
+                                                    labelDisplayMode:
+                                                        SparkChartLabelDisplayMode
+                                                            .all,
+                                                    data: const <double>[
+                                                      1,
+                                                      5,
+                                                      -6,
+                                                      0,
+                                                    ],
+                                                  ),
+                                                  width: 80.w,
+                                                  height: 50.h,
+                                                ),
+                                                Padding(
+                                                    padding:
+                                                        EdgeInsets.all(5.h)),
+
+                                                Container(
+                                                  height: 30.h,
+                                                  width: 55.w,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.h),
+                                                      color: const Color(
+                                                        0xffd8efe5,
+                                                      )),
+                                                  child: Center(
+                                                    child: Text(
+                                                      '\$930',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: ColorConstants
+                                                              .primaryColor2,
+                                                          fontSize: 14.sp),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                SizedBox(
+                                                  width: 5.w,
+                                                ),
+                                                //
+                                              ],
+                                            )),
+                                      );
+                                    },
+                                  )
+                                : const Text("")
+                          ],
+                        )
+                      : Center(
+                          child: dataNotAvailable(
+                              "No Previous results Available."),
                         ),
-                      ],
-                    ),
-                    (contestUserDataList != null &&
-                            contestUserDataList.isNotEmpty)
-                        ? Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: (contestUserDataList != null &&
-                                            contestUserDataList.length >= 2)
-                                        ? Column(
-                                            children: [
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 20.h)),
-                                              SizedBox(
-                                                width: 15.w,
-                                                height: 15.h,
-                                                child: FittedBox(
-                                                  child: Image.asset(
-                                                    'assets/arrow-up.png',
-                                                    color: ColorConstants
-                                                        .primaryColor2,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                '2',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15.sp),
-                                              ),
-                                              CircleAvatar(
-                                                radius: 20.h,
-                                                backgroundImage: const AssetImage(
-                                                    "assets/userprofile.png"),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                              SizedBox(
-                                                height: 2.h,
-                                              ),
-                                              Text(
-                                                contestUserDataList[1].name,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.sp,
-                                                ),
-                                              ),
-                                              /*Text('@123', style: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 12
-                        ),),
-                        Text('124', style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18
-                        ),),*/
-                                            ],
-                                          )
-                                        : const Text(""),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: (contestUserDataList != null &&
-                                            contestUserDataList.isNotEmpty)
-                                        ? Column(
-                                            children: [
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 0.h)),
-                                              SizedBox(
-                                                width: 35.w,
-                                                height: 30.h,
-                                                child: FittedBox(
-                                                  child: Image.asset(
-                                                    'assets/crown.png',
-                                                    fit: BoxFit.fitHeight,
-                                                  ),
-                                                ),
-                                              ),
-                                              const CircleAvatar(
-                                                radius: 35.0,
-                                                backgroundImage: const AssetImage(
-                                                    "assets/userprofile.png"),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                              SizedBox(
-                                                height: 2.h,
-                                              ),
-                                              Text(
-                                                contestUserDataList[0].name,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.sp,
-                                                ),
-                                              ),
-                                              /*Text('@123', style: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 12
-                        ),),
-                        Text('124', style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18
-                        ),),*/
-                                            ],
-                                          )
-                                        : const Text(""),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: (contestUserDataList != null &&
-                                            contestUserDataList.length >= 3)
-                                        ? Column(
-                                            children: [
-                                              Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 20.h)),
-                                              Text(
-                                                '3',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15.sp),
-                                              ),
-                                              SizedBox(
-                                                width: 15.w,
-                                                height: 15.h,
-                                                child: FittedBox(
-                                                  child: Image.asset(
-                                                      'assets/arrow-down-filled-triangle.png',
-                                                      color: Colors.red),
-                                                ),
-                                              ),
-                                              CircleAvatar(
-                                                radius: 20.h,
-                                                backgroundImage: const AssetImage(
-                                                    "assets/userprofile.png"),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                              SizedBox(
-                                                height: 2.h,
-                                              ),
-                                              Text(
-                                                contestUserDataList[2].name,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 12.sp,
-                                                ),
-                                              ),
-                                              /*Text('@123', style: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 12
-                        ),),
-                        Text('124', style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18
-                        ),),*/
-                                            ],
-                                          )
-                                        : const Text(""),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 5.h,
-                              ),
-                              (contestUserDataList != null &&
-                                      contestUserDataList.length > 3)
-                                  ? ListView.builder(
-                                      padding: const EdgeInsets.all(0.0),
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: contestUserDataList.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(top: 5.h),
-                                          child: InkWell(
-                                              onTap: () {},
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 5.w,
-                                                  ),
-                                                  Text(
-                                                    (index + 3).toString() +
-                                                        ".",
-                                                    style: TextStyle(
-                                                        fontSize: 18.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-
-                                                  CircleAvatar(
-                                                    radius: 18.h,
-                                                    backgroundImage:
-                                                        const AssetImage(
-                                                            "assets/userprofile.png"),
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                  ),
-                                                  const Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              2)),
-                                                  Text(
-                                                    contestUserDataList[
-                                                            index + 3]
-                                                        .name,
-                                                    style: TextStyle(
-                                                        fontSize: 12.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5.h)),
-                                                  SizedBox(
-                                                    child: SfSparkLineChart(
-                                                      //Enable the trackball
-                                                      trackball:
-                                                          const SparkChartTrackball(
-                                                              activationMode:
-                                                                  SparkChartActivationMode
-                                                                      .tap),
-                                                      //Enable marker
-                                                      marker: const SparkChartMarker(
-                                                          displayMode:
-                                                              SparkChartMarkerDisplayMode
-                                                                  .all),
-                                                      //Enable data label
-                                                      labelDisplayMode:
-                                                          SparkChartLabelDisplayMode
-                                                              .all,
-                                                      data: const <double>[
-                                                        1,
-                                                        5,
-                                                        -6,
-                                                        0,
-                                                      ],
-                                                    ),
-                                                    width: 80.w,
-                                                    height: 50.h,
-                                                  ),
-                                                  Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5.h)),
-
-                                                  Container(
-                                                    height: 30.h,
-                                                    width: 55.w,
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20.h),
-                                                        color: const Color(
-                                                          0xffd8efe5,
-                                                        )),
-                                                    child: Center(
-                                                      child: Text(
-                                                        '\$930',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: ColorConstants
-                                                                .primaryColor2,
-                                                            fontSize: 14.sp),
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                  SizedBox(
-                                                    width: 5.w,
-                                                  ),
-                                                  //
-                                                ],
-                                              )),
-                                        );
-                                      },
-                                    )
-                                  : const Text("")
-                            ],
-                          )
-                        : Center(
-                            child: dataNotAvailable(
-                                "No Previous results Available."),
-                          ),
-                  ]),
-            )),
-      );
+                ]),
+          ));
 
   showContestConfirmationDialog(BuildContext context) {
     return Dialog(

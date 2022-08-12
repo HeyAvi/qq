@@ -146,52 +146,38 @@ class _ContestUserState extends State<ContestUserStateful> {
                         )
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        (contestService.contestdata != null &&
-                                contestService.contestdata!.start_date != "")
-                            ? CountdownTimer(
-                                endTime:
-                                    DateFormatter.getUTCRemainingTimeInMills(
-                                        contestService.contestdata!.start_date),
-                                widgetBuilder: (_, time) {
-                                  if (time == null) {
-                                    isMove = true;
-                                    return const Text("");
-                                  }
+
+                    Center(
+                      child: CountdownTimer(
+                              endTime:
+                                  DateFormatter.getUTCRemainingTimeInMills(
+                                      contestService.contestdata!.start_date),
+                              widgetBuilder: (_, time) {
+                                if (time == null) {
+                                  isMove = true;
                                   return Container(
                                       margin: EdgeInsets.only(top: 15.h),
                                       width: 125.w,
                                       padding: EdgeInsets.all(8.h),
                                       decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(5.h),
+                                          BorderRadius.circular(5.h),
                                           border: Border.all(
                                               width: 2.h,
                                               color: ColorConstants
                                                   .primaryColor3)),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
-                                          (time.hours.toString() != "null")
-                                              ? Text(
-                                                  time.hours.toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                )
-                                              : Text(
-                                                  '00',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                ),
+                                           Text(
+                                            '00',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                color: ColorConstants
+                                                    .primaryColor3),
+                                          ),
                                           SizedBox(
                                             width: 5.w,
                                           ),
@@ -207,23 +193,14 @@ class _ContestUserState extends State<ContestUserStateful> {
                                           SizedBox(
                                             width: 5.w,
                                           ),
-                                          (time.min.toString() != "null")
-                                              ? Text(
-                                                  time.min.toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                )
-                                              : Text(
-                                                  '00',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                ),
+                                          Text(
+                                            '00',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                color: ColorConstants
+                                                    .primaryColor3),
+                                          ),
                                           SizedBox(
                                             width: 5.w,
                                           ),
@@ -238,31 +215,119 @@ class _ContestUserState extends State<ContestUserStateful> {
                                           ),
                                           SizedBox(
                                             width: 5.w,
+                                          ), Text(
+                                            '00',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 20.sp,
+                                                color: ColorConstants
+                                                    .primaryColor3),
                                           ),
-                                          (time.sec.toString() != "null")
-                                              ? Text(
-                                                  time.sec.toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                )
-                                              : Text(
-                                                  '00',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                      color: ColorConstants
-                                                          .primaryColor3),
-                                                ),
                                         ],
                                       ));
-                                },
-                              )
-                            : const Text(""),
-                      ],
+                                }
+                                return Container(
+                                    margin: EdgeInsets.only(top: 15.h),
+                                    width: 125.w,
+                                    padding: EdgeInsets.all(8.h),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(5.h),
+                                        border: Border.all(
+                                            width: 2.h,
+                                            color: ColorConstants
+                                                .primaryColor3)),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        (time.hours.toString() != "null")
+                                            ? Text(
+                                                time.hours.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              )
+                                            : Text(
+                                                '00',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              ),
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        Text(
+                                          ':',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: ColorConstants
+                                                  .primaryColor3),
+                                        ),
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        (time.min.toString() != "null")
+                                            ? Text(
+                                                time.min.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              )
+                                            : Text(
+                                                '00',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              ),
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        Text(
+                                          ':',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: ColorConstants
+                                                  .primaryColor3),
+                                        ),
+                                        SizedBox(
+                                          width: 5.w,
+                                        ),
+                                        (time.sec.toString() != "null")
+                                            ? Text(
+                                                time.sec.toString(),
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              )
+                                            : Text(
+                                                '00',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 20.sp,
+                                                    color: ColorConstants
+                                                        .primaryColor3),
+                                              ),
+                                      ],
+                                    ));
+                              },
+                            ),
                     ),
+                        // : const Text(""),
                     SizedBox(
                       height: 20.h,
                     ),

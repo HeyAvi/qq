@@ -432,7 +432,7 @@ class SubmitButtonState extends State<SubmitButton> {
         if (state is RegistrationCompleteState) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Home(false, false)));
+                MaterialPageRoute(builder: (context) => const Home(false, false)));
           });
         }
       },

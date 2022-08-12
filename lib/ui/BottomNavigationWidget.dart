@@ -144,7 +144,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                           width: 36.w,
                         ),
                         Padding(
-                            padding: EdgeInsets.only(left: 40.w, bottom: 30.h),
+                            padding: EdgeInsets.only(left: 40.w, bottom: 40.h),
                             child: ImageIcon(
                               const AssetImage('assets/lock.png'),
                               color: ColorConstants.primaryColor,

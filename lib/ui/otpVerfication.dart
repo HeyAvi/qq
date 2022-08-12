@@ -302,6 +302,5 @@ class _otpVerificationStatefulState extends State<otpVerificationStateful> {
   void dispose() {
     super.dispose();
     _timer!.cancel();
-    otpController.dispose();
   }
 }
