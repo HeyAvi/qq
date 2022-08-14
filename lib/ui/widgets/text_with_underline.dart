@@ -7,6 +7,7 @@ class TextWithUnderline extends StatelessWidget {
   final Color? borderColor;
   final Color? textColor;
   final double? fontSize;
+  final FontWeight? fontWeight;
 
   const TextWithUnderline(
       {Key? key,
@@ -14,6 +15,7 @@ class TextWithUnderline extends StatelessWidget {
       this.textColor,
       this.borderColor,
       this.lineHeight,
+        this.fontWeight,
       this.fontSize})
       : super(key: key);
 
@@ -36,7 +38,7 @@ class TextWithUnderline extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize ?? 16,
           color: textColor ?? Colors.white,
-          fontWeight: FontWeight.bold,
+          fontWeight: fontWeight ?? FontWeight.bold,
         ),
       ),
     );

@@ -47,7 +47,7 @@ class _PricesState extends State<Prices> {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(50.h),
               child: AppBar(
-                backgroundColor: Color(0xffEDEDF0),
+                backgroundColor: const Color(0xffEDEDF0),
                 elevation: 0,
                 automaticallyImplyLeading: false,
                 title: Container(
@@ -60,10 +60,10 @@ class _PricesState extends State<Prices> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (Context) => Home(false, false)));
+                                  builder: (Context) => const Home(false, false)));
                         },
                         child: ImageIcon(
-                          AssetImage(
+                          const AssetImage(
                             "assets/left-arrow.png",
                           ),
                           color: Colors.black,
@@ -79,7 +79,7 @@ class _PricesState extends State<Prices> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.sp,
-                            color: Color(0xff3E3C3C),
+                            color: const Color(0xff3E3C3C),
                           ),
                         ),
                       ),
@@ -106,15 +106,15 @@ class _PricesState extends State<Prices> {
   Widget _buildTopContainer() => Flexible(
         flex: 6,
         child: Container(
-          color: Color(0xffEDEDF0),
+          color: const Color(0xffEDEDF0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Card(
                 elevation: 10,
-                shadowColor: Color(0xffF1D109),
-                shape: RoundedRectangleBorder(
-                  borderRadius: const BorderRadius.all(
+                shadowColor: const Color(0xffF1D109),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
                     Radius.circular(150.0),
                   ),
                 ),
@@ -151,12 +151,12 @@ class _PricesState extends State<Prices> {
                 height: buttonHeight,
                 width: 250.w,
                 decoration: BoxDecoration(
-                  color: Color(0xffF9FBF9),
+                  color: const Color(0xffF9FBF9),
                   borderRadius: BorderRadius.circular(buttonHeight / 2.0),
                   boxShadow: [
                     BoxShadow(
                       blurRadius: 16.0,
-                      offset: Offset(0.0, 6.0),
+                      offset: const Offset(0.0, 6.0),
                       color: Colors.black.withOpacity(0.16),
                     ),
                   ],
@@ -175,7 +175,7 @@ class _PricesState extends State<Prices> {
                     ),
                     Text(
                       'Rs. ' + sum.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 22),
@@ -198,7 +198,7 @@ class _PricesState extends State<Prices> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: const [
                 Expanded(
                     flex: 1,
                     child: Center(
@@ -226,7 +226,7 @@ class _PricesState extends State<Prices> {
             Padding(
               padding: const EdgeInsets.only(top: 20),
               child: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: parsedListJson.length,
                 itemBuilder: (BuildContext context, int index) {

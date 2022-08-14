@@ -24,6 +24,7 @@ import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
+import 'package:qq/ui/prices.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
@@ -88,6 +89,7 @@ class _HomeState extends State<HomeStateful> {
   int backIndex = 0;
   var positions;
   bool isRules = false;
+  bool isExpanded = true;
 
   Future<void> getRulesData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -163,7 +165,8 @@ class _HomeState extends State<HomeStateful> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    print(' winner zone ${contestdata?.winner_zone}');
+    // todo from here use [contestdata.winner_zone]
     return WillPopScope(
       onWillPop: _willPopCallback,
       child: Scaffold(
@@ -234,7 +237,7 @@ class _HomeState extends State<HomeStateful> {
           border: Border.all(
             color: ColorConstants.primaryColor,
           ),
-          borderRadius: BorderRadius.only(
+          borderRadius: isExpanded ? null : BorderRadius.only(
             bottomLeft: Radius.circular(30.h),
             bottomRight: Radius.circular(30.h),
           ),
@@ -723,47 +726,180 @@ class _HomeState extends State<HomeStateful> {
               height: 5.h,
             ),
             if (contestdata != null)
-              Center(
-                  child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
+              GestureDetector(
+                onTap: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) =>
+                  //             Prices(contestdata.winner_zone)));
+                },
+                child: Center(
+                    child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: AnimatedContainer(
                         width: MediaQuery.of(context).size.width * 0.6,
+                        height: isExpanded ? 300 : 40,
+                        duration: const Duration(milliseconds: 180),
                         child: Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                           elevation: 0,
                           color: Colors.red[800],
-                          child: const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Text(
-                                'Winners & Prizes',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  letterSpacing: 2.0,
+                          child: isExpanded
+                              ? SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Winners & Prizes',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                            letterSpacing: 2.0,
+                                          ),
+                                        ),
+                                      ),
+                                      const Divider(
+                                        color: Colors.white,
+                                        endIndent: 30,
+                                        indent: 30,
+                                        height: 0,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          contestdata.winner_zone,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            TextWithUnderline(
+                                              text: 'Ranks',
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1,
+                                            ),
+                                            TextWithUnderline(
+                                              text: 'Reward',
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.normal,
+                                              lineHeight: 1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 210,
+                                        child: ListView.builder(
+                                          physics: const BouncingScrollPhysics(),
+                                          itemCount:
+                                              contestdata.winner_zone.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 10.0),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        child: Text(
+                                                          contestdata
+                                                                  .winner_zone[
+                                                              index][0],
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14),
+                                                        ),
+                                                        radius: 14,
+                                                        backgroundColor:
+                                                            Colors.red[900],
+                                                      ),
+                                                      const Text(
+                                                        'fs',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Divider(
+                                                    color: Colors.red[900],
+                                                    thickness: 2,
+                                                    indent: 5,
+                                                    endIndent: 5,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              : Column(
+                                  children: const [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Winners & Prizes',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          letterSpacing: 2.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
-                          ),
-                        )),
-                  ),
-                  Positioned(
-                    top: 30,
-                    right: 0,
-                    left: 0,
-                    child: SizedBox(
-                      width: 30.w,
-                      height: 30.w,
-                      child: const Icon(
-                        Icons.arrow_drop_down_circle_outlined,
-                        color: Colors.white,
-                        size: 20,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ))
+                    Positioned(
+                      top: isExpanded ? 290 : 30,
+                      right: 0,
+                      left: 0,
+                      child: SizedBox(
+                        width: 30.w,
+                        height: 30.w,
+                        child: IconButton(
+                          iconSize: 15.w,
+                          icon: RotatedBox(
+                              quarterTurns: isExpanded ? 2 : 0,
+                              child: const Icon(
+                                  Icons.arrow_drop_down_circle_outlined)),
+                          color: Colors.white,
+                          onPressed: () {
+                            setState(() {
+                              isExpanded = !isExpanded;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+              )
           ],
         ),
       );
@@ -850,13 +986,12 @@ class _HomeState extends State<HomeStateful> {
                         isRestart: true,
                         initialPosition: positions,
                         color: ColorConstants.primaryColor2,
-                        buttonColor: ColorConstants.primaryColor2,
                         dismissible: false,
                         label: Center(
                           child: Image.asset(
                             "assets/tokens.png",
-                            height: 25.h,
-                            width: 25.h,
+                            height: 30.h,
+                            width: 30.h,
                           ),
                         ),
                         child: Padding(
