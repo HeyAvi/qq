@@ -123,9 +123,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
               ),
               Icon(
                 Icons.list_alt_outlined,
-                // const AssetImage(
-                //   "assets/search-interface-symbol.png",
-                // ),
                 color: Colors.black,
                 size: 20.sp,
               ),
@@ -144,7 +141,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                           width: 36.w,
                         ),
                         Padding(
-                            padding: EdgeInsets.only(left: 40.w, bottom: 40.h),
+                            padding: EdgeInsets.only(left: 44.w, bottom: 28.h),
                             child: ImageIcon(
                               const AssetImage('assets/lock.png'),
                               color: ColorConstants.primaryColor,

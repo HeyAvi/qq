@@ -198,7 +198,7 @@ class SubmitButtonState extends State<SubmitButton> {
         child: Container(
           width: MediaQuery.of(context).size.width.w,
           height: 40.h,
-          margin: EdgeInsets.only(left: 15.w, right: 15.w),
+          margin: EdgeInsets.only(left: 60.w, right: 60.w),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 primary: ColorConstants.primaryColor,

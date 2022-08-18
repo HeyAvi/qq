@@ -24,7 +24,6 @@ import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
-import 'package:qq/ui/prices.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
@@ -39,7 +38,6 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
 import 'ContestPlay.dart';
-import 'home_screen/home_screen.dart';
 
 class Home extends StatelessWidget {
   final bool? isContestCompleted, isContestOpen;
@@ -89,7 +87,7 @@ class _HomeState extends State<HomeStateful> {
   int backIndex = 0;
   var positions;
   bool isRules = false;
-  bool isExpanded = true;
+  bool isExpanded = false;
 
   Future<void> getRulesData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -237,10 +235,12 @@ class _HomeState extends State<HomeStateful> {
           border: Border.all(
             color: ColorConstants.primaryColor,
           ),
-          borderRadius: isExpanded ? null : BorderRadius.only(
-            bottomLeft: Radius.circular(30.h),
-            bottomRight: Radius.circular(30.h),
-          ),
+          borderRadius: isExpanded
+              ? null
+              : BorderRadius.only(
+                  bottomLeft: Radius.circular(30.h),
+                  bottomRight: Radius.circular(30.h),
+                ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -335,12 +335,12 @@ class _HomeState extends State<HomeStateful> {
                                         userDataService.totalTickets,
                                         style: const TextStyle(
                                           fontSize: 18,
-                                          color: ColorConstants.primaryColor2,
+                                          color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       RotatedBox(
-                                        quarterTurns: 1,
+                                        quarterTurns: 0,
                                         child: Image.asset("assets/tokens.png",
                                             height: 30, width: 30),
                                       ),
@@ -415,6 +415,7 @@ class _HomeState extends State<HomeStateful> {
                             CupertinoSwitch(
                               value: isRules,
                               trackColor: Colors.grey[800],
+                              activeColor: Colors.white70,
                               onChanged: (val) {
                                 setState(() {
                                   isRules = val;
@@ -427,6 +428,7 @@ class _HomeState extends State<HomeStateful> {
                                         return CustomDialogBox(
                                           title: "Rules",
                                           descriptions: rules,
+                                          ruleButton: true,
                                           text: "Yes",
                                           onCountSelected: (string) {
                                             setState(() {
@@ -436,6 +438,10 @@ class _HomeState extends State<HomeStateful> {
                                                         .right;
                                               } else {
                                                 Navigator.pop(context);
+                                                setState(() {
+                                                  isRules = false;
+                                                  setRulesData();
+                                                });
                                                 // Navigator.push(
                                                 //     context,
                                                 //     MaterialPageRoute(
@@ -791,13 +797,13 @@ class _HomeState extends State<HomeStateful> {
                                               text: 'Ranks',
                                               fontSize: 13,
                                               fontWeight: FontWeight.normal,
-                                              lineHeight: 1,
+                                              lineHeight: 0,
                                             ),
                                             TextWithUnderline(
                                               text: 'Reward',
                                               fontSize: 13,
                                               fontWeight: FontWeight.normal,
-                                              lineHeight: 1,
+                                              lineHeight: 0,
                                             ),
                                           ],
                                         ),
@@ -805,14 +811,16 @@ class _HomeState extends State<HomeStateful> {
                                       SizedBox(
                                         height: 210,
                                         child: ListView.builder(
-                                          physics: const BouncingScrollPhysics(),
+                                          physics:
+                                              const BouncingScrollPhysics(),
                                           itemCount:
                                               contestdata.winner_zone.length,
                                           itemBuilder: (BuildContext context,
                                               int index) {
                                             return Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 10.0),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10.0),
                                               child: Column(
                                                 children: [
                                                   Row(
@@ -825,10 +833,11 @@ class _HomeState extends State<HomeStateful> {
                                                           contestdata
                                                                   .winner_zone[
                                                               index][0],
-                                                          style: const TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 14),
+                                                          style:
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 14),
                                                         ),
                                                         radius: 14,
                                                         backgroundColor:
@@ -1122,8 +1131,8 @@ class _HomeState extends State<HomeStateful> {
                         fontSize: 12.sp,
                         borderWidth: 1,
                         radiusStyle: true,
-                        minWidth: 90.w,
-                        minHeight: 35.h,
+                        minWidth: 92.w,
+                        minHeight: 32.h,
                         initialLabelIndex: initialLabelIndexs,
                         totalSwitches: 2,
                         labels: const ['Last Result', 'Date Range'],

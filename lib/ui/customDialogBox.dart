@@ -1,4 +1,3 @@
-
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -19,41 +18,58 @@ import 'package:qq/utils/Constants.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class CustomDialogBox extends StatelessWidget {
-
   final String title, descriptions, text;
   final Function(String) onCountSelected;
+  final bool? ruleButton;
 
-
-  const CustomDialogBox({required this.title, required this.descriptions, required this.text,required this.onCountSelected});
+  const CustomDialogBox(
+      {Key? key,
+      required this.title,
+      this.ruleButton,
+      required this.descriptions,
+      required this.text,
+      required this.onCountSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return  BlocProvider(
+    return BlocProvider(
       create: (_) => TicketsBloc(TicketsRepository(Dio())),
-      child: CustomDialogBoxStateful(title: title,descriptions: descriptions,text: text,onCountSelected: onCountSelected,),
+      child: CustomDialogBoxStateful(
+        ruleButton: ruleButton,
+        title: title,
+        descriptions: descriptions,
+        text: text,
+        onCountSelected: onCountSelected,
+      ),
     );
   }
 }
 
-
 class CustomDialogBoxStateful extends StatefulWidget {
   final String title, descriptions, text;
   final Function(String) onCountSelected;
+  final bool? ruleButton;
 
-  const CustomDialogBoxStateful({required this.title, required this.descriptions, required this.text,required this.onCountSelected});
+  const CustomDialogBoxStateful(
+      {Key? key,
+      this.ruleButton,
+      required this.title,
+      required this.descriptions,
+      required this.text,
+      required this.onCountSelected})
+      : super(key: key);
 
   @override
   _CustomDialogBoxState createState() => _CustomDialogBoxState();
 }
 
 class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
-
   List<Ticketdata>? ticketDataList;
   String userId = "";
-  ContestService contestService =  getIt<ContestService>();
-  UserDataService userDataService =  getIt<UserDataService>();
+  ContestService contestService = getIt<ContestService>();
+  UserDataService userDataService = getIt<UserDataService>();
 
   @override
   void initState() {
@@ -61,150 +77,196 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
     getSharedPreferencesData();
   }
 
-
   Future<void> getSharedPreferencesData() async {
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId").toString();
-    context.read<TicketsBloc>().add(GetTicketsDataEvent(context: context, userId: userId));
+    context
+        .read<TicketsBloc>()
+        .add(GetTicketsDataEvent(context: context, userId: userId));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (_) => TicketsBloc(TicketsRepository(Dio())),
-        child:Dialog(
-        shape: RoundedRectangleBorder(
-           borderRadius: BorderRadius.circular(Constants.padding),
-      ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: BlocListener<TicketsBloc,TicketsState>(
-        listener: (context, state){
-          if(state is TicketsCompleteState){
-            setState(() {
-              ticketDataList = state.ticketDataList;
-            });
-            if(state.contestUserSubmit){
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation1, animation2) => ContestPlay(true),
-                  transitionDuration: Duration.zero,
-                ),
-              );
-            }
-          }
-        },
-        child: SizedBox(
-          //width: 300.w,
-          height: 200.h,//MediaQuery.of(context).size.height.h,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 20.w,top: 20.h, right: 10.w,bottom: 15.h),
-                //margin: EdgeInsets.only(top: Constants.avatarRadius),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(Constants.padding),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.black,offset: Offset(0,10),
-                          blurRadius: 10
+        child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Constants.padding),
+            ),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            child: BlocListener<TicketsBloc, TicketsState>(
+              listener: (context, state) {
+                if (state is TicketsCompleteState) {
+                  setState(() {
+                    ticketDataList = state.ticketDataList;
+                  });
+                  if (state.contestUserSubmit) {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation1, animation2) =>
+                            ContestPlay(true),
+                        transitionDuration: Duration.zero,
                       ),
-                    ]
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                    );
+                  }
+                }
+              },
+              child: SizedBox(
+                //width: 300.w,
+                height: 200.h, //MediaQuery.of(context).size.height.h,
+                child: Stack(
                   children: <Widget>[
-                    Expanded(
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(widget.title,style: TextStyle(fontSize: 22.sp,fontWeight: FontWeight.w600),),
-                              ],
-                            ),
-                            SizedBox(height: 15.h,),
-                            Row(
-                              children: [
-                                Text(widget.descriptions,style: TextStyle(fontSize: 14.sp),textAlign: TextAlign.center,),
-                              ],
-                            ),
-                            SizedBox(height: 22.h,),
-                          ],
-                        )
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: 120.w,
-                              height: 35.h,
-                              margin: EdgeInsets.only(left: 15.w,right: 15.w),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: ColorConstants.primaryColor,
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.h))
-                                ),
-                                onPressed: () {
-                                  widget.onCountSelected("cancel");
-                                },
-                                child: Text('Cancel',style: TextStyle(color: Colors.white,fontSize: 15.sp,fontWeight: FontWeight.bold),),
+                    Container(
+                      padding: EdgeInsets.only(
+                          left: 20.w, top: 20.h, right: 10.w, bottom: 15.h),
+                      //margin: EdgeInsets.only(top: Constants.avatarRadius),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.circular(Constants.padding),
+                          boxShadow: const [
+                            BoxShadow(
+                                color: Colors.black,
+                                offset: Offset(0, 10),
+                                blurRadius: 10),
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                              child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    widget.title,
+                                    style: TextStyle(
+                                        fontSize: 22.sp,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
                               ),
-                            )
-                        ),
-                        SizedBox(width: 10.w,),
-                        Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: 120.w,
-                              height: 35.h,
-                              margin: EdgeInsets.only(left: 15.w,right: 15.w),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    primary: ColorConstants.primaryColor,
-                                    onPrimary: Colors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.h))
-                                ),
-                                onPressed: () {
-                                  widget.onCountSelected("agree");
-                                  Navigator.pop(context);
-                                  if(userDataService.totalTickets.toString() == "" || userDataService.totalTickets.toString() == "null" || userDataService.totalTickets.toString() == "0"){
-                                    showDialog(context: context,
-                                        builder: (BuildContext context) {
-                                          return DialogUtil.showTicketInfoDialog("Please purchase a ticket first.",context);
-                                        });
-                                  }
-                                  else{
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation1, animation2) => ContestPlay(true),
-                                        transitionDuration: Duration.zero,
+                              SizedBox(
+                                height: 15.h,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    widget.descriptions,
+                                    style: TextStyle(fontSize: 14.sp),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 22.h,
+                              ),
+                            ],
+                          )),
+                          Row(
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    width: 120.w,
+                                    height: 35.h,
+                                    margin: EdgeInsets.only(
+                                        left: 15.w, right: 15.w),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: ColorConstants.primaryColor,
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.h))),
+                                      onPressed: () {
+                                        widget.onCountSelected("cancel");
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    );
-                                  }
-                                },
-                                child: Text('Agree',style: TextStyle(color: Colors.white,fontSize: 15.sp,fontWeight: FontWeight.bold),),
+                                    ),
+                                  )),
+                              SizedBox(
+                                width: 10.w,
                               ),
-                            )
-                        ),
-                      ],
-                    )
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    width: 120.w,
+                                    height: 35.h,
+                                    margin: EdgeInsets.only(
+                                        left: 15.w, right: 15.w),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: ColorConstants.primaryColor,
+                                          onPrimary: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.h))),
+                                      onPressed: () {
+                                        widget.onCountSelected("agree");
+                                        Navigator.pop(context);
+                                        if (userDataService.totalTickets
+                                                    .toString() ==
+                                                "" ||
+                                            userDataService.totalTickets
+                                                    .toString() ==
+                                                "null" ||
+                                            userDataService.totalTickets
+                                                    .toString() ==
+                                                "0") {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return DialogUtil
+                                                    .showTicketInfoDialog(
+                                                        "Please purchase a ticket first.",
+                                                        context);
+                                              });
+                                        } else {
+                                          print(widget.ruleButton);
+                                          if (!(widget.ruleButton ?? false)) {
+                                            Navigator.push(
+                                              context,
+                                              PageRouteBuilder(
+                                                pageBuilder: (context,
+                                                    animation1,
+                                                    animation2) =>
+                                                    ContestPlay(true),
+                                                transitionDuration:
+                                                Duration.zero,
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      },
+                                      child: Text(
+                                        'Agree',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.sp,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      )
-    ));
+            )));
   }
-
-
-
 }
