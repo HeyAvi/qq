@@ -72,6 +72,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        extendBody: true,
           backgroundColor: Colors.white,
           body: ListView(
             shrinkWrap: true,

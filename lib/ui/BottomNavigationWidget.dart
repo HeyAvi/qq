@@ -68,14 +68,18 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
         .add(GetProfileDataEvent(context: context));
     BlocProvider.of<ProfileBloc>(context).stream.listen((event) {
       userData = userDataService.userData;
-      BlocProvider.of<HomeDashBoardBloc>(context)
-          .add(FetchContestEvent(context: context, userId: userData!.user_id));
-      setState(() {});
+      if (mounted) {
+        BlocProvider.of<HomeDashBoardBloc>(context).add(
+            FetchContestEvent(context: context, userId: userData!.user_id));
+        setState(() {});
+      }
     });
     BlocProvider.of<HomeDashBoardBloc>(context).stream.listen((event) {
-      setState(() {
-        contestdata = contestService.contestdata;
-      });
+      if (mounted) {
+        setState(() {
+          contestdata = contestService.contestdata;
+        });
+      }
     });
     BlocProvider.of<HomeDashBoardBloc>(context).add(
         BottomIndexChange(context: context, currentIndex: widget.bottomIndex));

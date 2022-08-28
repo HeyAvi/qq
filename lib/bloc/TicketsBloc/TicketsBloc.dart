@@ -43,7 +43,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
     } else {
       DialogUtil.showInfoDialog(
         title: 'Info',
-        message: serverAPIResponseDto!.data["messages"].toString(),
+        message: 'Something went wrong!',
         context: event.context,
       );
       TicketsState currentState = TicketsState(version: state.version + 1);

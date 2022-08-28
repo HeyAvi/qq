@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +10,7 @@ import 'package:qq/repository/TicketsRepository.dart';
 import 'package:qq/repository/WalletRepository.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/home.dart';
+import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/DataNotAvailable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,8 +65,8 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
   }
 
   Future<bool> _willPopCallback() async {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Home(false, false)));
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const Home(false, false)));
     return Future.value(true);
   }
 
@@ -87,7 +85,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
               appBar: PreferredSize(
                 preferredSize: Size.fromHeight(45.h),
                 child: AppBar(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: Colors.white,
                   elevation: 0,
                   automaticallyImplyLeading: false,
                   title: Container(
@@ -97,10 +95,12 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                       children: [
                         InkWell(
                           onTap: () {
-                            Navigator.pushReplacement(
+                            Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (Context) => Home(false, false)));
+                                    builder: (Context) =>
+                                        const Home(false, false)),
+                                (route) => false);
                           },
                           child: ImageIcon(
                             const AssetImage(
@@ -199,17 +199,10 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                   )
                                 : const Text("")
                             : const Text(""),
-                        RotatedBox(
-                          quarterTurns: 1,
-                          child: Transform(
-                            alignment: Alignment.center,
-                            transform: Matrix4.rotationY(pi),
-                            child: SizedBox(
-                              width: 150.w,
-                              height: 120.h,
-                              child: Image.asset("assets/ticket-flight.png"),
-                            ),
-                          ),
+                        SizedBox(
+                          width: 150.w,
+                          height: 150.h,
+                          child: Image.asset("assets/tokens.png"),
                         ),
                         SizedBox(
                           height: 40.h,
@@ -248,9 +241,6 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                         child: TextField(
                                             keyboardType: TextInputType.number,
                                             controller: ticketController,
-                                            // enabled: (walletAmount <= 0.0)
-                                            //     ? false
-                                            //     : true,
                                             onChanged: (value) {
                                               setState(() {
                                                 ticketValue = value;
@@ -268,8 +258,8 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                             },
                                             decoration: InputDecoration(
                                               labelText: "How many tickets?",
-                                              labelStyle:
-                                                  const TextStyle(color: Colors.grey),
+                                              labelStyle: const TextStyle(
+                                                  color: Colors.grey),
                                               //prefixIcon: Icon(Icons.people),
                                               border: OutlineInputBorder(
                                                   //Outline border type for TextFeild
@@ -388,19 +378,17 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                               width: 2.w,
                             ),
                             GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  'Read More',
-                                  style: TextStyle(
-                                    letterSpacing: 1.w,
-                                    decoration: TextDecoration.underline,
-                                    decorationStyle: TextDecorationStyle.solid,
-                                    decorationColor: Colors.green,
-                                    fontSize: 14.sp,
-                                    decorationThickness: 2.w,
-                                    color: Colors.black87,
-                                  ),
-                                ))
+                              onTap: () {},
+                              child: TextWithUnderline(
+                                text: 'Read More',
+                                fontSize: 14.sp,
+                                textColor: Colors.black87,
+                                fontWeight: FontWeight.normal,
+                                borderColor: Colors.black87,
+                                underlineHeight: 0.5,
+                                lineHeight: 0,
+                              ),
+                            ),
                           ],
                         ),
                         Padding(padding: EdgeInsets.all(5.h)),
@@ -417,6 +405,15 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                               ),
                               onPressed: () {
                                 if (walletAmount <= 0.0) {
+                                  Fluttertoast.showToast(
+                                      msg: 'Low wallet balance');
+                                  return;
+                                } else if (ticketValue == "") {
+                                  Fluttertoast.showToast(
+                                      msg: 'Please enter ticket value');
+                                  return;
+                                } else if (walletAmount <
+                                    double.parse(ticketsMoney)) {
                                   Fluttertoast.showToast(
                                       msg: 'Low wallet balance');
                                   return;
@@ -460,7 +457,8 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                             if (state is TicketsCompleteState) {
                               setState(() {
                                 ticketDataList = state.ticketDataList;
-                                print('Thhhhh ${state.ticketDataList} ${ticketDataList?.length}');
+                                print(
+                                    'Thhhhh ${state.ticketDataList} ${ticketDataList?.length}');
                               });
                             } else if (state is BuyTicketsCompleteState) {
                               if (state.isBook) {
@@ -471,7 +469,7 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                Home(false, false)));
+                                                const Home(false, false)));
                                   });
                                 }
                               }
@@ -480,82 +478,89 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                           child: (ticketDataList != null &&
                                   ticketDataList!.isNotEmpty)
                               ? SizedBox(
-                            height: MediaQuery.of(context).size.height.h / 1.6,
-                                child: ListView.builder(
+                                  height: MediaQuery.of(context).size.height.h /
+                                      1.6,
+                                  child: ListView.builder(
                                     physics: const BouncingScrollPhysics(),
                                     itemCount: ticketDataList?.length ?? 0,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       print(ticketDataList?.length);
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                            child: Container(
-                                                width:
-                                                    MediaQuery.of(context).size.width,
-                                                height: 50.h,
-                                                color: Colors.grey[100],
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    Text(
-                                                      ticketDataList![index]
-                                                          .ticket_code
-                                                          .substring(0, 1),
-                                                      style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                          fontWeight: FontWeight.bold,
-                                                          decoration: TextDecoration
-                                                              .underline,
-                                                          decorationColor:
-                                                              ColorConstants
-                                                                  .primaryColor),
-                                                    ),
-                                                    Text(
-                                                      ticketDataList![index]
-                                                          .ticket_code
-                                                          .substring(1, 2),
-                                                      style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                          fontWeight: FontWeight.bold,
-                                                          decoration: TextDecoration
-                                                              .underline,
-                                                          decorationColor:
-                                                              ColorConstants
-                                                                  .primaryColor),
-                                                    ),
-                                                    Text(
-                                                      ticketDataList![index]
-                                                          .ticket_code
-                                                          .substring(2, 3),
-                                                      style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                          fontWeight: FontWeight.bold,
-                                                          decoration: TextDecoration
-                                                              .underline,
-                                                          decorationColor:
-                                                              ColorConstants
-                                                                  .primaryColor),
-                                                    ),
-                                                    Text(
-                                                      ticketDataList![index]
-                                                          .ticket_code
-                                                          .substring(3, 4),
-                                                      style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                          fontWeight: FontWeight.bold,
-                                                          decoration: TextDecoration
-                                                              .underline,
-                                                          decorationColor:
-                                                              ColorConstants
-                                                                  .primaryColor),
-                                                    ),
-                                                  ],
-                                                )),
-                                          );
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8.0),
+                                        child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 50.h,
+                                            color: Colors.grey[100],
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(
+                                                  ticketDataList![index]
+                                                      .ticket_code
+                                                      .substring(0, 1),
+                                                  style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          ColorConstants
+                                                              .primaryColor),
+                                                ),
+                                                Text(
+                                                  ticketDataList![index]
+                                                      .ticket_code
+                                                      .substring(1, 2),
+                                                  style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          ColorConstants
+                                                              .primaryColor),
+                                                ),
+                                                Text(
+                                                  ticketDataList![index]
+                                                      .ticket_code
+                                                      .substring(2, 3),
+                                                  style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          ColorConstants
+                                                              .primaryColor),
+                                                ),
+                                                Text(
+                                                  ticketDataList![index]
+                                                      .ticket_code
+                                                      .substring(3, 4),
+                                                  style: TextStyle(
+                                                      fontSize: 18.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationColor:
+                                                          ColorConstants
+                                                              .primaryColor),
+                                                ),
+                                              ],
+                                            )),
+                                      );
                                     },
                                   ),
-                              )
+                                )
                               : dataNotAvailable("No Tickets are Available."),
                         )
                       ],

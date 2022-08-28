@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class TextWithUnderline extends StatelessWidget {
   final String text;
   final double? lineHeight;
+  final double? underlineHeight;
 
   final Color? borderColor;
   final Color? textColor;
@@ -15,7 +16,8 @@ class TextWithUnderline extends StatelessWidget {
       this.textColor,
       this.borderColor,
       this.lineHeight,
-        this.fontWeight,
+      this.underlineHeight,
+      this.fontWeight,
       this.fontSize})
       : super(key: key);
 
@@ -29,7 +31,7 @@ class TextWithUnderline extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             color: borderColor ?? Colors.white,
-            width: 1.0,
+            width: underlineHeight ?? 1.0,
           ),
         ),
       ),

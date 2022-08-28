@@ -168,6 +168,7 @@ class _HomeState extends State<HomeStateful> {
     return WillPopScope(
       onWillPop: _willPopCallback,
       child: Scaffold(
+        extendBody: true,
           backgroundColor: Colors.white,
           body: BlocListener<HomeDashBoardBloc, HomeDashBoardState>(
               listener: (context, state) {
@@ -312,6 +313,8 @@ class _HomeState extends State<HomeStateful> {
                           child: (userDataService.walletAmount == "null")
                               ? const TextWithUnderline(text: '₹ 0')
                               : TextWithUnderline(
+                                  lineHeight: 0,
+                                  underlineHeight: 0.5,
                                   text: '₹ ${userDataService.walletAmount}')),
                       GestureDetector(
                         onTap: () {
@@ -407,7 +410,7 @@ class _HomeState extends State<HomeStateful> {
                         const TextWithUnderline(
                           text: 'Rules',
                           lineHeight: 0,
-                          fontSize: 12,
+                          fontSize: 11,
                         ),
                         Stack(
                           alignment: Alignment.centerRight,
@@ -423,33 +426,38 @@ class _HomeState extends State<HomeStateful> {
                                 });
                                 if (isRules) {
                                   showDialog(
+                                      barrierDismissible: false,
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return CustomDialogBox(
-                                          title: "Rules",
-                                          descriptions: rules,
-                                          ruleButton: true,
-                                          text: "Yes",
-                                          onCountSelected: (string) {
+                                        return WillPopScope(
+                                          onWillPop: () async {
                                             setState(() {
-                                              if (string == "agree") {
-                                                positions =
-                                                    SlidableButtonPosition
-                                                        .right;
-                                              } else {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isRules = false;
-                                                  setRulesData();
-                                                });
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             Home(false, false)));
-                                              }
+                                              isRules = false;
+                                              setRulesData();
                                             });
+                                            return true;
                                           },
+                                          child: CustomDialogBox(
+                                            title: "Rules",
+                                            descriptions: rules,
+                                            ruleButton: true,
+                                            text: "Yes",
+                                            onCountSelected: (string) {
+                                              setState(() {
+                                                if (string == "agree") {
+                                                  positions =
+                                                      SlidableButtonPosition
+                                                          .right;
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  setState(() {
+                                                    isRules = false;
+                                                    setRulesData();
+                                                  });
+                                                }
+                                              });
+                                            },
+                                          ),
                                         );
                                       });
                                 }
@@ -707,9 +715,10 @@ class _HomeState extends State<HomeStateful> {
                                 ),
                                 (userData != null &&
                                         userData!.is_eligible == "yes")
-                                    ? const Text(
+                                    ? Text(
                                         " Eligible",
                                         style: TextStyle(
+                                            fontSize: 12.sp,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold),
                                       )
@@ -765,7 +774,6 @@ class _HomeState extends State<HomeStateful> {
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14,
-                                            letterSpacing: 2.0,
                                           ),
                                         ),
                                       ),
@@ -796,12 +804,14 @@ class _HomeState extends State<HomeStateful> {
                                             TextWithUnderline(
                                               text: 'Ranks',
                                               fontSize: 13,
+                                              underlineHeight: 0.5,
                                               fontWeight: FontWeight.normal,
                                               lineHeight: 0,
                                             ),
                                             TextWithUnderline(
                                               text: 'Reward',
                                               fontSize: 13,
+                                              underlineHeight: 0.5,
                                               fontWeight: FontWeight.normal,
                                               lineHeight: 0,
                                             ),
