@@ -33,7 +33,7 @@ Widget _buildTopContainer() => Flexible(
           border: Border.all(
             color: ColorConstants.primaryColor,
           ),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32.h) , bottomRight: Radius.circular(32.h))
+          // borderRadius: BorderRadius.only(bottomLeft: Radius.circular(32.h) , bottomRight: Radius.circular(32.h))
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -465,7 +465,11 @@ class _WalletStatefulState extends State<WalletStateful> {
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.bold,
-                                color: ColorConstants.primaryColor2,
+                                color: wallatDataList[index]
+                                    .transaction_type
+                                    .toUpperCase() ==
+                                    'DEBIT'
+                                    ? ColorConstants.primaryColor : ColorConstants.primaryColor2
                               ),
                             ),
                           ],
@@ -481,7 +485,11 @@ class _WalletStatefulState extends State<WalletStateful> {
                           style: TextStyle(
                               fontSize: 15.sp,
                               fontWeight: FontWeight.bold,
-                              color: ColorConstants.primaryColor2),
+                              color: wallatDataList[index]
+                                  .transaction_type
+                                  .toUpperCase() ==
+                                  'DEBIT'
+                                  ? ColorConstants.primaryColor : ColorConstants.primaryColor2),
                         ),
                         Text(
                           DateFormatter.getDayMonthYearFormat(

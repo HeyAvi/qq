@@ -415,61 +415,65 @@ class _HomeState extends State<HomeStateful> {
                         Stack(
                           alignment: Alignment.centerRight,
                           children: [
-                            CupertinoSwitch(
-                              value: isRules,
-                              trackColor: Colors.grey[800],
-                              activeColor: Colors.white70,
-                              onChanged: (val) {
-                                setState(() {
-                                  isRules = val;
-                                  setRulesData();
-                                });
-                                if (isRules) {
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return WillPopScope(
-                                          onWillPop: () async {
-                                            setState(() {
-                                              isRules = false;
-                                              setRulesData();
-                                            });
-                                            return true;
-                                          },
-                                          child: CustomDialogBox(
-                                            title: "Rules",
-                                            descriptions: rules,
-                                            ruleButton: true,
-                                            text: "Yes",
-                                            onCountSelected: (string) {
+                            Transform.scale(
+                              scale: 0.8,
+                              child: CupertinoSwitch(
+                                value: isRules,
+                                trackColor: Colors.grey[800],
+                                activeColor: Colors.white70,
+                                onChanged: (val) {
+                                  setState(() {
+                                    isRules = val;
+                                    setRulesData();
+                                  });
+                                  if (isRules) {
+                                    showDialog(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return WillPopScope(
+                                            onWillPop: () async {
                                               setState(() {
-                                                if (string == "agree") {
-                                                  positions =
-                                                      SlidableButtonPosition
-                                                          .right;
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  setState(() {
-                                                    isRules = false;
-                                                    setRulesData();
-                                                  });
-                                                }
+                                                isRules = false;
+                                                setRulesData();
                                               });
+                                              return true;
                                             },
-                                          ),
-                                        );
-                                      });
-                                }
-                              },
+                                            child: CustomDialogBox(
+                                              title: "Rules",
+                                              descriptions: rules,
+                                              ruleButton: true,
+                                              text: "Yes",
+                                              onCountSelected: (string) {
+                                                setState(() {
+                                                  if (string == "agree") {
+                                                    positions =
+                                                        SlidableButtonPosition
+                                                            .right;
+                                                  } else {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      isRules = false;
+                                                      setRulesData();
+                                                    });
+                                                  }
+                                                });
+                                              },
+                                            ),
+                                          );
+                                        });
+                                  }
+                                },
+                              ),
                             ),
                             Visibility(
                               visible: !isRules,
                               child: const Positioned(
-                                  right: 5.5,
+                                  // right: 3,
+                                left: 32,
                                   child: Icon(
                                     Icons.check,
-                                    size: 18,
+                                    size: 16,
                                     color: ColorConstants.primaryColor2,
                                   )),
                             )
