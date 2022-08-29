@@ -114,7 +114,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
           CurvedNavigationBar(
             key: _bottomNavigationKey,
             backgroundColor: Colors.transparent,
-            // color: const Color(0x0f454745),
+            color:  Color(0xFFD6D6D6),
             height: 50.h,
             index: widget.bottomIndex,
             items: <Widget>[
