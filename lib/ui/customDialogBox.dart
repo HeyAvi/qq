@@ -12,7 +12,6 @@ import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
 import 'package:qq/ui/ContestPlay.dart';
-import 'package:qq/ui/ContestUser.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
@@ -240,11 +239,11 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                                               context,
                                               PageRouteBuilder(
                                                 pageBuilder: (context,
-                                                    animation1,
-                                                    animation2) =>
+                                                        animation1,
+                                                        animation2) =>
                                                     ContestPlay(true),
                                                 transitionDuration:
-                                                Duration.zero,
+                                                    Duration.zero,
                                               ),
                                             );
                                           }

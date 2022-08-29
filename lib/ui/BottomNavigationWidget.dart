@@ -114,7 +114,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
           CurvedNavigationBar(
             key: _bottomNavigationKey,
             backgroundColor: Colors.transparent,
-            color:  Color(0xFFD6D6D6),
+            color: const Color(0xFFF5F5F5),
             height: 50.h,
             index: widget.bottomIndex,
             items: <Widget>[
@@ -252,7 +252,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
             context,
             PageRouteBuilder(
               pageBuilder: (context, animation1, animation2) =>
-                  Home(false, true),
+                  const Home(false, true),
               transitionDuration: Duration.zero,
             ),
           );
@@ -285,7 +285,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
       Navigator.push(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation1, animation2) => Home(false, false),
+          pageBuilder: (context, animation1, animation2) =>
+              const Home(false, false),
           transitionDuration: Duration.zero,
         ),
       );

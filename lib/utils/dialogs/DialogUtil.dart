@@ -12,7 +12,11 @@ class DialogUtil {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return ProgressDialog(message);
+        return WillPopScope(
+            onWillPop: () {
+              return Future.value(false);
+            },
+            child: ProgressDialog(message));
       },
     );
   }
@@ -87,14 +91,16 @@ class DialogUtil {
                     const SizedBox(
                       height: 20,
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => BuyTickets()));
                       },
-                      color: ColorConstants.primaryColor,
+                      style: ElevatedButton.styleFrom(
+                        primary: ColorConstants.primaryColor
+                      ) ,
                       child: const Text(
                         'Add Ticket',
                         style: TextStyle(color: Colors.white),
