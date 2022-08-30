@@ -73,6 +73,7 @@ dependencies:
   countdown_progress_indicator: 0.1.2
   modal_bottom_sheet: ^2.0.1
   fluttertoast: ^8.0.9
+  timelines: ^0.1.0
 
 
 

@@ -10,6 +10,7 @@ class ApiConstants{
   static String tickets = "tickets";
   static String wallet = "wallet";
   static String fetch_contest = "fetch_contest";
+  static String fetch_contest_practice = "fetch_contest_practice";
   static String fetch_contest_result = "fetch_contest_result/";
   static String contest_user = "contest_user";
   static String fetch_question = "fetch_question/";

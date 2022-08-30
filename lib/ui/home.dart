@@ -11,9 +11,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qq/bloc/HomeDashBoradBloc/HomeDashBoardBloc.dart';
 import 'package:qq/bloc/ProfileBloc/ProfileBloc.dart';
+import 'package:qq/home_countdown_widget/home_countdown_widget.dart';
 import 'package:qq/models/ContestUserData.dart';
 import 'package:qq/models/Contestdata.dart';
 import 'package:qq/models/Userdata.dart';
+import 'package:qq/models/home_countdown_model.dart';
 import 'package:qq/repository/ProfileRepository.dart';
 import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
@@ -24,6 +26,7 @@ import 'package:qq/ui/BuyTickets.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
+import 'package:qq/ui/ads_practice_play.dart';
 import 'package:qq/ui/customDialogBox.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
@@ -115,6 +118,8 @@ class _HomeState extends State<HomeStateful> {
       context
           .read<HomeDashBoardBloc>()
           .add(FetchContestEvent(context: context, userId: userData!.user_id));
+      context.read<HomeDashBoardBloc>().add(FetchExampleContestEvent(
+          context: context, userId: userData!.user_id));
       context.read<HomeDashBoardBloc>().add(GetLastContestDataEvent(
           context: context, date: "", contestdata: null));
       setState(() {});
@@ -392,14 +397,18 @@ class _HomeState extends State<HomeStateful> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                const ProfileScreen(),
-                            transitionDuration: Duration.zero,
-                          ),
-                        );
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const PracticePlayAds()));
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   PageRouteBuilder(
+                        //     pageBuilder: (context, animation1, animation2) =>
+                        //         const ProfileScreen(),
+                        //     transitionDuration: Duration.zero,
+                        //   ),
+                        // );
                       },
                       child: SizedBox(
                           height: 68.h,
@@ -522,180 +531,11 @@ class _HomeState extends State<HomeStateful> {
                     ),
             ),
             (contestdata != null)
-                ? CountdownTimer(
-                    endTime: DateFormatter.getUTCRemainingTimeInMills(
-                        contestService.contestdata!.start_date),
-                    widgetBuilder: (_, time) {
-                      if (time == null) {
-                        isMove = true;
-                        return Padding(
-                          padding: EdgeInsets.only(top: 20.h, bottom: 20.h),
-                          child: Text(
-                            'LIVE',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20.sp,
-                                fontFamily: "SL",
-                                fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      }
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (time.days != null)
-                            HomeTimer(
-                              boxText: time.days?.toString() ?? '0',
-                              boxName: 'Days',
-                            ),
-                          if (time.hours != null)
-                            HomeTimer(
-                              boxText: time.hours?.toString() ?? '0',
-                              boxName: 'Hr',
-                            ),
-                          if (time.min != null)
-                            HomeTimer(
-                              boxText: time.min?.toString() ?? '0',
-                              boxName: 'Min.',
-                            ),
-                          if (time.sec != null)
-                            HomeTimer(
-                              boxText: time.sec?.toString() ?? '0',
-                              boxName: 'Sec.',
-                              showColon: false,
-                            ),
-                        ],
-                      );
-                      // return Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Column(
-                      //       children: [
-                      //         Card(
-                      //           child: Container(
-                      //             width: 30.h,
-                      //             height: 30.h,
-                      //             margin: EdgeInsets.all(2.h),
-                      //             //padding: EdgeInsets.all(8.h),
-                      //             color: Colors.greenAccent,
-                      //             child: Center(
-                      //               child: (time.hours.toString() != "null")
-                      //                   ? Text(
-                      //                       time.hours.toString(),
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     )
-                      //                   : Text(
-                      //                       "00",
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         Text(
-                      //           "HOURS",
-                      //           style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontSize: 10.sp,
-                      //               fontWeight: FontWeight.bold),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     SizedBox(
-                      //       width: 10.sp,
-                      //     ),
-                      //     Column(
-                      //       children: [
-                      //         Card(
-                      //           child: Container(
-                      //             width: 30.h,
-                      //             height: 30.h,
-                      //             margin: const EdgeInsets.all(2),
-                      //             //padding: EdgeInsets.all(8),
-                      //             color: const Color(0xffce112c),
-                      //             child: Center(
-                      //               child: (time.min.toString() != "null")
-                      //                   ? Text(
-                      //                       time.min.toString(),
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     )
-                      //                   : Text(
-                      //                       "00",
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         Text(
-                      //           "MIN",
-                      //           style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontSize: 10.sp,
-                      //               fontWeight: FontWeight.bold),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     SizedBox(
-                      //       width: 10.w,
-                      //     ),
-                      //     Column(
-                      //       children: [
-                      //         Card(
-                      //           child: Container(
-                      //             width: 30.h,
-                      //             height: 30.h,
-                      //             margin: EdgeInsets.all(2.h),
-                      //             //padding: EdgeInsets.all(8.h),
-                      //             color: const Color(0xffC77D0A),
-                      //             child: Center(
-                      //               child: (time.sec.toString() != "null")
-                      //                   ? Text(
-                      //                       time.sec.toString(),
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     )
-                      //                   : Text(
-                      //                       "00",
-                      //                       textAlign: TextAlign.center,
-                      //                       style: TextStyle(
-                      //                           fontWeight: FontWeight.bold,
-                      //                           color: Colors.white,
-                      //                           fontSize: 20.sp),
-                      //                     ),
-                      //             ),
-                      //           ),
-                      //         ),
-                      //         Text(
-                      //           "SEC",
-                      //           style: TextStyle(
-                      //               color: Colors.white,
-                      //               fontSize: 10.sp,
-                      //               fontWeight: FontWeight.bold),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ],
-                      // );
-                    },
-                  )
+                ? HomeCountdownWidget(
+                    homeCountDown: HomeCountDown(
+                    startDate: contestService.contestdata!.start_date,
+                    isMove: isMove,
+                  ))
                 : SizedBox(
                     height: 30.h,
                   ),

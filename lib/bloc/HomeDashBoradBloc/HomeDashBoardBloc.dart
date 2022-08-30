@@ -22,6 +22,8 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
   HomeDashBoardBloc(this.repository)
       : super(const HomeDashBoardInitialState(version: 0)) {
     on<FetchContestEvent>(_handleFetchContestEvent, transformer: sequential());
+    on<FetchExampleContestEvent>(_handleFetchExampleContestEvent,
+        transformer: sequential());
     on<GetLastContestDataEvent>(_handleGetLastContestDataEvent,
         transformer: sequential());
     on<BottomIndexChange>(_handleBottomIndexChange, transformer: sequential());
@@ -37,6 +39,39 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
           serverAPIResponseDto.data! as Map<String, dynamic>;
       Contestdata newData = Contestdata.fromJson(dataDto["data"]);
       ContestService contestService = getIt<ContestService>();
+      contestService.setContestdata(
+          newData,
+          dataDto["wallet_sum"]["amount"].toString(),
+          dataDto["ticket"]["ticket_id"].toString(),
+          dataDto["contest_x_user"],
+          dataDto["participated"]);
+      HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
+          context: event.context,
+          version: state.version + 1,
+          contestdata: newData,
+          contestUserDataList: null);
+      emit(completeState);
+    } else {
+      HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
+          context: event.context,
+          version: state.version + 1,
+          contestdata: null,
+          contestUserDataList: null);
+      emit(completeState);
+    }
+  }
+
+  void _handleFetchExampleContestEvent(
+      FetchExampleContestEvent event, Emitter<HomeDashBoardState> emit) async {
+    Response? serverAPIResponseDto =
+        await repository.getPracticeContestData(event.context, event.userId);
+    if (serverAPIResponseDto != null &&
+        serverAPIResponseDto.data["status"].toString() == "201") {
+      Map<String, dynamic> dataDto =
+          serverAPIResponseDto.data! as Map<String, dynamic>;
+      Contestdata newData = Contestdata.fromJson(dataDto["data"]);
+      ContestService contestService = getIt<ContestService>();
+      print('------=========>>> data dto $dataDto');
       contestService.setContestdata(
           newData,
           dataDto["wallet_sum"]["amount"].toString(),

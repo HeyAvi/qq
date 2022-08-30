@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../utils/ColorConstants.dart';
 
 class HomeTimer extends StatelessWidget {
-  final String boxText;
+  final Widget boxWidget;
   final String boxName;
   final bool? showColon;
 
   const HomeTimer(
-      {Key? key, required this.boxText, required this.boxName, this.showColon})
+      {Key? key, required this.boxWidget, required this.boxName, this.showColon})
       : super(key: key);
 
   @override
@@ -35,11 +35,7 @@ class HomeTimer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(boxText,
-                      style: const TextStyle(
-                          color: ColorConstants.orangeColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold)),
+                  boxWidget
                 ],
               ),
             ),
