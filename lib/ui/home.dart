@@ -397,18 +397,14 @@ class _HomeState extends State<HomeStateful> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const PracticePlayAds()));
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   PageRouteBuilder(
-                        //     pageBuilder: (context, animation1, animation2) =>
-                        //         const ProfileScreen(),
-                        //     transitionDuration: Duration.zero,
-                        //   ),
-                        // );
+                        Navigator.pushReplacement(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                const ProfileScreen(),
+                            transitionDuration: Duration.zero,
+                          ),
+                        );
                       },
                       child: SizedBox(
                           height: 68.h,

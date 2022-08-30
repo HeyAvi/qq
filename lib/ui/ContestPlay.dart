@@ -12,6 +12,7 @@ import 'package:qq/repository/TicketsRepository.dart';
 import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
+import 'package:qq/ui/ads_practice_play.dart';
 import 'package:qq/ui/home.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/DateTimeFormatter.dart';
@@ -105,7 +106,8 @@ class _ContestUserState extends State<ContestUserStateful> {
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Home(false, false)),
+                                    builder: (context) =>
+                                        const Home(false, false)),
                                 (_) => false);
                           },
                           dialogType: DialogType.SUCCES);
@@ -126,7 +128,7 @@ class _ContestUserState extends State<ContestUserStateful> {
                               PageRouteBuilder(
                                 pageBuilder:
                                     (context, animation1, animation2) =>
-                                        Home(false, false),
+                                        const Home(false, false),
                                 transitionDuration: Duration.zero,
                               ),
                             );
@@ -149,185 +151,172 @@ class _ContestUserState extends State<ContestUserStateful> {
 
                     Center(
                       child: CountdownTimer(
-                              endTime:
-                                  DateFormatter.getUTCRemainingTimeInMills(
-                                      contestService.contestdata!.start_date),
-                              widgetBuilder: (_, time) {
-                                if (time == null) {
-                                  isMove = true;
-                                  return Container(
-                                      margin: EdgeInsets.only(top: 15.h),
-                                      width: 125.w,
-                                      padding: EdgeInsets.all(8.h),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(5.h),
-                                          border: Border.all(
-                                              width: 2.h,
-                                              color: ColorConstants
-                                                  .primaryColor3)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                           Text(
-                                            '00',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: ColorConstants
-                                                    .primaryColor3),
-                                          ),
-                                          SizedBox(
-                                            width: 5.w,
-                                          ),
-                                          Text(
-                                            ':',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: ColorConstants
-                                                    .primaryColor3),
-                                          ),
-                                          SizedBox(
-                                            width: 5.w,
-                                          ),
-                                          Text(
-                                            '00',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: ColorConstants
-                                                    .primaryColor3),
-                                          ),
-                                          SizedBox(
-                                            width: 5.w,
-                                          ),
-                                          Text(
-                                            ':',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                fontWeight: FontWeight.bold,
-                                                color: ColorConstants
-                                                    .primaryColor3),
-                                          ),
-                                          SizedBox(
-                                            width: 5.w,
-                                          ), Text(
-                                            '00',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 20.sp,
-                                                color: ColorConstants
-                                                    .primaryColor3),
-                                          ),
-                                        ],
-                                      ));
-                                }
-                                return Container(
-                                    margin: EdgeInsets.only(top: 15.h),
-                                    width: 125.w,
-                                    padding: EdgeInsets.all(8.h),
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(5.h),
-                                        border: Border.all(
-                                            width: 2.h,
-                                            color: ColorConstants
-                                                .primaryColor3)),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        (time.hours.toString() != "null")
-                                            ? Text(
-                                                time.hours.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              )
-                                            : Text(
-                                                '00',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              ),
-                                        SizedBox(
-                                          width: 5.w,
-                                        ),
-                                        Text(
-                                          ':',
+                        endTime: DateFormatter.getUTCRemainingTimeInMills(
+                            contestService.contestdata!.start_date),
+                        widgetBuilder: (_, time) {
+                          if (time == null) {
+                            isMove = true;
+                            return Container(
+                                margin: EdgeInsets.only(top: 15.h),
+                                width: 125.w,
+                                padding: EdgeInsets.all(8.h),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.h),
+                                    border: Border.all(
+                                        width: 2.h,
+                                        color: ColorConstants.primaryColor3)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '00',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          color: ColorConstants.primaryColor3),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Text(
+                                      ':',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorConstants.primaryColor3),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Text(
+                                      '00',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          color: ColorConstants.primaryColor3),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Text(
+                                      ':',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorConstants.primaryColor3),
+                                    ),
+                                    SizedBox(
+                                      width: 5.w,
+                                    ),
+                                    Text(
+                                      '00',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          fontSize: 20.sp,
+                                          color: ColorConstants.primaryColor3),
+                                    ),
+                                  ],
+                                ));
+                          }
+                          return Container(
+                              margin: EdgeInsets.only(top: 15.h),
+                              width: 125.w,
+                              padding: EdgeInsets.all(8.h),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5.h),
+                                  border: Border.all(
+                                      width: 2.h,
+                                      color: ColorConstants.primaryColor3)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  (time.hours.toString() != "null")
+                                      ? Text(
+                                          time.hours.toString(),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: ColorConstants
-                                                  .primaryColor3),
-                                        ),
-                                        SizedBox(
-                                          width: 5.w,
-                                        ),
-                                        (time.min.toString() != "null")
-                                            ? Text(
-                                                time.min.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              )
-                                            : Text(
-                                                '00',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              ),
-                                        SizedBox(
-                                          width: 5.w,
-                                        ),
-                                        Text(
-                                          ':',
+                                              color:
+                                                  ColorConstants.primaryColor3),
+                                        )
+                                      : Text(
+                                          '00',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                               fontSize: 20.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: ColorConstants
-                                                  .primaryColor3),
+                                              color:
+                                                  ColorConstants.primaryColor3),
                                         ),
-                                        SizedBox(
-                                          width: 5.w,
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Text(
+                                    ':',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorConstants.primaryColor3),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  (time.min.toString() != "null")
+                                      ? Text(
+                                          time.min.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color:
+                                                  ColorConstants.primaryColor3),
+                                        )
+                                      : Text(
+                                          '00',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color:
+                                                  ColorConstants.primaryColor3),
                                         ),
-                                        (time.sec.toString() != "null")
-                                            ? Text(
-                                                time.sec.toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              )
-                                            : Text(
-                                                '00',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    fontSize: 20.sp,
-                                                    color: ColorConstants
-                                                        .primaryColor3),
-                                              ),
-                                      ],
-                                    ));
-                              },
-                            ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Text(
+                                    ':',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorConstants.primaryColor3),
+                                  ),
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  (time.sec.toString() != "null")
+                                      ? Text(
+                                          time.sec.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color:
+                                                  ColorConstants.primaryColor3),
+                                        )
+                                      : Text(
+                                          '00',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 20.sp,
+                                              color:
+                                                  ColorConstants.primaryColor3),
+                                        ),
+                                ],
+                              ));
+                        },
+                      ),
                     ),
-                        // : const Text(""),
+                    // : const Text(""),
                     SizedBox(
                       height: 20.h,
                     ),
@@ -377,7 +366,11 @@ class _ContestUserState extends State<ContestUserStateful> {
                                             BorderRadius.circular(5.h))),
                                 onPressed: () {
                                   if (isMove) {
-                                    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (Context) => ContestMainPage()));
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const PracticePlayAds()));
                                   }
                                 },
                                 child: Text(
