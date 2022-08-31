@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:slidable_button/slidable_button.dart';
 import 'package:timelines/timelines.dart';
+
+import '../ad_helper.dart';
 
 class PracticePlayAds extends StatefulWidget {
   const PracticePlayAds({Key? key}) : super(key: key);
@@ -13,6 +19,54 @@ class PracticePlayAds extends StatefulWidget {
 
 class _PracticePlayAdsState extends State<PracticePlayAds>
     with SingleTickerProviderStateMixin {
+  RewardedAd? _rewardedAd;
+
+  bool _isRewardedAdLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRewardedAd();
+  }
+
+  int _currentIndex = 0;
+
+  void _loadRewardedAd() {
+    RewardedAd.load(
+        adUnitId: AdHelper.rewardedAdUnitId,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (ad) {
+            _rewardedAd = ad;
+            ad.fullScreenContentCallback = FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (ad) {},
+            );
+            _isRewardedAdLoaded = true;
+          },
+          onAdFailedToLoad: (err) {
+            log('Failed to load an interstitial ad: ${err.message}');
+            _isRewardedAdLoaded = false;
+          },
+        ));
+    // InterstitialAd.load(
+    //   adUnitId: AdHelper.interstitialAdUnitId,
+    //   request: const AdRequest(),
+    //   adLoadCallback: InterstitialAdLoadCallback(
+    //     onAdLoaded: (ad) {
+    //       _interstitialAd = ad;
+    //       ad.fullScreenContentCallback = FullScreenContentCallback(
+    //         onAdDismissedFullScreenContent: (ad) {},
+    //       );
+    //       _isInterstitialAdReady = true;
+    //     },
+    //     onAdFailedToLoad: (err) {
+    //       log('Failed to load an interstitial ad: ${err.message}');
+    //       _isInterstitialAdReady = false;
+    //     },
+    //   ),
+    // );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,10 +109,6 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                   ),
                   const Text(
                     'watch ads to join practice play',
-                    // style: TextStyle(
-                    //     fontSize: 20,
-                    //     fontWeight: FontWeight.bold,
-                    //     color: ColorConstants.primaryColor),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -73,23 +123,47 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                               contents: Padding(
                                 padding: const EdgeInsets.all(25),
                                 child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('Watch'),
+                                  onPressed: () {
+                                    if (_isRewardedAdLoaded &&
+                                        _currentIndex == 0) {
+                                      _rewardedAd?.show(onUserEarnedReward:
+                                          (AdWithoutView ad,
+                                              RewardItem reward) {
+                                        log('User earned reward: ${reward.type}');
+                                        setState(() {
+                                          _currentIndex = 1;
+                                          _loadRewardedAd();
+                                        });
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    _currentIndex > 0 ? 'Watched' : 'Watch',
+                                  ),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      primary: ColorConstants.primaryColor),
+                                      primary: _currentIndex > 0
+                                          ? ColorConstants.primaryColor2
+                                          : ColorConstants.primaryColor),
                                 ),
                               ),
-                              node: const TimelineNode(
+                              node: TimelineNode(
                                 indicator: CircleAvatar(
                                     radius: 30,
                                     backgroundColor:
                                         ColorConstants.primaryColor,
-                                    child:
-                                        Icon(Icons.check, color: Colors.white)),
-                                endConnector: SizedBox(
+                                    child: _currentIndex < 1
+                                        ? const Text(
+                                            '1',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          )
+                                        : const Icon(Icons.check,
+                                            color: Colors.white)),
+                                endConnector: const SizedBox(
                                   height: 50,
                                   child: SolidLineConnector(
                                     color: ColorConstants.primaryColor,
@@ -102,23 +176,46 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                               oppositeContents: Padding(
                                 padding: const EdgeInsets.all(25),
                                 child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('Watch'),
+                                  onPressed: () {
+                                    if (_isRewardedAdLoaded &&
+                                        _currentIndex == 1) {
+                                      _rewardedAd?.show(onUserEarnedReward:
+                                          (AdWithoutView ad,
+                                              RewardItem reward) {
+                                        log('User earned reward: ${reward.type}');
+                                        setState(() {
+                                          _currentIndex = 2;
+                                          _loadRewardedAd();
+                                        });
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                      _currentIndex > 1 ? 'Watched' : 'Watch'),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      primary: ColorConstants.primaryColor),
+                                      primary: _currentIndex > 1
+                                          ? ColorConstants.primaryColor2
+                                          : ColorConstants.primaryColor),
                                 ),
                               ),
-                              node: const TimelineNode(
+                              node: TimelineNode(
                                 indicator: CircleAvatar(
                                     radius: 30,
                                     backgroundColor:
                                         ColorConstants.primaryColor,
-                                    child:
-                                        Icon(Icons.check, color: Colors.white)),
-                                startConnector: SolidLineConnector(
+                                    child: _currentIndex < 2
+                                        ? const Text(
+                                            '2',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          )
+                                        : const Icon(Icons.check,
+                                            color: Colors.white)),
+                                startConnector: const SolidLineConnector(
                                   color: ColorConstants.primaryColor,
                                 ),
                                 endConnector: SizedBox(
@@ -134,17 +231,32 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                               contents: Padding(
                                 padding: const EdgeInsets.all(25),
                                 child: ElevatedButton(
-                                  onPressed: () {},
-                                  child: const Text('Watch'),
+                                  onPressed: () {
+                                    if (_isRewardedAdLoaded &&
+                                        _currentIndex == 2) {
+                                      _rewardedAd?.show(onUserEarnedReward:
+                                          (AdWithoutView ad,
+                                              RewardItem reward) {
+                                        log('User earned reward: ${reward.type}');
+                                        setState(() {
+                                          _currentIndex = 3;
+                                        });
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                      _currentIndex > 2 ? 'Watched' : 'Watch'),
                                   style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      primary: ColorConstants.primaryColor),
+                                      primary: _currentIndex > 2
+                                          ? ColorConstants.primaryColor2
+                                          : ColorConstants.primaryColor),
                                 ),
                               ),
-                              node: const TimelineNode(
-                                startConnector: SizedBox(
+                              node: TimelineNode(
+                                startConnector: const SizedBox(
                                   height: 50,
                                   child: SolidLineConnector(
                                     color: ColorConstants.primaryColor,
@@ -154,8 +266,15 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                                     radius: 30,
                                     backgroundColor:
                                         ColorConstants.primaryColor,
-                                    child:
-                                        Icon(Icons.check, color: Colors.white)),
+                                    child: _currentIndex < 3
+                                        ? const Text(
+                                            '3',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
+                                          )
+                                        : const Icon(Icons.check,
+                                            color: Colors.white)),
                               ),
                             ),
                           ],
@@ -185,10 +304,23 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                           borderRadius: BorderRadius.circular(12),
                           child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                isChecked = !isChecked;
-                                print(isChecked);
-                              });
+                              if (_currentIndex == 3) {
+                                setState(() {
+                                  isChecked = !isChecked;
+                                  print(isChecked);
+                                });
+                              } else {
+                                setState(() {
+                                  Fluttertoast.showToast(
+                                      msg: "Please watch all the videos",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                });
+                              }
                             },
                             child: Stack(
                               alignment: Alignment.center,
@@ -243,6 +375,9 @@ class _PracticePlayAdsState extends State<PracticePlayAds>
                               setState(() {
                                 if (position == SlidableButtonPosition.right) {
                                   icon = const Icon(Icons.check);
+                                  Fluttertoast.showToast(
+                                      msg: 'Will be available Soon!');
+                                  Navigator.pop(context);
                                 } else {
                                   icon = const Icon(Icons.navigate_next);
                                 }

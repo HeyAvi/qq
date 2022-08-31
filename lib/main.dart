@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/ui/ContestDetails/JigsawPuzzle/ScoreWidget.dart';
 import 'package:qq/ui/splashScreen.dart';
-import 'package:qq/utils/ColorConstants.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     SystemChrome.setSystemUIOverlayStyle(
