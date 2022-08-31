@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:qq/models/Userdata.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
@@ -15,7 +13,6 @@ import 'package:qq/ui/home.dart';
 import 'package:qq/ui/splashScreen.dart';
 import 'package:qq/utils/ApiConstants.dart';
 import 'package:qq/utils/ColorConstants.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/ProfileBloc/ProfileBloc.dart';
@@ -73,754 +70,586 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorConstants.primaryColor,
       extendBody: true,
-      body: SingleChildScrollView(
-          child: Column(
+      backgroundColor: ColorConstants.primaryColor,
+      body: Stack(
+        fit: StackFit.expand,
         children: [
-          SafeArea(
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Home(false, false)));
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          size: 30,
+          basicProfile(),
+          DraggableScrollableSheet(
+            initialChildSize: 0.45,
+            minChildSize: 0.45,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return settings(controller: scrollController);
+            },
+          )
+        ],
+      ),
+      bottomNavigationBar: const BottomNavigationWidget(4),
+    );
+  }
+
+  Widget basicProfile() => Column(
+    children: [
+      SafeArea(
+        bottom: false,
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const Home(false, false)));
+                },
+                icon: const Icon(
+                  Icons.arrow_back,
+                  size: 30,
+                ),
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
+      ),
+      Row(
+        children: [
+          Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: (userData.image != "")
+                    ? CircleAvatar(
+                        radius: 64,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 60.0,
+                          backgroundImage: NetworkImage(
+                              ApiConstants.IMAGE_URL + userData.image),
+                          backgroundColor: Colors.transparent,
                         ),
-                        color: Colors.white,
+                      )
+                    : const CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 47.5,
+                          backgroundImage:
+                              AssetImage('assets/userprofile.png'),
+                          backgroundColor: Colors.transparent,
+                        ),
                       ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 30,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 15,
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: ColorConstants.primaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8.0, right: 15.0),
+                      child: (userData.name.isNotEmpty)
+                          ? Text(
+                              ' ' +
+                                  userData.name
+                                      .substring(0, 1)
+                                      .toUpperCase() +
+                                  userData.name.substring(1),
+                              style: const TextStyle(
+                                  fontSize: 28,
+                                  color: Colors.white,
+                                  overflow: TextOverflow.ellipsis,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            )
+                          : const Text(""),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: const CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 8,
+                        child: Icon(
+                          Icons.edit,
+                          size: 12,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.white,
-                          ),
-                          onPressed: () {
-                            Fluttertoast.showToast(msg: 'Edit Profile Page');
-                          },
-                          child: const Text(
-                            'Edit Profile',
-                            style: TextStyle(
-                              color: ColorConstants.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Text(
+                          'Mobile No. +91${userData.phone}',
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      if (userData.is_verified == 'YES')
+                        const CircleAvatar(
+                          backgroundColor: Colors.blueAccent,
+                          radius: 10,
+                          child: Icon(
+                            Icons.check,
+                            size: 16,
+                            color: Colors.white,
                           ),
                         ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      const SizedBox(height: 20),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          children: [
+            Flex(
+              direction: Axis.horizontal,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        userDataService.totalParticipation,
+                        style: const TextStyle(
+                            fontSize: 30, color: Colors.white),
+                      ),
+                      const Text(
+                        'Total Entries',
+                        style:
+                            TextStyle(fontSize: 12, color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomLeft,
+                Flexible(
+                  flex: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: (userData.image != "")
-                              ? CircleAvatar(
-                                  radius: 64,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 60.0,
-                                    backgroundImage: NetworkImage(
-                                        ApiConstants.IMAGE_URL +
-                                            userData.image),
-                                    backgroundColor: Colors.transparent,
-                                  ),
-                                )
-                              : const CircleAvatar(
-                                  radius: 64,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 60.0,
-                                    backgroundImage:
-                                        AssetImage('assets/userprofile.png'),
-                                    backgroundColor: Colors.transparent,
+                        const SizedBox(
+                          height: 60,
+                          child: Opacity(
+                            opacity: 0.5,
+                            child: VerticalDivider(
+                              color: Colors.white,
+                              thickness: 1,
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(8.0),
+                                  side: const BorderSide(
+                                    color: Colors.black38,
+                                    width: 2,
                                   ),
                                 ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 30,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: ColorConstants.primaryColor,
-                              ),
+                                primary: ColorConstants.orangeColor),
+                            onPressed: () {},
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              child: Text('Rankings'),
+                            )),
+                        const SizedBox(
+                          height: 60,
+                          child: Opacity(
+                            opacity: 0.5,
+                            child: VerticalDivider(
+                              color: Colors.white,
+                              thickness: 1,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          (userData.name.isNotEmpty)
-                              ? Text(
-                                  userData.name.substring(0, 1).toUpperCase() +
-                                      userData.name.substring(1),
-                                  style: const TextStyle(
-                                      fontSize: 28,
-                                      color: Colors.white,
-                                      overflow: TextOverflow.ellipsis,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : const Text(""),
-                          Card(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    'Mobile No. ${userData.phone}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  if(userData.is_verified == 'YES')
-                                  const CircleAvatar(
-                                    backgroundColor: Colors.blueAccent,
-                                    radius: 10,
-                                    child: Icon(
-                                      Icons.check,
-                                      size: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                  child: Column(
-                    children: [
-                      Flex(
-                        direction: Axis.horizontal,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Flexible(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  userDataService.totalParticipation,
-                                  style: const TextStyle(
-                                      fontSize: 30, color: Colors.white),
-                                ),
-                                const Text(
-                                  'Total Entries',
-                                  style: TextStyle(
-                                      fontSize: 12, color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Flexible(
-                            flex: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const SizedBox(
-                                    height: 80,
-                                    child: VerticalDivider(
-                                      color: Colors.white,
-                                      thickness: 2,
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 0,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8.0),
-                                            side: const BorderSide(
-                                              color: Colors.black38,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          primary: ColorConstants.orangeColor),
-                                      onPressed: () {},
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 18.0, vertical: 12.0),
-                                        child: Text('Rankings'),
-                                      )),
-                                  const SizedBox(
-                                    height: 80,
-                                    child: VerticalDivider(
-                                      color: Colors.white,
-                                      thickness: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: GestureDetector(
-                              onTap: () async {
-                                var prefs =
-                                    await SharedPreferences.getInstance();
-                                await prefs.clear();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SplashScreen(),
-                                  ),
-                                  (_) => false,
-                                );
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Padding(padding: EdgeInsets.all(2)),
-                                  ImageIcon(
-                                    AssetImage("assets/logout.png"),
-                                    size: 30,
-                                    color: Colors.white,
-                                  ),
-                                  Text(
-                                    "Log Out",
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.all(2.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('D.O.B',
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.white)),
-                                  const Text('userData  (X Years)',
-                                      style: TextStyle(
-                                          fontSize: 14, color: Colors.white)),
-                                  // todo update with real values
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Text('E-mail',
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.white)),
-                                  Text(userData.email,
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.white)),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // todo add update function
-                                    },
-                                    child: const Text('Update',
-                                        style: TextStyle(color: Colors.black)),
-                                    style: ElevatedButton.styleFrom(
-                                      elevation: 0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
-                                      ),
-                                      primary: ColorConstants.colorBackground,
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Stack(
-                                    alignment: Alignment.topRight,
-                                    children: const [
-                                      Padding(
-                                        padding: EdgeInsets.all(4.0),
-                                        child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            child: Icon(Icons.male,
-                                                color: Colors.blueAccent)),
-                                      ),
-                                      CircleAvatar(
-                                        child: Icon(
-                                          Icons.check,
-                                          size: 10,
-                                        ),
-                                        radius: 8,
-                                      )
-                                    ],
-                                  ),
-                                  const SizedBox(width: 10),
-                                  const CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(Icons.female,
-                                          color: ColorConstants.primaryColor)),
-                                ],
-                              )
-                            ]),
-                      )
-                    ],
+                Flexible(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () async {
+                      var prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SplashScreen(),
+                        ),
+                        (_) => false,
+                      );
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Padding(padding: EdgeInsets.all(2)),
+                        Icon(Icons.logout, color: Colors.white),
+                        Text(
+                          "Log Out",
+                          style: TextStyle(
+                              fontSize: 12, color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
-          Container(
-            decoration: const BoxDecoration(
-              color: ColorConstants.colorBackground,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: SafeArea(
-                top: false,
-                left: false,
-                right: false,
-                child: Column(
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(height: 20),
-                    ListTile(
-                      onTap: () {},
-                      leading: const Icon(Icons.notifications_active),
-                      title: const Text('Notification'),
-                      trailing: Switch(
-                          value: notification,
-                          activeColor: ColorConstants.primaryColor,
-                          onChanged: (v) {
-                            setState(() {
-                              notification = v;
-                            });
-                          }),
-                    ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                    ListTile(
-                      onTap: () {},
-                      leading: const Icon(Icons.volume_up),
-                      title: const Text('Sounds'),
-                      trailing: Switch(
-                          value: sound,
-                          activeColor: ColorConstants.primaryColor,
-                          onChanged: (v) {
-                            setState(() {
-                              sound = v;
-                            });
-                          }),
-                    ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        'Do you like our Game ?',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18.sp),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    ListTile(
-                      onTap: () {},
-                      title: Text(
-                        'Be a part of gaming revolution and rate us on ${Platform.isAndroid ? 'Google Play' : 'App Store'}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600]),
-                      ),
-                      subtitle: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: ColorConstants.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.h),
-                            )),
-                        onPressed: () {
-                          setState(() {
-                            Fluttertoast.showToast(msg: 'Rate us');
-                          });
-                        },
-                        child: const Text(
-                          'RATE US',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 24,
+                              ),
+                              child: const Text('D.O.B',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white)),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: const CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 8,
+                                child: Icon(
+                                  Icons.edit,
+                                  size: 12,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      ),
-                      leading: CircleAvatar(
-                          backgroundColor: Colors.yellow[100],
-                          radius: 30,
-                          child: const Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 50,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    const ListTile(
-                      contentPadding: EdgeInsets.all(0),
-                      leading: Text(
-                        'Support',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Icon(Icons.navigate_next),
-                    ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                    const ListTile(
-                      contentPadding: EdgeInsets.all(0),
-                      leading: Text(
-                        'Privacy Policy',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Icon(Icons.navigate_next),
-                    ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                    const ListTile(
-                      contentPadding: EdgeInsets.all(0),
-                      leading: Text(
-                        'Terms and Conditions',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Icon(Icons.navigate_next),
-                    ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                    ListTile(
-                      contentPadding: EdgeInsets.all(0),
-                      leading: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.remove_circle_outline,
-                            color: Colors.red,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            'Delete Account',
+                        const Text('userData  (X Years)',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, color: Colors.red),
+                                fontSize: 14, color: Colors.white)),
+                        // todo update with real values
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                right: 20,
+                              ),
+                              child: Text('E-mail',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.white)),
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: const CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 8,
+                                child: Icon(
+                                  Icons.edit,
+                                  size: 12,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Text(userData.email,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.white)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          height: 25,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // todo add update function
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20.0),
+                              child: const Text('Update',
+                                  style: TextStyle(color: Colors.black)),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.0),
+                              ),
+                              primary: ColorConstants.colorBackground,
+                            ),
                           ),
-                        ],
-                      ),
-                      trailing: Icon(Icons.navigate_next),
+                        )
+                      ],
                     ),
-                    const Divider(
-                      thickness: 2,
-                    ),
-                  ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: const [
+                            Padding(
+                              padding: EdgeInsets.all(4.0),
+                              child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: Icon(Icons.male,
+                                      color: Colors.blueAccent)),
+                            ),
+                            CircleAvatar(
+                              child: Icon(
+                                Icons.check,
+                                size: 10,
+                              ),
+                              radius: 8,
+                            )
+                          ],
+                        ),
+                        const SizedBox(width: 10),
+                        const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: Icon(Icons.female,
+                                color: ColorConstants.primaryColor)),
+                      ],
+                    )
+                  ]),
+            )
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Widget settings({required ScrollController controller}) => Container(
+        decoration: const BoxDecoration(
+          color: ColorConstants.colorBackground,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            controller: controller,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 5.0),
+                  height: 6,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                ListTile(
+                  onTap: () {},
+                  leading: const Icon(Icons.notifications_active),
+                  title: const Text('Notification'),
+                  trailing: Switch(
+                      value: notification,
+                      activeColor: ColorConstants.primaryColor,
+                      onChanged: (v) {
+                        setState(() {
+                          notification = v;
+                        });
+                      }),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: const Icon(Icons.volume_up),
+                  title: const Text('Sounds'),
+                  trailing: Switch(
+                      value: sound,
+                      activeColor: ColorConstants.primaryColor,
+                      onChanged: (v) {
+                        setState(() {
+                          sound = v;
+                        });
+                      }),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Do you like our Game ?',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 18.sp),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.h,
+                ),
+                ListTile(
+                  onTap: () {},
+                  title: Text(
+                    'Be a part of gaming revolution and rate us on ${Platform.isAndroid ? 'Google Play' : 'App Store'}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.grey[600]),
+                  ),
+                  subtitle: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: ColorConstants.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.h),
+                        )),
+                    onPressed: () {
+                      setState(() {
+                        Fluttertoast.showToast(msg: 'Rate us');
+                      });
+                    },
+                    child: const Text(
+                      'RATE US',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  leading: CircleAvatar(
+                      backgroundColor: Colors.yellow[100],
+                      radius: 30,
+                      child: const Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                        size: 50,
+                      )),
+                ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                const ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  leading: Text(
+                    'Support',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  trailing: Icon(Icons.navigate_next),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                const ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  leading: Text(
+                    'Privacy Policy',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  trailing: Icon(Icons.navigate_next),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                const ListTile(
+                  contentPadding: EdgeInsets.all(0),
+                  leading: Text(
+                    'Terms and Conditions',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  trailing: Icon(Icons.navigate_next),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+                ListTile(
+                  contentPadding: const EdgeInsets.all(0),
+                  leading: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.remove_circle_outline,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Delete Account',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.red),
+                      ),
+                    ],
+                  ),
+                  trailing: const Icon(Icons.navigate_next),
+                ),
+                const Divider(
+                  thickness: 2,
+                ),
+              ],
             ),
           ),
-        ],
-      )),
-      bottomNavigationBar: const BottomNavigationWidget(4),
-    );
-
-    // return DefaultTabController(
-    //   length: 2,
-    //   child: Scaffold(
-    //       extendBody: true,
-    //       backgroundColor: Colors.white,
-    //       body: ListView(
-    //         shrinkWrap: true,
-    //         children: [
-    //           SizedBox(
-    //             height: MediaQuery.of(context).size.height.h / 2.h,
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.start,
-    //               children: [
-    //                 const Padding(
-    //                   padding: EdgeInsets.all(10),
-    //                 ),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.end,
-    //                   children: [
-    //                     InkWell(
-    //                         onTap: () {
-    //                           Navigator.pushReplacement(
-    //                               context,
-    //                               MaterialPageRoute(
-    //                                   builder: (context) =>
-    //                                       const Home(false, false)));
-    //                         },
-    //                         child: Container(
-    //                             margin: const EdgeInsets.all(20),
-    //                             child: const ImageIcon(
-    //                               AssetImage(
-    //                                 "assets/cancel.png",
-    //                               ),
-    //                               color: Colors.black,
-    //                               size: 35,
-    //                             ))),
-    //                   ],
-    //                 ),
-    //                 Row(
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   children: [
-    //                     SizedBox(
-    //                       width: 5.w,
-    //                     ),
-    //                     Column(
-    //                       children: [
-    //                         const Text(
-    //                           "Total Participates",
-    //                           style:
-    //                               TextStyle(fontSize: 15, color: Colors.grey),
-    //                         ),
-    //                         Text(userDataService.totalParticipation),
-    //                       ],
-    //                     ),
-    //                     Expanded(
-    //                       child: (userData.image != "")
-    //                           ? CircleAvatar(
-    //                               radius: 64,
-    //                               backgroundColor: ColorConstants.primaryColor,
-    //                               child: CircleAvatar(
-    //                                 radius: 60.0,
-    //                                 backgroundImage: NetworkImage(
-    //                                     ApiConstants.IMAGE_URL +
-    //                                         userData.image),
-    //                                 backgroundColor: Colors.transparent,
-    //                               ),
-    //                             )
-    //                           : const CircleAvatar(
-    //                               radius: 64,
-    //                               backgroundColor: ColorConstants.primaryColor,
-    //                               child: CircleAvatar(
-    //                                 radius: 60.0,
-    //                                 backgroundImage:
-    //                                     AssetImage('assets/userprofile.png'),
-    //                                 backgroundColor: Colors.transparent,
-    //                               ),
-    //                             ),
-    //                     ),
-    //                     GestureDetector(
-    //                       onTap: () async {
-    //                         var prefs = await SharedPreferences.getInstance();
-    //                         await prefs.clear();
-    //                         Navigator.pushAndRemoveUntil(
-    //                           context,
-    //                           MaterialPageRoute(
-    //                             builder: (context) => const SplashScreen(),
-    //                           ),
-    //                           (_) => false,
-    //                         );
-    //                       },
-    //                       child: Column(
-    //                         crossAxisAlignment: CrossAxisAlignment.center,
-    //                         children: [
-    //                           const Text(
-    //                             "Log Out",
-    //                             style:
-    //                                 TextStyle(fontSize: 15, color: Colors.grey),
-    //                           ),
-    //                           const Padding(padding: EdgeInsets.all(2)),
-    //                           Row(
-    //                             mainAxisAlignment: MainAxisAlignment.end,
-    //                             children: const [
-    //                               ImageIcon(
-    //                                 AssetImage("assets/logout.png"),
-    //                                 size: 20,
-    //                                 color: Colors.pink,
-    //                               ),
-    //                             ],
-    //                           ),
-    //                         ],
-    //                       ),
-    //                     ),
-    //                     SizedBox(
-    //                       width: 5.w,
-    //                     )
-    //                   ],
-    //                 ),
-    //                 const Padding(
-    //                   padding: EdgeInsets.all(5),
-    //                 ),
-    //                 (userData.name != "")
-    //                     ? Text(
-    //                         userData.name,
-    //                         style: const TextStyle(
-    //                             fontSize: 20,
-    //                             color: Colors.black,
-    //                             fontWeight: FontWeight.bold),
-    //                       )
-    //                     : const Text(""),
-    //                 const Padding(
-    //                   padding: EdgeInsets.all(5),
-    //                 ),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //                   children: [
-    //                     GestureDetector(
-    //                       onTap: () {
-    //                         Share.share(
-    //                             'https://play.google.com/store/apps/details?id=com.example.qq');
-    //                       },
-    //                       child: Card(
-    //                         color: Colors.white,
-    //                         elevation: 4,
-    //                         shape: RoundedRectangleBorder(
-    //                           borderRadius: BorderRadius.circular(50),
-    //                         ),
-    //                         child: Container(
-    //                           width: 50,
-    //                           padding: const EdgeInsets.all(15),
-    //                           child: const SizedBox(
-    //                               height: 20,
-    //                               child: ImageIcon(
-    //                                 AssetImage("assets/share.png"),
-    //                                 size: 20,
-    //                                 color: Colors.pink,
-    //                               )),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     InkWell(
-    //                       onTap: () {},
-    //                       borderRadius: BorderRadius.circular(50),
-    //                       child: Padding(
-    //                         padding: const EdgeInsets.all(0.1),
-    //                         child: Card(
-    //                           color: ColorConstants.primaryColor,
-    //                           shape: RoundedRectangleBorder(
-    //                             borderRadius: BorderRadius.circular(50),
-    //                           ),
-    //                           child: Container(
-    //                             width: 180,
-    //                             padding: const EdgeInsets.all(13),
-    //                             child: Row(
-    //                               mainAxisAlignment: MainAxisAlignment.center,
-    //                               children: [
-    //                                 SizedBox(
-    //                                     height: 25,
-    //                                     child: Image.asset(
-    //                                         "assets/first-rank.png")),
-    //                                 const Text(
-    //                                   'Rank',
-    //                                   textAlign: TextAlign.center,
-    //                                   style: TextStyle(
-    //                                       color: Colors.white, fontSize: 20),
-    //                                 ),
-    //                               ],
-    //                             ),
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                     Card(
-    //                       color: Colors.white,
-    //                       shape: RoundedRectangleBorder(
-    //                         borderRadius: BorderRadius.circular(50),
-    //                       ),
-    //                       elevation: 0,
-    //                       child: Container(
-    //                         width: 50,
-    //                         padding: const EdgeInsets.all(15),
-    //                         child: const SizedBox(
-    //                           height: 20,
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 const TabBar(
-    //                   tabs: [
-    //                     Tab(
-    //                       child: Text(
-    //                         "Basic Info",
-    //                         textAlign: TextAlign.center,
-    //                         style: TextStyle(color: Colors.black),
-    //                       ),
-    //                     ),
-    //                     Tab(
-    //                       child: Text(
-    //                         "Settings",
-    //                         textAlign: TextAlign.center,
-    //                         style: TextStyle(color: Colors.black),
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //           SizedBox(
-    //               height: MediaQuery.of(context).size.height.h / 1.5.h,
-    //               child: Column(
-    //                 children: [
-    //                   SizedBox(
-    //                     height: 10.h,
-    //                   ),
-    //                   Expanded(
-    //                       child: Align(
-    //                     alignment: Alignment.topCenter,
-    //                     child: TabBarView(
-    //                       physics: const ClampingScrollPhysics(),
-    //                       children: [
-    //                         basicInfo(context),
-    //                       ],
-    //                     ),
-    //                   ))
-    //                 ],
-    //               ))
-    //         ],
-    //       ),
-    //       bottomNavigationBar: const BottomNavigationWidget(4)),
-    // );
-  }
+        ),
+      );
 
   bool notification = true;
   bool sound = true;

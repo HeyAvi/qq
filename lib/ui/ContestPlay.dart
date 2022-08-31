@@ -359,11 +359,12 @@ class _ContestUserState extends State<ContestUserStateful> {
                               height: 35.h,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: Colors.redAccent, // background
-                                    onPrimary: Colors.white, // foreground
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5.h))),
+                                  primary: Colors.redAccent, // background
+                                  onPrimary: Colors.white, // foreground
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5.h),
+                                  ),
+                                ),
                                 onPressed: () {
                                   if (isMove) {
                                     Navigator.pushReplacement(
