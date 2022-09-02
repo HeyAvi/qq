@@ -107,7 +107,7 @@ class _ContestUserState extends State<ContestUserStateful> {
                     stateContext = context;
                     if (state is TicketsCompleteState) {
                       if (state.contestUserSubmit) {
-                        WidgetsBinding.instance!.addPostFrameCallback((_) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

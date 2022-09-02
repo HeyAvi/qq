@@ -39,6 +39,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
 import 'ContestPlay.dart';
+import 'ads_practice_play.dart';
 
 class Home extends StatelessWidget {
   final bool? isContestCompleted, isContestOpen;
@@ -394,6 +395,15 @@ class _HomeState extends State<HomeStateful> {
                   children: [
                     GestureDetector(
                       onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (
+                        //       context,
+                        //     ) =>
+                        //         const PracticePlayAds(),
+                        //   ),
+                        // );
                         Navigator.pushReplacement(
                           context,
                           PageRouteBuilder(

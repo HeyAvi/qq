@@ -43,7 +43,7 @@ class ContestMainSateful extends StatefulWidget {
 
 class _ContestMainState extends State<ContestMainSateful>
     with TickerProviderStateMixin {
-  late TabController _cardController;
+  TabController? _cardController;
   late TabPageSelector _tabPageSelector;
   List<ParentContestQuestiondata>? contestQuestiondataDataList;
   bool isSubmit = false;
@@ -67,7 +67,12 @@ class _ContestMainState extends State<ContestMainSateful>
   }
 
   Future<bool> _willPopCallback() async {
-    return Future.value(true);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const Home(false,false)),
+        (route) => false);
+
+    return Future.value(false);
   }
 
   @override
@@ -88,22 +93,20 @@ class _ContestMainState extends State<ContestMainSateful>
                 padding: const EdgeInsets.only(left: 20),
                 child: InkWell(
                   onTap: () {
-                    if (_cardController.index == 0) {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, animation1, animation2) =>
-                              Home(false, false),
-                          transitionDuration: Duration.zero,
-                        ),
-                      );
-                    } else {
-                      if (isSubmit) {
-                        _cardController.animateTo(
-                            (currentIndex + 1) %
-                                contestQuestiondataDataList!.length,
-                            duration: const Duration(seconds: 10));
-                      }
+                    if(_cardController == null){
+                      _willPopCallback();
+                      return;
+                    }
+                    if (isSubmit) {
+                      _cardController?.animateTo(
+                          (currentIndex + 1) %
+                              contestQuestiondataDataList!.length,
+                          duration: const Duration(seconds: 10));
+                      return;
+                    }
+
+                    if (_cardController?.index == 0) {
+                      _willPopCallback();
                     }
                   },
                   child: Row(
@@ -139,7 +142,7 @@ class _ContestMainState extends State<ContestMainSateful>
           listener: (context, state) {
             if (state is ContestCompleteState) {
               if (state.isContestCompleted) {
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -523,7 +526,7 @@ class _ContestMainState extends State<ContestMainSateful>
               userId: userDataService.userData.user_id,
               contestQuestiondataDataList: contestQuestiondataDataList));
     } else if (isSubmit) {
-      _cardController.animateTo(
+      _cardController?.animateTo(
           (currentIndex + 1) % contestQuestiondataDataList!.length,
           duration: const Duration(seconds: 10));
     }
@@ -541,7 +544,7 @@ class _ContestMainState extends State<ContestMainSateful>
                       return JigsawPuzzleTwo(
                         dynamicContent.question,
                         contestQuestiondataDataList,
-                        _cardController.index,
+                        _cardController!.index,
                         onIndexChanged: () {
                           //_cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
@@ -551,7 +554,7 @@ class _ContestMainState extends State<ContestMainSateful>
                       return SoundPuzzle(
                         dynamicContent.question,
                         contestQuestiondataDataList,
-                        _cardController.index,
+                        _cardController!.index,
                         onIndexChanged: () {
                           //_cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
@@ -561,7 +564,7 @@ class _ContestMainState extends State<ContestMainSateful>
                       return Board(
                         dynamicContent.question,
                         contestQuestiondataDataList,
-                        _cardController.index,
+                        _cardController!.index,
                         onIndexChanged: () {
                           // _cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
@@ -569,8 +572,8 @@ class _ContestMainState extends State<ContestMainSateful>
                     } else {
                       currentIndex = currentIndex + 1;
                       //BlocProvider.of<ContestBloc>(context).add(ChangeCurrentIndexEvent(context: context, contestId:"5",questionId:dynamicContent.question!["question_id"],answerGiven:"",isAnswerTrue:"true",moves:"",timeTaken:"",contestQuestiondataDataList: contestQuestiondataDataList,currentIndex: currentIndex));
-                      _cardController.animateTo(
-                          (_cardController.index + 1) %
+                      _cardController?.animateTo(
+                          (_cardController!.index + 1) %
                               contestQuestiondataDataList.length,
                           duration: const Duration(seconds: 10));
                       return const Text("");
@@ -587,6 +590,6 @@ class _ContestMainState extends State<ContestMainSateful>
   @override
   void dispose() {
     super.dispose();
-    _cardController.dispose();
+    // _cardController.dispose();
   }
 }

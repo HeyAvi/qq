@@ -327,8 +327,7 @@ class _RegistrationStatefulState extends State<RegistrationStateful> {
                                               children: [
                                                 InkWell(
                                                   onTap: () {
-                                                    WidgetsBinding.instance!
-                                                        .addPostFrameCallback(
+                                                    WidgetsBinding.instance.addPostFrameCallback(
                                                             (_) {
                                                       Navigator.push(
                                                           context,

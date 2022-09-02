@@ -90,10 +90,16 @@ class _PuzzleState extends State<Puzzle> {
       height: 80.0,
       margin: EdgeInsets.only(bottom: 20.0),
       padding: EdgeInsets.all(10.0),
-      child: RaisedButton(
-        highlightElevation: 6.0,
-        color: Colors.lightBlueAccent,
-        splashColor: Colors.blue[100],
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.blue[100], backgroundColor: Colors.lightBlueAccent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 6.0,
+
+        ),
+
         onPressed: (() {
           scrambled.clear();
           scramble();
@@ -177,14 +183,14 @@ class _PuzzleState extends State<Puzzle> {
           title: Text("GREAT JOB"),
           content: Text("You Solved the Puzzle!"),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () {
                 scrambled.clear();
                 scramble();
                 setState(() {});
                 Navigator.pop(context);
               },
-              child: Text("Play again"),
+              child: const Text("Play again"),
             ),
           ],
         );

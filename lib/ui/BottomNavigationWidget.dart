@@ -214,22 +214,25 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
     }
     if (index == 2) {
       await Future.delayed(const Duration(milliseconds: 500));
-      if (isMove &&
-          contestService.participated == false &&
-          (contestService.userBooked)) {
-        setState(() {
-          _page = index;
-          BlocProvider.of<HomeDashBoardBloc>(context)
-              .add(BottomIndexChange(context: context, currentIndex: _page!));
-        });
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: (context, animation1, animation2) => ContestMainPage(),
-            transitionDuration: Duration.zero,
-          ),
-        );
-      } else if (!isMove &&
+      // if (isMove &&
+      //     contestService.participated == false &&
+      //     (contestService.userBooked)) {
+      //   setState(() {
+      //     _page = index;
+      //     BlocProvider.of<HomeDashBoardBloc>(context)
+      //         .add(BottomIndexChange(context: context, currentIndex: _page!));
+      //   });
+      //   Navigator.push(
+      //     context,
+      //     PageRouteBuilder(
+      //       pageBuilder: (context, animation1, animation2) => ContestMainPage(),
+      //       transitionDuration: Duration.zero,
+      //     ),
+      //   );
+      // } else
+      //
+
+        if (
           contestService.participated == false &&
           (contestService.userBooked)) {
         setState(() {

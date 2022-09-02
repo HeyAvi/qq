@@ -22,6 +22,8 @@ Userdata _$UserdataFromJson(Map<String, dynamic> json) => Userdata(
     json['created_at'] == null ? "" : json['created_at'] as String,
     json['updated_at'] == null ? "" : json['updated_at'] as String,
     json['deleted_at'] == null ? "" : json['deleted_at'] as String,
+    gender: json['gender'] == null ? "" : json['gender'] as String,
+    dob: json['dob'] == null ? "" : json['dob'] as String,
 );
 
 Map<String, dynamic> _$UserdataToJson(Userdata instance) => <String, dynamic>{
@@ -39,5 +41,7 @@ Map<String, dynamic> _$UserdataToJson(Userdata instance) => <String, dynamic>{
   'is_eligible' : instance.is_eligible,
   'created_at' : instance.created_at,
   'updated_at' : instance.updated_at,
-  'deleted_at' : instance.deleted_at
+  'deleted_at' : instance.deleted_at,
+  'gender' : instance.gender,
+  'dob' : instance.dob,
 };

@@ -21,6 +21,8 @@ class Userdata {
   late String created_at;
   late String updated_at;
   late String deleted_at;
+   String? gender;
+   String? dob;
 
   Userdata(
       this.user_id,
@@ -37,8 +39,9 @@ class Userdata {
       this.is_eligible,
       this.created_at,
       this.updated_at,
-      this.deleted_at
-      );
+      this.deleted_at,
+      {required this.dob,
+      required this.gender});
 
   factory Userdata.fromJson(Map<String,dynamic> json) => _$UserdataFromJson(json);
   Map<String, dynamic> toJson() => _$UserdataToJson(this);

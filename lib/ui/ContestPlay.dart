@@ -366,13 +366,11 @@ class _ContestUserState extends State<ContestUserStateful> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  if (isMove) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const PracticePlayAds()));
-                                  }
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const PracticePlayAds()));
                                 },
                                 child: Text(
                                   'Practice Play',
@@ -401,18 +399,26 @@ class _ContestUserState extends State<ContestUserStateful> {
                                         borderRadius:
                                             BorderRadius.circular(5.h))),
                                 onPressed: () {
-                                  BlocProvider.of<TicketsBloc>(context).add(
-                                      SubmitContextUserEvent(
-                                          context: context,
-                                          userId: userId,
-                                          ticketId:
-                                              ticketDataList![0].ticket_id,
-                                          contestId: contestService
-                                              .contestdata!.contest_id,
-                                          ticketDataList: ticketDataList));
+                                  if (isMove) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ContestMainPage()));
+                                  } else {
+                                    BlocProvider.of<TicketsBloc>(context).add(
+                                        SubmitContextUserEvent(
+                                            context: context,
+                                            userId: userId,
+                                            ticketId:
+                                                ticketDataList![0].ticket_id,
+                                            contestId: contestService
+                                                .contestdata!.contest_id,
+                                            ticketDataList: ticketDataList));
+                                  }
                                 },
                                 child: Text(
-                                  'Play',
+                                  isMove ? 'Play' : 'Join',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15.sp,

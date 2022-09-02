@@ -1,19 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qq/models/ParentContestQuestiondata.dart';
-import 'package:qq/models/Walletdata.dart';
 import 'package:qq/repository/ContestRepository.dart';
-import 'package:qq/repository/WalletRepository.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
 
-import '../../models/ContestQuestiondata.dart';
-
 part 'ContestEvent.dart';
-
 part 'ContestState.dart';
 
 class ContestBloc extends Bloc<ContestEvent, ContestState> {

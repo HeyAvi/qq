@@ -9,7 +9,7 @@ class GridButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text(
         text,
         style: TextStyle(
@@ -17,10 +17,13 @@ class GridButton extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: new BorderRadius.circular(8.0),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
       ),
+
      onPressed: click,
     );
   }
