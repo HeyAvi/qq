@@ -53,5 +53,5 @@ class ContestExampleService {
 
   bool get userBooked => _userBooked ?? false;
 
-  bool get participated => _isparticipated ?? false; // todo crash here
+  bool get participated => _isparticipated ?? false;
 }

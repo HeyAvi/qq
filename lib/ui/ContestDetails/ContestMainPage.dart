@@ -23,6 +23,8 @@ import 'package:qq/utils/DateTimeFormatter.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
 
 class ContestMainPage extends StatelessWidget {
+  const ContestMainPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +74,6 @@ class _ContestMainState extends State<ContestMainSateful>
         context,
         MaterialPageRoute(builder: (context) => const Home(false,false)),
         (route) => false);
-
     return Future.value(false);
   }
 

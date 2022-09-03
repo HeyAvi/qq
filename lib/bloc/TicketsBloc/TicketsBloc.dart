@@ -84,7 +84,8 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
     DialogUtil.showProgressDialog("", event.context);
     print('ticketId: ${event.ticketId}');
     Response? serverAPIResponseDto = await repository.submitContextUserEvent(
-        event.context, event.userId, event.contestId, event.ticketId, status: event.status );
+        event.context, event.userId, event.contestId, event.ticketId,
+        status: event.status);
     DialogUtil.dismissProgressDialog(event.context);
     if (serverAPIResponseDto != null) {
       log('===$serverAPIResponseDto');
@@ -97,8 +98,21 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
             contestUserSubmit: true);
         emit(completeState);
       } else if (serverAPIResponseDto.data!["status"].toString() == "404") {
-        DialogUtil.showSuccessDialog(
-            "Already registered for contest", event.context);
+        if (event.status == Status.A) {
+          DialogUtil.showInfoDialog(
+            title: 'Info',
+            message: 'You have already submitted your contest!',
+            context: event.context,
+          );
+          return;
+        }
+        TicketsCompleteState completeState = TicketsCompleteState(
+            context: event.context,
+            version: state.version + 1,
+            ticketDataList: event.ticketDataList,
+            contestUserSubmit: true);
+        emit(completeState);
+
       }
     }
   }

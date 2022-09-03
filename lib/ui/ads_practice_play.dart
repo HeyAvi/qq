@@ -21,21 +21,27 @@ import '../services/ServicesLocator.dart';
 import 'ContestDetails/ContestMainPage.dart';
 
 class PracticePlayAds extends StatelessWidget {
-  const PracticePlayAds({Key? key}) : super(key: key);
+  final List<Ticketdata>? ticketDataList;
+
+  const PracticePlayAds({Key? key, this.ticketDataList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocProvider(
         create: (_) => TicketsBloc(TicketsRepository(Dio())),
-        child: const PracticePlay(),
+        child: PracticePlay(
+          ticketDataList: ticketDataList,
+        ),
       ),
     );
   }
 }
 
 class PracticePlay extends StatefulWidget {
-  const PracticePlay({Key? key}) : super(key: key);
+  final List<Ticketdata>? ticketDataList;
+
+  const PracticePlay({Key? key, this.ticketDataList}) : super(key: key);
 
   @override
   State<PracticePlay> createState() => _PracticePlayState();
@@ -51,6 +57,8 @@ class _PracticePlayState extends State<PracticePlay>
   @override
   void initState() {
     super.initState();
+    ticketDataList = widget.ticketDataList;
+    getSharedPreferencesData();
     _loadRewardedAd();
   }
 
@@ -83,9 +91,7 @@ class _PracticePlayState extends State<PracticePlay>
   Future<void> getSharedPreferencesData() async {
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getString("userId").toString();
-    context
-        .read<TicketsBloc>()
-        .add(GetTicketsDataEvent(context: context, userId: userId));
+    print('userId: ' + userId);
   }
 
   @override
@@ -100,13 +106,16 @@ class _PracticePlayState extends State<PracticePlay>
                       setState(() {
                         ticketDataList = state.ticketDataList;
                       });
-
+                      print(' ticket ${state.ticketDataList}');
                       if (state.contestUserSubmit) {
-                        log('contest user submit ${state.contestUserSubmit}');
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContestMainPage()));
+                        print(
+                            'contest user submit from ads ${state.contestUserSubmit}');
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContestMainPage(),
+                          ),
+                        );
                       }
                     }
                   },

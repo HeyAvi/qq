@@ -367,8 +367,9 @@ class _ContestUserState extends State<ContestUserStateful> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              const PracticePlayAds()));
+                                          builder: (context) => PracticePlayAds(
+                                                ticketDataList: ticketDataList,
+                                              )));
                                 },
                                 child: Text(
                                   'Practice Play',
