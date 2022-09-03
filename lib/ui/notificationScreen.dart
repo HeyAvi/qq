@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:qq/ui/BottomNavigationWidget.dart';
-import 'package:qq/ui/ProfileScreen.dart';
+import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/home.dart';
 import 'package:qq/utils/ColorConstants.dart';
 

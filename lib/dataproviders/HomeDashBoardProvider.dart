@@ -19,6 +19,7 @@ class HomeDashBoardProvider {
 
   Future<Response?> getContestData(BuildContext context, String userId) async {
     apiUrl = ApiConstants.BASE_URL + "Contest/" + ApiConstants.fetch_contest;
+    // apiUrl = https://qqq.frantic.in/Contest/fetch_contest
 
     FormData data;
 
@@ -28,7 +29,7 @@ class HomeDashBoardProvider {
 
     try {
       Response response = await client.post(apiUrl, data: data);
-      //print("getContestData==response===>>"+response.toString());
+      print("getContestData==response===>>"+response.toString());
       return response;
     } catch (error) {
       return null;
@@ -49,7 +50,7 @@ class HomeDashBoardProvider {
 
     try {
       Response response = await client.post(apiUrl, data: data);
-      //print("getContestData==response===>>"+response.toString());
+      print("practice==response===>>"+response.toString());
       return response;
     } catch (error) {
       return null;

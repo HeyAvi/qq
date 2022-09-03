@@ -39,6 +39,8 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
           serverAPIResponseDto.data! as Map<String, dynamic>;
       Contestdata newData = Contestdata.fromJson(dataDto["data"]);
       ContestService contestService = getIt<ContestService>();
+      print('------=========>>>actual data dto $dataDto');
+
       contestService.setContestdata(
           newData,
           dataDto["wallet_sum"]["amount"].toString(),
@@ -70,9 +72,9 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
       Map<String, dynamic> dataDto =
           serverAPIResponseDto.data! as Map<String, dynamic>;
       Contestdata newData = Contestdata.fromJson(dataDto["data"]);
-      ContestService contestService = getIt<ContestService>();
-      print('------=========>>> data dto $dataDto');
-      contestService.setContestdata(
+      ContestExampleService contestService = getIt<ContestExampleService>();
+      print('------=========>>>example data dto $dataDto');
+      contestService.setContestExample(
           newData,
           dataDto["wallet_sum"]["amount"].toString(),
           dataDto["ticket"]["ticket_id"].toString(),
@@ -82,13 +84,6 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
           context: event.context,
           version: state.version + 1,
           contestdata: newData,
-          contestUserDataList: null);
-      emit(completeState);
-    } else {
-      HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
-          context: event.context,
-          version: state.version + 1,
-          contestdata: null,
           contestUserDataList: null);
       emit(completeState);
     }

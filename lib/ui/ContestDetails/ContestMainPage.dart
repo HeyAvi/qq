@@ -64,6 +64,7 @@ class _ContestMainState extends State<ContestMainSateful>
         context: context,
         contestId: contestService.contestdata!.contest_id,
         userId: userDataService.userData.user_id));
+    print('hello ====>>>> ${contestService.contestdata!.contest_id}');
   }
 
   Future<bool> _willPopCallback() async {

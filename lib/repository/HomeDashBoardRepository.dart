@@ -16,7 +16,7 @@ class HomeDashBoardRepository {
 
   Future<Response?> getPracticeContestData(
           BuildContext context, String userId) =>
-      provider.getContestData(context, userId);
+      provider.getPracticeContestData(context, userId);
 
   Future<Response?> getLastContestData(BuildContext context, String date) =>
       provider.getLastContestData(context, date);

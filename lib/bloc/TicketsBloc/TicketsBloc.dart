@@ -1,10 +1,8 @@
 import 'dart:developer';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:dio/dio.dart';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:dio/src/response.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qq/models/Ticketdata.dart';
 import 'package:qq/repository/TicketsRepository.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
+
+import '../../dataproviders/TicketsProvider.dart';
 
 part 'TicketsEvent.dart';
 
@@ -82,8 +82,9 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
   void _handleSubmitContextUserEvent(
       SubmitContextUserEvent event, Emitter<TicketsState> emit) async {
     DialogUtil.showProgressDialog("", event.context);
+    print('ticketId: ${event.ticketId}');
     Response? serverAPIResponseDto = await repository.submitContextUserEvent(
-        event.context, event.userId, event.contestId, event.ticketId);
+        event.context, event.userId, event.contestId, event.ticketId, status: event.status );
     DialogUtil.dismissProgressDialog(event.context);
     if (serverAPIResponseDto != null) {
       log('===$serverAPIResponseDto');

@@ -17,7 +17,7 @@ import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ContestPlay.dart';
-import 'package:qq/ui/ProfileScreen.dart';
+import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/customerSupport.dart';
 import 'package:qq/ui/home.dart';
 import 'package:qq/ui/notificationScreen.dart';

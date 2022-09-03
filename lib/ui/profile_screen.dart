@@ -136,6 +136,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               child: Icon(
                                 Icons.camera_alt,
                                 color: ColorConstants.primaryColor,
+                                size: 18,
                               ),
                             ),
                           ),
@@ -177,13 +178,13 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                       valueType: UserValueType.name,
                                       value: userData.name);
                                 },
-                                child: const CircleAvatar(
+                                child: CircleAvatar(
                                   backgroundColor: Colors.white,
                                   radius: 8,
                                   child: Icon(
                                     Icons.edit,
-                                    size: 12,
-                                    color: Colors.blueAccent,
+                                    size: 10,
+                                    color: Colors.grey[600],
                                   ),
                                 ),
                               ),
@@ -259,12 +260,11 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
-                Flex(
-                  direction: Axis.horizontal,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Flexible(
-                      flex: 2,
+                      flex: 1,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -281,51 +281,40 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         ],
                       ),
                     ),
-                    Flexible(
-                      flex: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const SizedBox(
-                              height: 60,
-                              child: Opacity(
-                                opacity: 0.5,
-                                child: VerticalDivider(
-                                  color: Colors.white,
-                                  thickness: 1,
-                                ),
+                    const SizedBox(
+                      height: 60,
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: VerticalDivider(
+                          color: Colors.white,
+                          thickness: 1,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: ColorConstants.orangeColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              side: const BorderSide(
+                                color: Colors.black38,
+                                width: 2,
                               ),
-                            ),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      side: const BorderSide(
-                                        color: Colors.black38,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    primary: ColorConstants.orangeColor),
-                                onPressed: () {},
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  child: Text('Rankings'),
-                                )),
-                            const SizedBox(
-                              height: 60,
-                              child: Opacity(
-                                opacity: 0.5,
-                                child: VerticalDivider(
-                                  color: Colors.white,
-                                  thickness: 1,
-                                ),
-                              ),
-                            ),
-                          ],
+                            )),
+                        onPressed: () {},
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                          child: Text('Rankings'),
+                        )),
+                    const SizedBox(
+                      height: 60,
+                      child: Opacity(
+                        opacity: 0.5,
+                        child: VerticalDivider(
+                          color: Colors.white,
+                          thickness: 1,
                         ),
                       ),
                     ),
@@ -381,35 +370,33 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                           fontSize: 20, color: Colors.white)),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      showDatePicker(
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(1900),
-                                              lastDate: DateTime.now())
-                                          .then((date) {
-                                        if (date != null) {
-                                          setState(() {
-                                            updateUser(
-                                                value:
-                                                    '$date',
-                                                valueType: UserValueType.dob);
-                                          });
-                                        }
+                                    onTap: () {
+                                      setState(() {
+                                        showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(1900),
+                                                lastDate: DateTime.now())
+                                            .then((date) {
+                                          if (date != null) {
+                                            setState(() {
+                                              updateUser(
+                                                  value: '$date',
+                                                  valueType: UserValueType.dob);
+                                            });
+                                          }
+                                        });
                                       });
-                                    });
-                                  },
-                                  child: const CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 8,
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 12,
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ),
-                                )
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 8,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 10,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ))
                               ],
                             ),
                             Text(userData.dob ?? 'Update your D.O.B',
@@ -431,28 +418,27 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                           fontSize: 20, color: Colors.white)),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    updateUser(
-                                        value: userData.email,
-                                        valueType: UserValueType.email);
-                                  },
-                                  child: const CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 8,
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 12,
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ),
-                                )
+                                    onTap: () {
+                                      updateUser(
+                                          value: userData.email,
+                                          valueType: UserValueType.email);
+                                    },
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      radius: 8,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 10,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ))
                               ],
                             ),
                             Text(userData.email,
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.white)),
                             const SizedBox(
-                              height: 10,
+                              height: 20,
                             ),
                             SizedBox(
                               height: 25,
@@ -467,11 +453,10 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                       style: TextStyle(color: Colors.black)),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  elevation: 0,
+                                  elevation: 0, backgroundColor: ColorConstants.colorBackground,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4.0),
                                   ),
-                                  primary: ColorConstants.colorBackground,
                                 ),
                               ),
                             )
@@ -481,48 +466,59 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(Icons.male,
-                                          color: Colors.blueAccent)),
-                                ),
-                                if (userData.gender != null &&
-                                    userData.gender == 'male')
-                                  const CircleAvatar(
-                                    child: Icon(
-                                      Icons.check,
-                                      size: 10,
-                                    ),
-                                    radius: 8,
-                                  )
-                              ],
+                            GestureDetector(
+                              onTap: (){
+                                updateGender(gender: 'male');
+                              },
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Icon(Icons.male,
+                                            color: Colors.blueAccent)),
+                                  ),
+                                  if (userData.gender != null &&
+                                      userData.gender?.toLowerCase() == 'male')
+                                    const CircleAvatar(
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 10,
+                                      ),
+                                      radius: 8,
+                                    )
+                                ],
+                              ),
                             ),
                             const SizedBox(width: 10),
-                            Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(4.0),
-                                  child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(Icons.female,
-                                          color: Colors.blueAccent)),
-                                ),
-                                if (userData.gender != null &&
-                                    userData.gender == 'female')
-                                  const CircleAvatar(
-                                    child: Icon(
-                                      Icons.check,
-                                      size: 10,
-                                    ),
-                                    radius: 8,
-                                  )
-                              ],
+                            GestureDetector(
+                              onTap: (){
+                                updateGender(gender: 'female');
+
+                              },
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        child: Icon(Icons.female,
+                                            color: Colors.blueAccent)),
+                                  ),
+                                  if (userData.gender != null &&
+                                      userData.gender?.toLowerCase() == 'female')
+                                    const CircleAvatar(
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 10,
+                                      ),
+                                      radius: 8,
+                                    )
+                                ],
+                              ),
                             ),
                           ],
                         )
@@ -716,6 +712,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
         builder: (_) => AlertDialog(
               title: TextField(
                 controller: _controller,
+                readOnly: valueType == UserValueType.dob,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Enter your name',
@@ -729,9 +726,9 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           name: valueType == UserValueType.name
                               ? _controller.text
                               : userData.name,
-                          gender: valueType == UserValueType.email
+                          gender: valueType == UserValueType.gender
                               ? _controller.text
-                              : userData.email,
+                              : userData.gender ?? '',
                           dob: valueType == UserValueType.dob
                               ? _controller.text
                               : userData.dob ?? '',
@@ -748,6 +745,40 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                 style: ElevatedButton.styleFrom(
                     primary: ColorConstants.primaryColor),
               ),
+            ));
+  }
+
+  updateGender({required String gender}) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(
+                  'Are you sure you want to change your gender to $gender'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    BlocProvider.of<ProfileBloc>(context).add(
+                        UpdateProfileDataEvent(
+                            context: context,
+                            name: userData.name,
+                            gender: gender,
+                            dob: userData.dob ?? '',
+                            email: userData.email,
+                            image: userData.image,
+                            userId: userId));
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Yes'),
+                )
+              ],
             ));
   }
 }

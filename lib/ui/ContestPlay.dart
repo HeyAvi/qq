@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qq/bloc/TicketsBloc/TicketsBloc.dart';
+import 'package:qq/dataproviders/TicketsProvider.dart';
 import 'package:qq/models/Ticketdata.dart';
 import 'package:qq/repository/TicketsRepository.dart';
 import 'package:qq/services/ContestServcie.dart';
@@ -21,11 +22,9 @@ import 'dart:math' as math;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ContestPlay extends StatelessWidget {
-  bool? isAlreadyBooked;
+  final bool? isAlreadyBooked;
 
-  ContestPlay(bool _isAlreadyBooked) {
-    isAlreadyBooked = _isAlreadyBooked;
-  }
+  const ContestPlay(this.isAlreadyBooked, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +38,9 @@ class ContestPlay extends StatelessWidget {
 }
 
 class ContestUserStateful extends StatefulWidget {
-  bool? isAlreadyBooked;
+  final bool? isAlreadyBooked;
 
-  ContestUserStateful(bool _isAlreadyBooked) {
-    isAlreadyBooked = _isAlreadyBooked;
-  }
+  const ContestUserStateful(this.isAlreadyBooked, {Key? key}) : super(key: key);
 
   @override
   _ContestUserState createState() => _ContestUserState();
@@ -90,13 +87,13 @@ class _ContestUserState extends State<ContestUserStateful> {
                     setState(() {
                       ticketDataList = state.ticketDataList;
                     });
-                    log('${state.contestUserSubmit}');
+                    log('contest user submit ${state.contestUserSubmit}');
                     log('$isMove');
                     if (state.contestUserSubmit && isMove) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (Context) => ContestMainPage()));
+                              builder: (context) => ContestMainPage()));
                     } else if (state.contestUserSubmit && !isMove) {
                       DialogUtil.showInfoDialog(
                           message: "You're booked for this contest.",
@@ -359,8 +356,9 @@ class _ContestUserState extends State<ContestUserStateful> {
                               height: 35.h,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.redAccent, // background
-                                  onPrimary: Colors.white, // foreground
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.redAccent,
+                                  // foreground
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(5.h),
                                   ),
@@ -391,31 +389,23 @@ class _ContestUserState extends State<ContestUserStateful> {
                               height: 35.h,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    primary: Colors.indigoAccent,
-                                    // background
-                                    onPrimary: Colors.white,
+                                    foregroundColor: Colors.white,
+                                    backgroundColor: Colors.indigoAccent,
                                     // foreground
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(5.h))),
                                 onPressed: () {
-                                  if (isMove) {
-                                    Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ContestMainPage()));
-                                  } else {
-                                    BlocProvider.of<TicketsBloc>(context).add(
-                                        SubmitContextUserEvent(
-                                            context: context,
-                                            userId: userId,
-                                            ticketId:
-                                                ticketDataList![0].ticket_id,
-                                            contestId: contestService
-                                                .contestdata!.contest_id,
-                                            ticketDataList: ticketDataList));
-                                  }
+                                  BlocProvider.of<TicketsBloc>(context).add(
+                                      SubmitContextUserEvent(
+                                          context: context,
+                                          userId: userId,
+                                          ticketId:
+                                              ticketDataList![0].ticket_id,
+                                          contestId: contestService
+                                              .contestdata!.contest_id,
+                                          ticketDataList: ticketDataList,
+                                          status: Status.A));
                                 },
                                 child: Text(
                                   isMove ? 'Play' : 'Join',

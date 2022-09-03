@@ -4,10 +4,12 @@ import 'package:qq/services/UserDataServcie.dart';
 
 final getIt = GetIt.instance;
 
-
 setupServiceLocator() {
   // Register UserDataService
   getIt.registerLazySingleton<UserDataService>(() => UserDataService());
   // Register ContestService
   getIt.registerLazySingleton<ContestService>(() => ContestService());
+  // Register ContestExampleService
+  getIt.registerLazySingleton<ContestExampleService>(
+      () => ContestExampleService());
 }

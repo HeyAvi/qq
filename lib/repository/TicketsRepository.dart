@@ -10,7 +10,7 @@ class TicketsRepository{
   late final TicketsProvider provider ;
 
   TicketsRepository(this.client){
-    provider = new TicketsProvider(client);
+    provider = TicketsProvider(client);
   }
 
 
@@ -18,6 +18,8 @@ class TicketsRepository{
 
   Future<Response?> getTicketsDataEvent(BuildContext context ,String userId) => provider.getTicketsDataEvent(context,userId);
 
-  Future<Response?> submitContextUserEvent(BuildContext context ,String userId , String contestId, String ticketId) => provider.submitContextUserEvent(context,userId,contestId,ticketId);
+  Future<Response?> submitContextUserEvent(BuildContext context ,String userId , String contestId, String ticketId, {
+    required Status status,
+  } ) => provider.submitContextUserEvent(context,userId,contestId,ticketId, status: status);
 
 }

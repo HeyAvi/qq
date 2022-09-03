@@ -22,9 +22,9 @@ import 'package:qq/services/UserDataServcie.dart';
 import 'package:qq/ui/BottomNavigationWidget.dart';
 import 'package:qq/ui/BuyTickets.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
-import 'package:qq/ui/ProfileScreen.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
+import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
@@ -39,7 +39,6 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../repository/HomeDashBoardRepository.dart';
 import '../utils/DateTimeFormatter.dart';
 import 'ContestPlay.dart';
-import 'ads_practice_play.dart';
 
 class Home extends StatelessWidget {
   final bool? isContestCompleted, isContestOpen;

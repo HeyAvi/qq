@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:qq/bloc/TicketsBloc/TicketsBloc.dart';
+import 'package:qq/dataproviders/TicketsProvider.dart';
 import 'package:qq/repository/TicketsRepository.dart';
 import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
@@ -296,20 +297,20 @@ class _ContestUserState extends State<ContestUserStateful> {
                                                                 children: [
                                                                   InkWell(
                                                                     onTap: () {
-                                                                      BlocProvider.of<TicketsBloc>(stateContext).add(SubmitContextUserEvent(
-                                                                          context:
-                                                                              context,
-                                                                          userId:
-                                                                              userId,
-                                                                          ticketId: state
-                                                                              .ticketDataList![
-                                                                                  index]
-                                                                              .ticket_id,
-                                                                          contestId: contestService
-                                                                              .contestdata!
-                                                                              .contest_id,
-                                                                          ticketDataList:
-                                                                              state.ticketDataList));
+                                                                      BlocProvider.of<TicketsBloc>(
+                                                                              stateContext)
+                                                                          .add(
+                                                                        SubmitContextUserEvent(
+                                                                            context:
+                                                                                context,
+                                                                            userId:
+                                                                                userId,
+                                                                            ticketId:
+                                                                                state.ticketDataList![index].ticket_id,
+                                                                            contestId: contestService.contestdata!.contest_id,
+                                                                            ticketDataList: state.ticketDataList,
+                                                                            status: Status.A),
+                                                                      );
                                                                     },
                                                                     child:
                                                                         Container(
