@@ -113,7 +113,9 @@ class _PracticePlayState extends State<PracticePlay>
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ContestMainPage(),
+                            builder: (context) => ContestMainPage(
+                              contestExampleService: contestExampleService,
+                            ),
                           ),
                         );
                       }
