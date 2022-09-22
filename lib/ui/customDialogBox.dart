@@ -105,7 +105,7 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                       context,
                       PageRouteBuilder(
                         pageBuilder: (context, animation1, animation2) =>
-                            ContestPlay(true),
+                            const ContestPlay(true),
                         transitionDuration: Duration.zero,
                       ),
                     );
@@ -215,38 +215,16 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                                       onPressed: () {
                                         widget.onCountSelected("agree");
                                         Navigator.pop(context);
-                                        if (userDataService.totalTickets
-                                                    .toString() ==
-                                                "" ||
-                                            userDataService.totalTickets
-                                                    .toString() ==
-                                                "null" ||
-                                            userDataService.totalTickets
-                                                    .toString() ==
-                                                "0") {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return DialogUtil
-                                                    .showTicketInfoDialog(
-                                                        "Please purchase a ticket first.",
-                                                        context);
-                                              });
-                                        } else {
-                                          print(widget.ruleButton);
-                                          if (!(widget.ruleButton ?? false)) {
-                                            Navigator.push(
-                                              context,
-                                              PageRouteBuilder(
-                                                pageBuilder: (context,
-                                                        animation1,
-                                                        animation2) =>
-                                                    ContestPlay(true),
-                                                transitionDuration:
-                                                    Duration.zero,
-                                              ),
-                                            );
-                                          }
+                                        if (!(widget.ruleButton ?? false)) {
+                                          Navigator.push(
+                                            context,
+                                            PageRouteBuilder(
+                                              pageBuilder: (context, animation1,
+                                                      animation2) =>
+                                                  const ContestPlay(true),
+                                              transitionDuration: Duration.zero,
+                                            ),
+                                          );
                                         }
                                       },
                                       child: Text(

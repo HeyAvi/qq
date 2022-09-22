@@ -35,12 +35,12 @@ class BuyicketsDataEvent extends TicketsEvent {
 
 
 class SubmitContextUserEvent extends TicketsEvent {
-  const SubmitContextUserEvent({required this.context  ,required this.userId,required this.contestId,required this.ticketId,required this.ticketDataList,
+  const SubmitContextUserEvent({required this.context  ,required this.userId,required this.contestId,this.ticketId,required this.ticketDataList,
   required this.status,
 });
 
   final String userId;
-  final String ticketId;
+  final String? ticketId;
   final String contestId;
   final BuildContext context;
   final List<Ticketdata>? ticketDataList;

@@ -12,15 +12,18 @@ import 'package:qq/ui/ContestDetails/SlidingPuzzle/Menu.dart';
 import 'package:qq/ui/ContestDetails/SlidingPuzzle/MyTitle.dart';
 import 'package:qq/utils/ColorConstants.dart';
 
-
 class Board extends StatefulWidget {
-
-  Map<String,dynamic>? dynamicContent;
+  Map<String, dynamic>? dynamicContent;
   final VoidCallback onIndexChanged;
   List<ParentContestQuestiondata>? contestQuestiondataDataLists;
   int? indexs;
 
-  Board(Map<String,dynamic>? _dynamicContent,List<ParentContestQuestiondata>? contestQuestiondataDataList, int index,{required this.onIndexChanged,}){
+  Board(
+    Map<String, dynamic>? _dynamicContent,
+    List<ParentContestQuestiondata>? contestQuestiondataDataList,
+    int index, {
+    required this.onIndexChanged,
+  }) {
     dynamicContent = _dynamicContent;
     contestQuestiondataDataLists = contestQuestiondataDataList;
     indexs = index;
@@ -31,7 +34,7 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  var numbers  = [];//[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  var numbers = []; //[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   int move = 0;
 
   static const duration = const Duration(seconds: 1);
@@ -40,8 +43,7 @@ class _BoardState extends State<Board> {
   Timer? timer;
   int startNumber = 10;
   int endNumber = 21;
-  ContestService contestService =  getIt<ContestService>();
-
+  ContestService contestService = getIt<ContestService>();
 
   @override
   void initState() {
@@ -52,11 +54,10 @@ class _BoardState extends State<Board> {
     startNumber = int.parse(arr[0].toString());
     endNumber = int.parse(arr[1].toString());
 
-    for(int i=startNumber ; i<=endNumber ; i++){
+    for (int i = startNumber; i <= endNumber; i++) {
       numbers.add(i);
     }
     numbers.shuffle();
-
   }
 
   @override
@@ -69,44 +70,54 @@ class _BoardState extends State<Board> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          height: size.height,
-          color: Colors.grey,
-          child: Column(
-            children: <Widget>[
-              MyTitle(size),
-              Expanded(child: Grid(numbers, size, clickGrid),),
-              Menu(reset, move, secondsPassed, size),
-            ],
+        body: SafeArea(
+          child: Container(
+            height: size.height,
+            color: Colors.grey,
+            child: Column(
+              children: <Widget>[
+                MyTitle(size),
+                Expanded(
+                  child: Grid(numbers, size, clickGrid),
+                ),
+                Menu(reset, move, secondsPassed, size),
+              ],
+            ),
           ),
         ),
-      ),
-        floatingActionButton: Row(
+        floatingActionButton: Row(children: [
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 80,
-                      ),
-                      Container(
-                        width: 150,
-                        child: FloatingActionButton.extended(
-                          backgroundColor: ColorConstants.primaryColor3,
-                          onPressed: () => {
-                             BlocProvider.of<ContestBloc>(context).add(SubmitQuestionDataEvent(context: context, contestId:contestService.contestdata!.contest_id,questionId:widget.dynamicContent!["question_id"],answerGiven:"yes",isAnswerTrue:"true".toString(),moves:"1",timeTaken:secondsPassed.toString(),contestQuestiondataDataList: widget.contestQuestiondataDataLists,currentIndex: widget.indexs!))
-                          },
-                          heroTag: null, label: Text("SUBMIT"),
-                        ),
-                      )
-                    ],
-                  )
+              SizedBox(
+                width: 80,
               ),
-            ]
-        )
-    );
+              Container(
+                width: 150,
+                child: FloatingActionButton.extended(
+                  backgroundColor: ColorConstants.primaryColor3,
+                  onPressed: () => {
+                    BlocProvider.of<ContestBloc>(context).add(
+                        SubmitQuestionDataEvent(
+                            context: context,
+                            contestId: contestService.contestdata!.contest_id,
+                            questionId: widget.dynamicContent!["question_id"],
+                            answerGiven: "yes",
+                            isAnswerTrue: "true".toString(),
+                            moves: "1",
+                            timeTaken: secondsPassed.toString(),
+                            contestQuestiondataDataList:
+                                widget.contestQuestiondataDataLists,
+                            currentIndex: widget.indexs!))
+                  },
+                  heroTag: null,
+                  label: Text("SUBMIT"),
+                ),
+              )
+            ],
+          )),
+        ]));
   }
 
   void clickGrid(index) {
@@ -117,7 +128,7 @@ class _BoardState extends State<Board> {
         index + 1 < 16 && numbers[index + 1] == 0 && (index + 1) % 4 != 0 ||
         (index - 4 >= 0 && numbers[index - 4] == 0) ||
         (index + 4 < 16 && numbers[index + 4] == 0)) {
-      if(this.mounted){
+      if (this.mounted) {
         setState(() {
           move++;
           numbers[numbers.indexOf(0)] = numbers[index];
@@ -130,16 +141,16 @@ class _BoardState extends State<Board> {
 
   void startTime() {
     if (isActive) {
-     if(this.mounted){
-       setState(() {
-         secondsPassed = secondsPassed + 1;
-       });
-     }
+      if (this.mounted) {
+        setState(() {
+          secondsPassed = secondsPassed + 1;
+        });
+      }
     }
   }
 
   void reset() {
-    if(this.mounted){
+    if (this.mounted) {
       setState(() {
         numbers.shuffle();
         move = 0;

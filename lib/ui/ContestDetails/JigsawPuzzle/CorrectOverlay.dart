@@ -8,7 +8,7 @@ class CorrectOverlay extends StatefulWidget {
   CorrectOverlay(this._isCorrect, this._onTap);
 
   @override
-  State createState() => new CorrectOverlayState();
+  State createState() => CorrectOverlayState();
 }
 
 class CorrectOverlayState extends State<CorrectOverlay> with SingleTickerProviderStateMixin {
@@ -18,11 +18,11 @@ class CorrectOverlayState extends State<CorrectOverlay> with SingleTickerProvide
   @override
   void initState() {
     super.initState();
-    _iconAnimationController = new AnimationController(
-        duration: new Duration(seconds: 2), vsync: this);
-    _iconAnimation = new CurvedAnimation(
+    _iconAnimationController = AnimationController(
+        duration: const Duration(seconds: 2), vsync: this);
+    _iconAnimation = CurvedAnimation(
         parent: _iconAnimationController!, curve: Curves.elasticOut);
-    _iconAnimation!.addListener(() => this.setState(() {}));
+    _iconAnimation!.addListener(() => setState(() {}));
     _iconAnimationController!.forward();
   }
 
@@ -34,30 +34,30 @@ class CorrectOverlayState extends State<CorrectOverlay> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
-    return new Material(
+    return Material(
       color: Colors.black54,
-      child: new InkWell(
+      child: InkWell(
         onTap: () => widget._onTap(),
-        child: new Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
+            Container(
+              decoration: const BoxDecoration(
                   color: Colors.white, shape: BoxShape.circle),
-              child: new Transform.rotate(
+              child: Transform.rotate(
                 angle: _iconAnimation!.value * 2 * math.pi,
-                child: new Icon(
+                child: Icon(
                   widget._isCorrect == true ? Icons.done : Icons.clear,
                   size: _iconAnimation!.value * 80.0,
                 ),
               ),
             ),
-            new Padding(
-              padding: new EdgeInsets.only(bottom: 20.0),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20.0),
             ),
-            new Text(
+            Text(
               widget._isCorrect == true ? "Correct!" : "Wrong!",
-              style: new TextStyle(color: Colors.white, fontSize: 30.0),
+              style: const TextStyle(color: Colors.white, fontSize: 30.0),
             )
           ],
         ),

@@ -49,7 +49,6 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
   void initState() {
     super.initState();
     userData = userDataService.userData;
-
     userId = userData.user_id;
   }
 
@@ -65,189 +64,199 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
       }
     }, child: BlocBuilder<ProfileBloc, ProfileState>(
       builder: (BuildContext context, ProfileState state) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(155),
-            child: Column(
-              children: [
-                SafeArea(
-                  bottom: false,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Home(false, false)));
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                          ),
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
-                          child: (userData.image != "")
-                              ? CircleAvatar(
-                                  radius: 64,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 60.0,
-                                    backgroundImage: NetworkImage(
-                                        ApiConstants.IMAGE_URL +
-                                            userData.image),
-                                    backgroundColor: Colors.transparent,
-                                  ),
-                                )
-                              : const CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor: Colors.white,
-                                  child: CircleAvatar(
-                                    radius: 47.5,
-                                    backgroundImage:
-                                        AssetImage('assets/userprofile.png'),
-                                    backgroundColor: Colors.transparent,
-                                  ),
-                                ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          left: 15,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: const CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: ColorConstants.primaryColor,
-                                size: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        return WillPopScope(
+          onWillPop: () async {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                    const Home(false, false)), (_)=> false);
+            return false;
+          },
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(155),
+              child: Column(
+                children: [
+                  SafeArea(
+                    bottom: false,
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8.0, right: 15.0),
-                                child: (userData.name.isNotEmpty)
-                                    ? Text(
-                                        ' ' +
-                                            userData.name
-                                                .substring(0, 1)
-                                                .toUpperCase() +
-                                            userData.name.substring(1),
-                                        style: const TextStyle(
-                                            fontSize: 28,
-                                            color: Colors.white,
-                                            overflow: TextOverflow.ellipsis,
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.left,
-                                      )
-                                    : const Text(""),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  updateUser(
-                                      valueType: UserValueType.name,
-                                      value: userData.name);
-                                },
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.white,
-                                  radius: 8,
-                                  child: Icon(
-                                    Icons.edit,
-                                    size: 10,
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Card(
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Home(false, false)));
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              size: 30,
+                            ),
                             color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: Text(
-                                    'Mobile No. +91${userData.phone}',
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                if (userData.is_verified == 'YES')
-                                  const CircleAvatar(
-                                    backgroundColor: Colors.blueAccent,
-                                    radius: 10,
-                                    child: Icon(
-                                      Icons.check,
-                                      size: 16,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          )
+                          ),
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15.0),
+                            child: (userData.image != "")
+                                ? CircleAvatar(
+                                    radius: 64,
+                                    backgroundColor: Colors.white,
+                                    child: CircleAvatar(
+                                      radius: 60.0,
+                                      backgroundImage: NetworkImage(
+                                          ApiConstants.IMAGE_URL +
+                                              userData.image),
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                  )
+                                : const CircleAvatar(
+                                    radius: 50,
+                                    backgroundColor: Colors.white,
+                                    child: CircleAvatar(
+                                      radius: 47.5,
+                                      backgroundImage:
+                                          AssetImage('assets/userprofile.png'),
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                  ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            left: 15,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: const CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 15,
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: ColorConstants.primaryColor,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, right: 15.0),
+                                  child: (userData.name.isNotEmpty)
+                                      ? Text(
+                                          ' ' +
+                                              userData.name
+                                                  .substring(0, 1)
+                                                  .toUpperCase() +
+                                              userData.name.substring(1),
+                                          style: const TextStyle(
+                                              fontSize: 28,
+                                              color: Colors.white,
+                                              overflow: TextOverflow.ellipsis,
+                                              fontWeight: FontWeight.bold),
+                                          textAlign: TextAlign.left,
+                                        )
+                                      : const Text(""),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    updateUser(
+                                        valueType: UserValueType.name,
+                                        value: userData.name);
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 8,
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 10,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Card(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    child: Text(
+                                      'Mobile No. +91${userData.phone}',
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  if (userData.is_verified == 'YES')
+                                    const CircleAvatar(
+                                      backgroundColor: Colors.blueAccent,
+                                      radius: 10,
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
+            extendBody: true,
+            backgroundColor: ColorConstants.primaryColor,
+            body: NestedScrollView(
+                headerSliverBuilder: (context, value) {
+                  return [
+                    SliverAppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        automaticallyImplyLeading: false,
+                        expandedHeight: 280,
+                        toolbarHeight: 0,
+                        pinned: true,
+                        flexibleSpace:
+                            FlexibleSpaceBar(background: basicProfile())),
+                  ];
+                },
+                body: settings()),
+            bottomNavigationBar: const BottomNavigationWidget(4),
           ),
-          extendBody: true,
-          backgroundColor: ColorConstants.primaryColor,
-          body: NestedScrollView(
-              headerSliverBuilder: (context, value) {
-                return [
-                  SliverAppBar(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      automaticallyImplyLeading: false,
-                      expandedHeight: 280,
-                      toolbarHeight: 0,
-                      pinned: true,
-                      flexibleSpace:
-                          FlexibleSpaceBar(background: basicProfile())),
-                ];
-              },
-              body: settings()),
-          bottomNavigationBar: const BottomNavigationWidget(4),
         );
       },
     ));

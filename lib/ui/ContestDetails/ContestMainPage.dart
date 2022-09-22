@@ -74,10 +74,10 @@ class _ContestMainState extends State<ContestMainSateful>
         userId: userDataService.userData.user_id));
   }
 
-  void h(){
+  void h() {
     value = double.parse(DateFormatter.getUTCRemainingTimeInMills(
-        widget.contestExampleService?.contestdata?.start_date.toString() ??
-            contestService.contestdata!.start_date)
+            widget.contestExampleService?.contestdata?.start_date.toString() ??
+                contestService.contestdata!.start_date)
         .toString());
     BlocProvider.of<ContestBloc>(context).add(GetContestQuestionDataEvent(
         context: context,
@@ -89,7 +89,12 @@ class _ContestMainState extends State<ContestMainSateful>
   Future<bool> _willPopCallback() async {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const Home(false, false)),
+        MaterialPageRoute(
+          builder: (context) => const Home(
+            false,
+            false,
+          ),
+        ),
         (route) => false);
     return Future.value(false);
   }
@@ -172,19 +177,20 @@ class _ContestMainState extends State<ContestMainSateful>
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (Context) => Home(true, false)));
+                            builder: (context) => const Home(true, false)));
                   });
                 }
                 if (state.isCurrentIndexChanged == false) {
                   _cardController = TabController(
                       vsync: this,
                       length: state.contestQuestiondataDataList?.length ?? 0);
-                  _tabPageSelector = TabPageSelector(controller: _cardController);
-                  contestQuestiondataDataList = state.contestQuestiondataDataList ?? [];
+                  _tabPageSelector =
+                      TabPageSelector(controller: _cardController);
+                  contestQuestiondataDataList =
+                      state.contestQuestiondataDataList ?? [];
                   isSubmit = state.isSubmit;
                   currentIndex = state.currentIndex;
-                  if (currentIndex <
-                      contestQuestiondataDataList.length - 1) {
+                  if (currentIndex < contestQuestiondataDataList.length - 1) {
                     BlocProvider.of<ContestBloc>(context).add(
                         GetContestQuestionDataEvent(
                             context: context,
@@ -207,7 +213,7 @@ class _ContestMainState extends State<ContestMainSateful>
                 (contestQuestiondataDataList.isNotEmpty)
                     ? Padding(
                         padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                        child: Container(
+                        child: SizedBox(
                           height: 80.h,
                           child: ListView.builder(
                               itemCount: contestQuestiondataDataList.length,
@@ -216,7 +222,8 @@ class _ContestMainState extends State<ContestMainSateful>
                                 return Padding(
                                     padding: EdgeInsets.only(top: 10.h),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Column(
                                           mainAxisAlignment:
@@ -240,12 +247,14 @@ class _ContestMainState extends State<ContestMainSateful>
                                                               width: 40,
                                                               height: 40,
                                                               child: Center(
-                                                                child: Image.asset(
-                                                                    "assets/jigsawpuzzle.png",
-                                                                    height: 18.h,
-                                                                    width: 18.w,
-                                                                    color: Colors
-                                                                        .white),
+                                                                child:
+                                                                    Image.asset(
+                                                                  "assets/jigsawpuzzle.png",
+                                                                  height: 18.h,
+                                                                  width: 18.w,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
                                                               ),
                                                               decoration: BoxDecoration(
                                                                   shape: BoxShape
@@ -280,7 +289,8 @@ class _ContestMainState extends State<ContestMainSateful>
                                                               child: Center(
                                                                 child: Image.asset(
                                                                     "assets/audio.png",
-                                                                    height: 18.h,
+                                                                    height:
+                                                                        18.h,
                                                                     width: 18.w,
                                                                     color: Colors
                                                                         .white),
@@ -315,7 +325,8 @@ class _ContestMainState extends State<ContestMainSateful>
                                                               child: Center(
                                                                 child: Image.asset(
                                                                     "assets/slide_puzzle.png",
-                                                                    height: 18.h,
+                                                                    height:
+                                                                        18.h,
                                                                     width: 18.w,
                                                                     color: Colors
                                                                         .white),
@@ -351,7 +362,8 @@ class _ContestMainState extends State<ContestMainSateful>
                                                   elevation: 2,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(10),
+                                                        BorderRadius.circular(
+                                                            10),
                                                   ),
                                                   child: Container(
                                                     width: 80,
@@ -368,7 +380,8 @@ class _ContestMainState extends State<ContestMainSateful>
                                                           textAlign:
                                                               TextAlign.center,
                                                           style: TextStyle(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontSize: 12.sp,
                                                               fontWeight:
                                                                   FontWeight
@@ -383,15 +396,18 @@ class _ContestMainState extends State<ContestMainSateful>
                                         ),
                                         Container(
                                             height: 50.h,
-                                            margin: EdgeInsets.only(bottom: 20.h),
+                                            margin:
+                                                EdgeInsets.only(bottom: 20.h),
                                             child: Center(
                                               child: ((index + 1) <
-                                                      contestQuestiondataDataList.length)
+                                                      contestQuestiondataDataList
+                                                          .length)
                                                   ? Container(
                                                       width: 50.w,
                                                       height: 2.h,
                                                       margin: EdgeInsets.only(
-                                                          left: 1.w, right: 1.w),
+                                                          left: 1.w,
+                                                          right: 1.w),
                                                       color:
                                                           (contestQuestiondataDataList[
                                                                       index]
@@ -445,13 +461,14 @@ class _ContestMainState extends State<ContestMainSateful>
                                           ?.end_date ??
                                       contestService.contestdata!.end_date),
                               widgetBuilder: (_, time) {
-                                _progress += double.parse(
-                                        DateFormatter.getUTCRemainingTimeInMills(
-                                                widget.contestExampleService
-                                                        ?.contestdata?.end_date ??
-                                                    contestService
-                                                        .contestdata!.end_date)
-                                            .toString()) /
+                                _progress += double.parse(DateFormatter
+                                            .getUTCRemainingTimeInMills(widget
+                                                    .contestExampleService
+                                                    ?.contestdata
+                                                    ?.end_date ??
+                                                contestService
+                                                    .contestdata!.end_date)
+                                        .toString()) /
                                     100;
                                 if (time == null) {
                                   _progress = 1;
@@ -459,11 +476,11 @@ class _ContestMainState extends State<ContestMainSateful>
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (Context) =>
-                                              Home(false, false)));
+                                          builder: (context) =>
+                                              const Home(false, false)));
                                   return Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 20.h, bottom: 20.h),
+                                    padding: EdgeInsets.only(
+                                        top: 20.h, bottom: 20.h),
                                     child: Text('CLOSED',
                                         style: TextStyle(
                                             color: Colors.white,
@@ -539,7 +556,8 @@ class _ContestMainState extends State<ContestMainSateful>
                 SizedBox(
                   height: 5.h,
                 ),
-                Expanded(child: contestQuestionsView(contestQuestiondataDataList))
+                Expanded(
+                    child: contestQuestionsView(contestQuestiondataDataList))
               ],
             ),
           ),
@@ -575,6 +593,8 @@ class _ContestMainState extends State<ContestMainSateful>
             children: contestQuestiondataDataList.isEmpty
                 ? <Widget>[]
                 : contestQuestiondataDataList.map((dynamicContent) {
+                    print(
+                        'val ${((dynamicContent.is_submitted == false || (dynamicContent.is_submitted == true && widget.contestExampleService != null)) && dynamicContent.question!["puzzle_type"] == "jigsaw")}');
                     if (((dynamicContent.is_submitted == false) &&
                         dynamicContent.question!["puzzle_type"] == "jigsaw")) {
                       return JigsawPuzzleTwo(

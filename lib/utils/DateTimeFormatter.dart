@@ -38,7 +38,7 @@ class DateFormatter {
 
   static int getUTCRemainingTimeInMills(String dateStr)  {
 
-    DateFormat dateFormat = new DateFormat("yyyy-MM-dd HH:mm:ss");
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     DateTime dateTime = dateFormat.parse(dateStr);
 
     int utcRemainingTime = dateTime.millisecondsSinceEpoch ;
@@ -47,7 +47,7 @@ class DateFormatter {
   }
 
   static int getUTCRemainingTimeInSeconds(String dateStr)  {
-    DateFormat dateFormat = new DateFormat("yyyy-MM-dd HH:mm:ss");
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     DateTime dateTime = dateFormat.parse(dateStr);
     final toDayDate = DateTime.now();
     var different = dateTime.difference(toDayDate).inSeconds;

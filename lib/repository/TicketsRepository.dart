@@ -18,7 +18,7 @@ class TicketsRepository{
 
   Future<Response?> getTicketsDataEvent(BuildContext context ,String userId) => provider.getTicketsDataEvent(context,userId);
 
-  Future<Response?> submitContextUserEvent(BuildContext context ,String userId , String contestId, String ticketId, {
+  Future<Response?> submitContextUserEvent(BuildContext context ,String userId , String contestId, String? ticketId, {
     required Status status,
   } ) => provider.submitContextUserEvent(context,userId,contestId,ticketId, status: status);
 

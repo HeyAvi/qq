@@ -52,7 +52,7 @@ class TicketsProvider {
     BuildContext context,
     String userId,
     String contestId,
-    String ticketId,
+    String? ticketId,
       {
     required Status status,
   }) async {

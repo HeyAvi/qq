@@ -55,8 +55,8 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
   late Timer _timer;
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-     _timer = new Timer.periodic(
+    const oneSec = Duration(seconds: 1);
+     _timer = Timer.periodic(
       oneSec,
           (Timer timer) {
         if (_start == 0) {
@@ -97,7 +97,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
       _image = File(file.path);
       _imagePath = _image!.path;
       pieces.clear();
-      if(this.mounted){
+      if(mounted){
         ScoreWidget.of(context).allInPlaceCount = 0;
         setState(() {
 
@@ -132,7 +132,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
 
     for (int x = 0; x < rows; x++) {
       for (int y = 0; y < cols; y++) {
-        if(this.mounted){
+        if(mounted){
           setState(() {
             pieces.add(
               PuzzlePiece(
@@ -143,8 +143,8 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
                 col: y,
                 maxRow: rows,
                 maxCol: cols,
-                bringToTop: this.bringToTop,
-                sendToBack: this.sendToBack,
+                bringToTop: bringToTop,
+                sendToBack: sendToBack,
               ),
             );
           });
@@ -155,7 +155,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
 
   // when the pan of a piece starts, we need to bring it to the front of the stack
   void bringToTop(Widget widget) {
-    if(this.mounted){
+    if(mounted){
       setState(() {
         pieces.remove(widget);
         pieces.add(widget);
@@ -166,7 +166,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
 // when a piece reaches its final position,
 // it will be sent to the back of the stack to not get in the way of other, still movable, pieces
   void sendToBack(Widget widget) {
-    if(this.mounted){
+    if(mounted){
       setState(() {
         pieces.remove(widget);
         pieces.insert(0, widget);
@@ -187,7 +187,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
             OverlayEntry(builder: (context) {
               //widget.onIndexChanged();
               return CorrectOverlay(true, () {
-                if(this.mounted){
+                if(mounted){
                   setState(() {
                     ScoreWidget.of(context).allInPlaceCount = 0;
                   });
@@ -216,7 +216,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
                         isAnswerTrue = (ScoreWidget.of(context).allInPlaceCount == rows * cols);
                         BlocProvider.of<ContestBloc>(context).add(SubmitQuestionDataEvent(context: context, contestId:contestService.contestdata!.contest_id,questionId:widget.dynamicContent!["question_id"],answerGiven:"yes",isAnswerTrue:isAnswerTrue.toString(),moves:"1",timeTaken:seconds.toString(),contestQuestiondataDataList: widget.contestQuestiondataDataLists,currentIndex: widget.indexs!));
                       },
-                      heroTag: null, label: Text("SUBMIT"),
+                      heroTag: null, label: const Text("SUBMIT"),
                     ),
                   )
                 ],
@@ -224,7 +224,7 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
             ),
             FloatingActionButton(
               backgroundColor: ColorConstants.primaryColor3,
-              child: Icon(Icons.image
+              child: const Icon(Icons.image
               ),
               onPressed: () {
                 showModalBottomSheet<void>(

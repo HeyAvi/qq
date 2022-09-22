@@ -24,7 +24,6 @@ import 'package:qq/ui/BuyTickets.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
-import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
@@ -112,11 +111,10 @@ class _HomeState extends State<HomeStateful> {
         .add(GetProfileDataEvent(context: context));
     BlocProvider.of<ProfileBloc>(context).stream.listen((event) {
       userData = userDataService.userData;
-      context
-          .read<HomeDashBoardBloc>()
-          .add(FetchContestEvent(context: context, userId: userData!.user_id));
-      context.read<HomeDashBoardBloc>().add(FetchExampleContestEvent(
-          context: context, userId: userData!.user_id));
+      context.read<HomeDashBoardBloc>()
+        ..add(FetchContestEvent(context: context, userId: userData!.user_id))
+        ..add(FetchExampleContestEvent(
+            context: context, userId: userData!.user_id));
       context.read<HomeDashBoardBloc>().add(GetLastContestDataEvent(
           context: context, date: "", contestdata: null));
       setState(() {});
@@ -166,8 +164,6 @@ class _HomeState extends State<HomeStateful> {
 
   @override
   Widget build(BuildContext context) {
-    print(' winner zone ${contestdata?.winner_zone}');
-    // todo from here use [contestdata.winner_zone]
     return WillPopScope(
       onWillPop: _willPopCallback,
       child: Scaffold(
@@ -394,23 +390,23 @@ class _HomeState extends State<HomeStateful> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (
-                        //       context,
-                        //     ) =>
-                        //         const PracticePlayAds(),
-                        //   ),
-                        // );
-                        Navigator.pushReplacement(
+                        Navigator.push(
                           context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                const ProfileScreen(),
-                            transitionDuration: Duration.zero,
+                          MaterialPageRoute(
+                            builder: (
+                              context,
+                            ) =>
+                                const ContestMainPage(),
                           ),
                         );
+                        // Navigator.pushReplacement(
+                        //   context,
+                        //   PageRouteBuilder(
+                        //     pageBuilder: (context, animation1, animation2) =>
+                        //         const ProfileScreen(),
+                        //     transitionDuration: Duration.zero,
+                        //   ),
+                        // );
                       },
                       child: SizedBox(
                           height: 68.h,
@@ -878,7 +874,6 @@ class _HomeState extends State<HomeStateful> {
                         //buttonWidth: 60.h,
                         height: buttonHeight,
                         isRestart: true,
-                        initialPosition: positions,
                         color: ColorConstants.primaryColor2,
                         dismissible: false,
                         label: Center(
@@ -918,33 +913,15 @@ class _HomeState extends State<HomeStateful> {
                                 if (position == SlidableButtonPosition.right) {
                                   setState(() {
                                     positions = SlidableButtonPosition.right;
-                                    if (userDataService.totalTickets
-                                                .toString() ==
-                                            "" ||
-                                        userDataService.totalTickets
-                                                .toString() ==
-                                            "null" ||
-                                        userDataService.totalTickets
-                                                .toString() ==
-                                            "0") {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return DialogUtil.showTicketInfoDialog(
-                                                "Please purchase a ticket first.",
-                                                context);
-                                          });
-                                    } else {
-                                      Navigator.push(
-                                        context,
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation1,
-                                                  animation2) =>
-                                              ContestPlay(true),
-                                          transitionDuration: Duration.zero,
-                                        ),
-                                      );
-                                    }
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder:
+                                            (context, animation1, animation2) =>
+                                                const ContestPlay(true),
+                                        transitionDuration: Duration.zero,
+                                      ),
+                                    );
                                   });
                                 }
                               }
@@ -1428,7 +1405,7 @@ class _HomeState extends State<HomeStateful> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                ContestMainPage()));
+                                                const ContestMainPage()));
                                   } else {
                                     DialogUtil.showInfoDialog(
                                         message: "Contest is not Live now.",

@@ -68,6 +68,10 @@ class _ContestUserState extends State<ContestUserStateful> {
   }
 
   Future<bool> _willPopCallback() async {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const Home(false, false)),
+        (route) => false);
     return Future.value(true);
   }
 
@@ -93,7 +97,7 @@ class _ContestUserState extends State<ContestUserStateful> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ContestMainPage()));
+                              builder: (context) => const ContestMainPage()));
                     } else if (state.contestUserSubmit && !isMove) {
                       DialogUtil.showInfoDialog(
                           message: "You're booked for this contest.",
@@ -120,15 +124,7 @@ class _ContestUserState extends State<ContestUserStateful> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation1, animation2) =>
-                                        const Home(false, false),
-                                transitionDuration: Duration.zero,
-                              ),
-                            );
+                            _willPopCallback();
                           },
                           child: const Icon(
                             Icons.arrow_back_sharp,
@@ -142,7 +138,7 @@ class _ContestUserState extends State<ContestUserStateful> {
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.bold),
                           ),
-                        )
+                        ),
                       ],
                     ),
 
@@ -397,16 +393,28 @@ class _ContestUserState extends State<ContestUserStateful> {
                                         borderRadius:
                                             BorderRadius.circular(5.h))),
                                 onPressed: () {
-                                  BlocProvider.of<TicketsBloc>(context).add(
-                                      SubmitContextUserEvent(
-                                          context: context,
-                                          userId: userId,
-                                          ticketId:
-                                              ticketDataList![0].ticket_id,
-                                          contestId: contestService
-                                              .contestdata!.contest_id,
-                                          ticketDataList: ticketDataList,
-                                          status: Status.A));
+                                  if (ticketDataList?.isNotEmpty ?? false) {
+                                    BlocProvider.of<TicketsBloc>(context).add(
+                                        SubmitContextUserEvent(
+                                            context: context,
+                                            userId: userId,
+                                            ticketId:
+                                                ticketDataList![0].ticket_id,
+                                            contestId: contestService
+                                                .contestdata!.contest_id,
+                                            ticketDataList: ticketDataList,
+                                            status: Status.A));
+                                  } else {
+                                    DialogUtil.showInfoDialog(
+                                        message:
+                                            "Please buy some tickets first to enter the contest!",
+                                        context: context,
+                                        title: 'No tickets available',
+                                        onOkTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        dialogType: DialogType.ERROR);
+                                  }
                                 },
                                 child: Text(
                                   isMove ? 'Play' : 'Join',

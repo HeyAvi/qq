@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qq/models/Ticketdata.dart';
 import 'package:qq/repository/TicketsRepository.dart';
+import 'package:qq/services/ContestServcie.dart';
+import 'package:qq/services/ServicesLocator.dart';
+import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
 
 import '../../dataproviders/TicketsProvider.dart';
@@ -81,12 +84,15 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
 
   void _handleSubmitContextUserEvent(
       SubmitContextUserEvent event, Emitter<TicketsState> emit) async {
+    ContestService contestService = getIt<ContestService>();
+    ContestExampleService exampleService = getIt<ContestExampleService>();
     DialogUtil.showProgressDialog("", event.context);
     print('ticketId: ${event.ticketId}');
     Response? serverAPIResponseDto = await repository.submitContextUserEvent(
         event.context, event.userId, event.contestId, event.ticketId,
         status: event.status);
     DialogUtil.dismissProgressDialog(event.context);
+    // todo check that can join and don't go to contest page
     if (serverAPIResponseDto != null) {
       log('===$serverAPIResponseDto');
       if (serverAPIResponseDto.data!["status"].toString() == "200" ||
@@ -98,10 +104,23 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
             contestUserSubmit: true);
         emit(completeState);
       } else if (serverAPIResponseDto.data!["status"].toString() == "404") {
-        if (event.status == Status.A) {
+        if (event.status == Status.A &&
+            serverAPIResponseDto.data!["messages"]['erroe'].toString() ==
+                "Already registered for contest") {
+          DateTime startDate =
+              DateTime.parse(exampleService.contestdata!.start_date);
+          print('dtt ${DateTime.now().isAfter(startDate)}');
+          if (!contestService.participated &&
+              event.contestId ==
+                  (contestService.contestdata?.contest_id ?? '') &&
+              DateTime.now().isAfter(startDate)) {
+            Navigator.push(event.context,
+                MaterialPageRoute(builder: (_) => const ContestMainPage()));
+            return;
+          }
           DialogUtil.showInfoDialog(
             title: 'Info',
-            message: 'You have already submitted your contest!',
+            message: 'Already registered for the contest!',
             context: event.context,
           );
           return;
@@ -112,7 +131,27 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
             ticketDataList: event.ticketDataList,
             contestUserSubmit: true);
         emit(completeState);
-
+      } else if (event.status == Status.P &&
+          serverAPIResponseDto.data!["messages"]['erroe'].toString() ==
+              "Already registered for contest") {
+        if (!exampleService.participated &&
+            event.contestId == (exampleService.contestdata?.contest_id ?? '')) {
+          Navigator.push(
+            event.context,
+            MaterialPageRoute(
+              builder: (_) => ContestMainPage(
+                contestExampleService: exampleService,
+              ),
+            ),
+          );
+          return;
+        }
+        DialogUtil.showInfoDialog(
+          title: 'Info',
+          message: 'Already registered for the contest!',
+          context: event.context,
+        );
+        return;
       }
     }
   }

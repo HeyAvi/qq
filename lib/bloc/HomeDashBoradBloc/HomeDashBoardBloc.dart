@@ -47,6 +47,8 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
           dataDto["ticket"]["ticket_id"].toString(),
           dataDto["contest_x_user"],
           dataDto["participated"]);
+      print('------=========>>>actual data dto $dataDto');
+
       HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
           context: event.context,
           version: state.version + 1,
@@ -80,12 +82,13 @@ class HomeDashBoardBloc extends Bloc<HomeDashBoardEvent, HomeDashBoardState> {
           dataDto["ticket"]["ticket_id"].toString(),
           dataDto["contest_x_user"],
           dataDto["participated"]);
-      HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
-          context: event.context,
-          version: state.version + 1,
-          contestdata: newData,
-          contestUserDataList: null);
-      emit(completeState);
+
+      // HomeDashBoardCompleteState completeState = HomeDashBoardCompleteState(
+      //     context: event.context,
+      //     version: state.version + 1,
+      //     contestdata: newData,
+      //     contestUserDataList: null);
+      // emit(completeState);
     }
   }
 
