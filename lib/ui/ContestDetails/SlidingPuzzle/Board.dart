@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qq/bloc/ContestBloc/ContestBloc.dart';
-import 'package:qq/models/ContestQuestiondata.dart';
 import 'package:qq/models/ParentContestQuestiondata.dart';
 import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
@@ -17,13 +17,11 @@ class Board extends StatefulWidget {
   final VoidCallback onIndexChanged;
   List<ParentContestQuestiondata>? contestQuestiondataDataLists;
   int? indexs;
+  final ContestExampleService? contestExampleService;
 
-  Board(
-    Map<String, dynamic>? _dynamicContent,
-    List<ParentContestQuestiondata>? contestQuestiondataDataList,
-    int index, {
-    required this.onIndexChanged,
-  }) {
+  Board(Map<String, dynamic>? _dynamicContent,
+      List<ParentContestQuestiondata>? contestQuestiondataDataList, int index,
+      {required this.onIndexChanged, required this.contestExampleService}) {
     dynamicContent = _dynamicContent;
     contestQuestiondataDataLists = contestQuestiondataDataList;
     indexs = index;
@@ -37,7 +35,7 @@ class _BoardState extends State<Board> {
   var numbers = []; //[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   int move = 0;
 
-  static const duration = const Duration(seconds: 1);
+  static const duration = Duration(seconds: 1);
   int secondsPassed = 0;
   bool isActive = false;
   Timer? timer;
@@ -63,11 +61,9 @@ class _BoardState extends State<Board> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    if (timer == null) {
-      timer = Timer.periodic(duration, (Timer t) {
-        startTime();
-      });
-    }
+    timer ??= Timer.periodic(duration, (Timer t) {
+      startTime();
+    });
 
     return Scaffold(
         body: SafeArea(
@@ -90,29 +86,32 @@ class _BoardState extends State<Board> {
               child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 80,
               ),
-              Container(
+              SizedBox(
                 width: 150,
                 child: FloatingActionButton.extended(
                   backgroundColor: ColorConstants.primaryColor3,
                   onPressed: () => {
                     BlocProvider.of<ContestBloc>(context).add(
-                        SubmitQuestionDataEvent(
-                            context: context,
-                            contestId: contestService.contestdata!.contest_id,
-                            questionId: widget.dynamicContent!["question_id"],
-                            answerGiven: "yes",
-                            isAnswerTrue: "true".toString(),
-                            moves: "1",
-                            timeTaken: secondsPassed.toString(),
-                            contestQuestiondataDataList:
-                                widget.contestQuestiondataDataLists,
-                            currentIndex: widget.indexs!))
+                      SubmitQuestionDataEvent(
+                          context: context,
+                          contestId: widget.contestExampleService?.contestdata
+                                  ?.contest_id ??
+                              contestService.contestdata!.contest_id,
+                          questionId: widget.dynamicContent!["question_id"],
+                          answerGiven: "yes",
+                          isAnswerTrue: "true".toString(),
+                          moves: "1",
+                          timeTaken: secondsPassed.toString(),
+                          contestQuestiondataDataList:
+                              widget.contestQuestiondataDataLists,
+                          currentIndex: widget.indexs!),
+                    )
                   },
                   heroTag: null,
-                  label: Text("SUBMIT"),
+                  label: const Text("SUBMIT"),
                 ),
               )
             ],
@@ -128,7 +127,7 @@ class _BoardState extends State<Board> {
         index + 1 < 16 && numbers[index + 1] == 0 && (index + 1) % 4 != 0 ||
         (index - 4 >= 0 && numbers[index - 4] == 0) ||
         (index + 4 < 16 && numbers[index + 4] == 0)) {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           move++;
           numbers[numbers.indexOf(0)] = numbers[index];
@@ -141,7 +140,7 @@ class _BoardState extends State<Board> {
 
   void startTime() {
     if (isActive) {
-      if (this.mounted) {
+      if (mounted) {
         setState(() {
           secondsPassed = secondsPassed + 1;
         });
@@ -150,7 +149,7 @@ class _BoardState extends State<Board> {
   }
 
   void reset() {
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         numbers.shuffle();
         move = 0;
@@ -179,7 +178,7 @@ class _BoardState extends State<Board> {
             return Dialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0)), //this right here
-              child: Container(
+              child: SizedBox(
                 height: 200,
                 child: Padding(
                   padding: const EdgeInsets.all(30.0),
@@ -187,7 +186,7 @@ class _BoardState extends State<Board> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "You Win!!",
                         style: TextStyle(fontSize: 20),
                       ),
@@ -197,7 +196,7 @@ class _BoardState extends State<Board> {
                           onPressed: () {
                             Navigator.pop(context);
                           },
-                          child: Text(
+                          child: const Text(
                             "Close",
                             style: TextStyle(color: Colors.white),
                           ),

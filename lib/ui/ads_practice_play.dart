@@ -380,7 +380,6 @@ class _PracticePlayState extends State<PracticePlay>
                                         if (_currentIndex == 3) {
                                           setState(() {
                                             isChecked = !isChecked;
-                                            print(isChecked);
                                           });
                                         } else {
                                           setState(() {
@@ -449,7 +448,7 @@ class _PracticePlayState extends State<PracticePlay>
                                   vertical: 10, horizontal: 20),
                               child: SlidableButton(
                                 tristate: true,
-                                onChanged: true
+                                onChanged: isChecked
                                     ? (position) {
                                         setState(() {
                                           if (position ==

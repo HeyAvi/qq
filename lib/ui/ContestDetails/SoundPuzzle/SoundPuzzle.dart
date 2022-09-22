@@ -16,12 +16,14 @@ class SoundPuzzle extends StatefulWidget {
   final VoidCallback onIndexChanged;
   List<ParentContestQuestiondata>? contestQuestiondataDataLists;
   int? indexs;
+  final ContestExampleService? contestExampleService;
 
   SoundPuzzle(
     Map<String, dynamic>? _dynamicContent,
     List<ParentContestQuestiondata>? contestQuestiondataDataList,
     int index, {
     required this.onIndexChanged,
+    required this.contestExampleService,
   }) {
     dynamicContent = _dynamicContent;
     contestQuestiondataDataLists = contestQuestiondataDataList;
@@ -45,7 +47,7 @@ class _SoundPuzzleState extends State<SoundPuzzle> {
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
-    _timer = new Timer.periodic(
+    _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (_start == 0) {
@@ -245,7 +247,9 @@ class _SoundPuzzleState extends State<SoundPuzzle> {
                       BlocProvider.of<ContestBloc>(context).add(
                           SubmitQuestionDataEvent(
                               context: context,
-                              contestId: contestService.contestdata!.contest_id,
+                              contestId: widget.contestExampleService
+                                      ?.contestdata?.contest_id ??
+                                  contestService.contestdata!.contest_id,
                               questionId: widget.dynamicContent!["question_id"],
                               answerGiven: "yes",
                               isAnswerTrue: "true",

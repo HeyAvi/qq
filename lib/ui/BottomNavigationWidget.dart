@@ -54,6 +54,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
     with SingleTickerProviderStateMixin {
   bool isMove = false;
   ContestService contestService = getIt<ContestService>();
+  ContestExampleService contestExampleService = getIt<ContestExampleService>();
   int? _page;
 
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
@@ -231,10 +232,9 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
       //   );
       // } else
       //
-
-        if (
-          contestService.participated == false &&
-          (contestService.userBooked)) {
+      if (contestService.participated == false && (contestService.userBooked) ||
+          contestExampleService.participated == false &&
+              (contestExampleService.userBooked) == false) {
         setState(() {
           _page = index;
           BlocProvider.of<HomeDashBoardBloc>(context)
@@ -244,7 +244,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
           context,
           PageRouteBuilder(
             pageBuilder: (context, animation1, animation2) =>
-                ContestPlay(false),
+                const ContestPlay(false),
             transitionDuration: Duration.zero,
           ),
         );

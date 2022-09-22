@@ -157,10 +157,12 @@ class _ContestMainState extends State<ContestMainSateful>
                   ),
                 ),
                 title: Row(
-                  children: const [
+                  children: [
                     Text(
-                      "Contest Questions ",
-                      style: TextStyle(
+                      widget.contestExampleService == null
+                          ? "Contest Questions "
+                          : "Practice Questions ",
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                         color: Color(0xff3E3C3C),
@@ -601,6 +603,7 @@ class _ContestMainState extends State<ContestMainSateful>
                         dynamicContent.question,
                         contestQuestiondataDataList,
                         _cardController!.index,
+                        contestExampleService: widget.contestExampleService,
                         onIndexChanged: () {
                           //_cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
@@ -611,6 +614,7 @@ class _ContestMainState extends State<ContestMainSateful>
                         dynamicContent.question,
                         contestQuestiondataDataList,
                         _cardController!.index,
+                        contestExampleService: widget.contestExampleService,
                         onIndexChanged: () {
                           //_cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
@@ -621,6 +625,7 @@ class _ContestMainState extends State<ContestMainSateful>
                         dynamicContent.question,
                         contestQuestiondataDataList,
                         _cardController!.index,
+                        contestExampleService: widget.contestExampleService,
                         onIndexChanged: () {
                           // _cardController.animateTo((_cardController.index + 1) % contestQuestiondataDataList.length, duration: Duration(seconds: 10));
                         },
