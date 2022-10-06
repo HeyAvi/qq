@@ -104,6 +104,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                   endTime: DateFormatter.getUTCRemainingTimeInMills(
                       contestService.contestdata!.start_date),
                   widgetBuilder: (_, time) {
+                    print('date ${contestService.contestdata!.start_date}');
                     if (time == null) {
                       isMove = true;
                       return const SizedBox();
@@ -232,8 +233,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
       //   );
       // } else
       //
-      if (contestService.participated == false && (contestService.userBooked) ||
-          contestExampleService.participated == false &&
+      if (isMove &&
+              contestService.participated == false &&
+              (contestService.userBooked) ||
+          isMove &&
+              contestExampleService.participated == false &&
               (contestExampleService.userBooked) == false) {
         setState(() {
           _page = index;
@@ -262,6 +266,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
         });
       }
     }
+
     if (index == 1) {
       await Future.delayed(const Duration(milliseconds: 500));
       setState(() {

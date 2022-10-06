@@ -46,6 +46,7 @@ class DialogUtil {
       {required String title,
       required String message,
       required BuildContext context,
+      String? btnOkText,
       DialogType? dialogType,
       Function()? onOkTap,
       Function(DismissType)? dismissTap}) {
@@ -57,8 +58,16 @@ class DialogUtil {
       showCloseIcon: true,
       title: title,
       desc: message,
-      btnOkOnPress: onOkTap,
+      btnOkOnPress: null,
       btnOkIcon: null,
+      btnOk: onOkTap == null
+          ? null
+          : ElevatedButton(
+              onPressed: onOkTap,
+              child: Text(btnOkText ?? "Buy Tickets"),
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: ColorConstants.primaryColor),
+            ),
       onDissmissCallback: dismissTap,
     ).show();
   }
@@ -96,11 +105,10 @@ class DialogUtil {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BuyTickets()));
+                                builder: (context) => const BuyTickets()));
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: ColorConstants.primaryColor
-                      ) ,
+                          backgroundColor: ColorConstants.primaryColor),
                       child: const Text(
                         'Add Ticket',
                         style: TextStyle(color: Colors.white),

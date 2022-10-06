@@ -16,6 +16,8 @@ import 'package:qq/utils/DataNotAvailable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BuyTickets extends StatelessWidget {
+  const BuyTickets({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,26 +165,19 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                               color: Colors.red),
                                         ),
                                       ),
-                                      InkWell(
-                                        child: Container(
-                                          margin: EdgeInsets.only(top: 0.h),
-                                          width: 100.w,
-                                          padding: EdgeInsets.all(5.h),
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  ColorConstants.primaryColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(20.h)),
-                                          child: Center(
-                                            child: Text(
-                                              'Add Money',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12.sp),
-                                            ),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: Colors.white,
+                                          backgroundColor:
+                                              ColorConstants.primaryColor,
+                                          // foreg// round
+                                          elevation: 0,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
                                           ),
                                         ),
-                                        onTap: () {
+                                        onPressed: () {
                                           Navigator.push(
                                             context,
                                             PageRouteBuilder(
@@ -193,6 +188,12 @@ class _BuyTicketsState extends State<BuyTicketsStateful> {
                                             ),
                                           );
                                         },
+                                        child: Text(
+                                          'Add Money',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12.sp),
+                                        ),
                                       ),
                                       SizedBox(width: 5.w),
                                     ],

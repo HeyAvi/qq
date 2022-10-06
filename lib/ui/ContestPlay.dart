@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qq/bloc/TicketsBloc/TicketsBloc.dart';
 import 'package:qq/dataproviders/TicketsProvider.dart';
 import 'package:qq/models/Ticketdata.dart';
@@ -20,6 +21,8 @@ import 'package:qq/utils/DateTimeFormatter.dart';
 import 'package:qq/utils/dialogs/DialogUtil.dart';
 import 'dart:math' as math;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'BuyTickets.dart';
 
 class ContestPlay extends StatelessWidget {
   final bool? isAlreadyBooked;
@@ -99,18 +102,11 @@ class _ContestUserState extends State<ContestUserStateful> {
                           MaterialPageRoute(
                               builder: (context) => const ContestMainPage()));
                     } else if (state.contestUserSubmit && !isMove) {
+
                       DialogUtil.showInfoDialog(
                           message: "You're booked for this contest.",
                           context: context,
                           title: 'Successfully Booked',
-                          onOkTap: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Home(false, false)),
-                                (_) => false);
-                          },
                           dialogType: DialogType.SUCCES);
                     }
                   }
@@ -360,6 +356,13 @@ class _ContestUserState extends State<ContestUserStateful> {
                                   ),
                                 ),
                                 onPressed: () {
+                                  if (contestService.userBooked) {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            'Already booked for another contest');
+                                    return;
+                                  }
+
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
@@ -411,7 +414,11 @@ class _ContestUserState extends State<ContestUserStateful> {
                                         context: context,
                                         title: 'No tickets available',
                                         onOkTap: () {
-                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const BuyTickets()));
                                         },
                                         dialogType: DialogType.ERROR);
                                   }

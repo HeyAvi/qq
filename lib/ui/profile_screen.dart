@@ -69,8 +69,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
             Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                    const Home(false, false)), (_)=> false);
+                    builder: (context) => const Home(false, false)),
+                (_) => false);
             return false;
           },
           child: Scaffold(
@@ -247,7 +247,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         backgroundColor: Colors.transparent,
                         elevation: 0,
                         automaticallyImplyLeading: false,
-                        expandedHeight: 280,
+                        expandedHeight: 220,
                         toolbarHeight: 0,
                         pinned: true,
                         flexibleSpace:
@@ -303,7 +303,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            backgroundColor: ColorConstants.orangeColor,
+                            backgroundColor: ColorConstants.colorBackground,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               side: const BorderSide(
@@ -315,7 +315,10 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         child: const Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 10.0),
-                          child: Text('Rankings'),
+                          child: Text(
+                            'Rankings',
+                            style: TextStyle(color: Colors.black),
+                          ),
                         )),
                     const SizedBox(
                       height: 60,
@@ -345,7 +348,16 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
                             Padding(padding: EdgeInsets.all(2)),
-                            Icon(Icons.logout, color: Colors.white),
+                            CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: RotatedBox(
+                                  quarterTurns: 3,
+                                  child: ImageIcon(
+                                      AssetImage(
+                                        'assets/icons-logout.png',
+                                      ),
+                                      color: Colors.black),
+                                )),
                             Text(
                               "Log Out",
                               style:
@@ -408,7 +420,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                     ))
                               ],
                             ),
-                            Text(userData.dob ?? 'Update your D.O.B',
+                            Text(dob(),
                                 style: const TextStyle(
                                     fontSize: 14, color: Colors.white)),
                             // todo update with real values
@@ -449,26 +461,6 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                             const SizedBox(
                               height: 20,
                             ),
-                            SizedBox(
-                              height: 25,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // todo add update function
-                                },
-                                child: const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20.0),
-                                  child: Text('Update',
-                                      style: TextStyle(color: Colors.black)),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0, backgroundColor: ColorConstants.colorBackground,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                ),
-                              ),
-                            )
                           ],
                         ),
                         Row(
@@ -476,7 +468,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 updateGender(gender: 'male');
                               },
                               child: Stack(
@@ -486,7 +478,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                     padding: EdgeInsets.all(4.0),
                                     child: CircleAvatar(
                                         backgroundColor: Colors.white,
-                                        child: Icon(Icons.male,
+                                        child: ImageIcon(
+                                            AssetImage('assets/male-user.png'),
                                             color: Colors.blueAccent)),
                                   ),
                                   if (userData.gender != null &&
@@ -503,9 +496,8 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                             ),
                             const SizedBox(width: 10),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 updateGender(gender: 'female');
-
                               },
                               child: Stack(
                                 alignment: Alignment.topRight,
@@ -514,11 +506,14 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                     padding: EdgeInsets.all(4.0),
                                     child: CircleAvatar(
                                         backgroundColor: Colors.white,
-                                        child: Icon(Icons.female,
-                                            color: Colors.blueAccent)),
+                                        child: ImageIcon(
+                                            AssetImage(
+                                                'assets/woman-avatar.png'),
+                                            color: Colors.pinkAccent)),
                                   ),
                                   if (userData.gender != null &&
-                                      userData.gender?.toLowerCase() == 'female')
+                                      userData.gender?.toLowerCase() ==
+                                          'female')
                                     const CircleAvatar(
                                       child: Icon(
                                         Icons.check,
@@ -619,7 +614,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                   ),
                   subtitle: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: ColorConstants.primaryColor,
+                        backgroundColor: ColorConstants.primaryColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.h),
                         )),
@@ -715,16 +710,28 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
   Future updateUser(
       {required String value, required UserValueType valueType}) async {
     TextEditingController _controller = TextEditingController(text: value);
+    String label = '';
+    if (valueType == UserValueType.name) {
+      label = 'Enter your name';
+    }
+    if (valueType == UserValueType.email) {
+      label = 'Enter your email';
+    }
+    if (valueType == UserValueType.dob) {
+      label = 'Enter your date of birth';
+    }
 
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               title: TextField(
                 controller: _controller,
                 readOnly: valueType == UserValueType.dob,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter your name',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: label,
                 ),
               ),
               content: ElevatedButton(
@@ -752,17 +759,28 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                 },
                 child: const Text('Submit'),
                 style: ElevatedButton.styleFrom(
-                    primary: ColorConstants.primaryColor),
+                    backgroundColor: ColorConstants.primaryColor),
               ),
             ));
+  }
+
+  String dob() {
+    if (userData.dob != null && userData.dob!.isNotEmpty) {
+      List<String> date = userData.dob!.split('-');
+      return '${date[2]}-${date[1]}-${date[0]}';
+    }
+    return 'Update your D.O.B';
   }
 
   updateGender({required String gender}) {
     showDialog(
         context: context,
         builder: (_) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.h),
+              ),
               title: Text(
-                  'Are you sure you want to change your gender to $gender'),
+                  'Are you sure you want to change your gender to $gender?'),
               actions: [
                 TextButton(
                   onPressed: () {

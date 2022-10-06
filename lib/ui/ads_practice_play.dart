@@ -368,11 +368,14 @@ class _PracticePlayState extends State<PracticePlay>
                               underlineHeight: 0.5,
                               lineHeight: 0,
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(4.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: GestureDetector(

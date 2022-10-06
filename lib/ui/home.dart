@@ -24,6 +24,7 @@ import 'package:qq/ui/BuyTickets.dart';
 import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/Wallet/Wallet.dart';
 import 'package:qq/ui/customDialogBox.dart';
+import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/widgets/text_with_underline.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/Constants.dart';
@@ -320,7 +321,7 @@ class _HomeState extends State<HomeStateful> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BuyTickets()));
+                                  builder: (context) => const BuyTickets()));
                         },
                         child: Stack(
                           children: [
@@ -330,7 +331,8 @@ class _HomeState extends State<HomeStateful> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0, vertical: 2),
                                   child: Row(
                                     children: [
                                       Text(
@@ -390,27 +392,18 @@ class _HomeState extends State<HomeStateful> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(
-                            builder: (
-                              context,
-                            ) =>
-                                const ContestMainPage(),
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation1, animation2) =>
+                                const ProfileScreen(),
+                            transitionDuration: Duration.zero,
                           ),
                         );
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   PageRouteBuilder(
-                        //     pageBuilder: (context, animation1, animation2) =>
-                        //         const ProfileScreen(),
-                        //     transitionDuration: Duration.zero,
-                        //   ),
-                        // );
                       },
                       child: SizedBox(
-                          height: 68.h,
-                          width: 68.w,
+                          height: 66.h,
+                          width: 66.w,
                           child: Image.asset("assets/accountMan.png")),
                     ),
                     Column(
@@ -474,17 +467,14 @@ class _HomeState extends State<HomeStateful> {
                                 },
                               ),
                             ),
-                            Visibility(
-                              visible: !isRules,
-                              child: const Positioned(
-                                  // right: 3,
-                                  left: 32,
-                                  child: Icon(
-                                    Icons.check,
-                                    size: 16,
-                                    color: ColorConstants.primaryColor2,
-                                  )),
-                            )
+                            const Positioned(
+                                // right: 3,
+                                left: 31,
+                                child: Icon(
+                                  Icons.check,
+                                  size: 16,
+                                  color: ColorConstants.primaryColor2,
+                                ))
                           ],
                         ),
                       ],
@@ -538,7 +528,7 @@ class _HomeState extends State<HomeStateful> {
                     height: 30.h,
                   ),
             SizedBox(
-              height: 15.h,
+              height: 7.h,
             ),
             (contestdata != null)
                 ? Padding(

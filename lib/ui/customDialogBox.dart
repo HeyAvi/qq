@@ -127,12 +127,13 @@ class _CustomDialogBoxState extends State<CustomDialogBoxStateful> {
                           color: Colors.white,
                           borderRadius:
                               BorderRadius.circular(Constants.padding),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Colors.black,
-                                offset: Offset(0, 10),
-                                blurRadius: 10),
-                          ]),
+                          // boxShadow: const [
+                          //   BoxShadow(
+                          //       color: Colors.black,
+                          //       offset: Offset(0, 10),
+                          //       blurRadius: 10),
+                          // ]
+                        ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
