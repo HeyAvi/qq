@@ -251,162 +251,183 @@ class _HomeState extends State<HomeStateful> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              child:
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      InkWell(
-                          onTap: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Wallet()));
-                            setState(() {
-                              BlocProvider.of<ProfileBloc>(context)
-                                  .add(GetProfileDataEvent(context: context));
-                              BlocProvider.of<ProfileBloc>(context)
-                                  .stream
-                                  .listen((event) {
-                                userData = userDataService.userData;
-                                context.read<HomeDashBoardBloc>().add(
-                                    FetchContestEvent(
-                                        context: context,
-                                        userId: userData!.user_id));
-                                context.read<HomeDashBoardBloc>().add(
-                                    GetLastContestDataEvent(
-                                        context: context,
-                                        date: "",
-                                        contestdata: null));
-                                setState(() {});
-                              });
-                              Future.delayed(Duration.zero, () {
-                                if (widget.isContestCompleted! && mounted) {
-                                  DialogUtil.showInfoDialog(
-                                      message:
-                                          "Contest Submitted Successfully.",
-                                      title: 'Contest Submitted',
-                                      context: context,
-                                      dialogType: DialogType.SUCCES);
-                                }
-                                if (widget.isContestOpen == true &&
-                                    (contestService.userBooked)) {
-                                  DialogUtil.showInfoDialog(
-                                      message: "Contest is not live now.",
-                                      title: 'Info',
-                                      context: context,
-                                      dialogType: DialogType.INFO);
-                                }
-                                if (widget.isContestOpen == true &&
-                                    !(contestService.userBooked)) {
-                                  DialogUtil.showInfoDialog(
-                                      message:
-                                          "You're not booked for this contest.",
-                                      context: context,
-                                      title: 'Not Booked Yet',
-                                      dialogType: DialogType.ERROR);
-                                }
-                              });
-                              positions = SlidableButtonPosition.left;
-                            });
-                          },
-                          child: (userDataService.walletAmount == "null")
-                              ? const TextWithUnderline(text: '₹ 0')
-                              : TextWithUnderline(
-                                  lineHeight: 0,
-                                  underlineHeight: 0.5,
-                                  text: '₹ ${userDataService.walletAmount}')),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const BuyTickets()));
-                        },
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0, vertical: 2),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        userDataService.totalTickets,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              InkWell(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Wallet()));
+                                    setState(() {
+                                      BlocProvider.of<ProfileBloc>(context).add(
+                                          GetProfileDataEvent(
+                                              context: context));
+                                      BlocProvider.of<ProfileBloc>(context)
+                                          .stream
+                                          .listen((event) {
+                                        userData = userDataService.userData;
+                                        context.read<HomeDashBoardBloc>().add(
+                                            FetchContestEvent(
+                                                context: context,
+                                                userId: userData!.user_id));
+                                        context.read<HomeDashBoardBloc>().add(
+                                            GetLastContestDataEvent(
+                                                context: context,
+                                                date: "",
+                                                contestdata: null));
+                                        setState(() {});
+                                      });
+                                      Future.delayed(Duration.zero, () {
+                                        if (widget.isContestCompleted! &&
+                                            mounted) {
+                                          DialogUtil.showInfoDialog(
+                                              message:
+                                                  "Contest Submitted Successfully.",
+                                              title: 'Contest Submitted',
+                                              context: context,
+                                              dialogType: DialogType.SUCCES);
+                                        }
+                                        if (widget.isContestOpen == true &&
+                                            (contestService.userBooked)) {
+                                          DialogUtil.showInfoDialog(
+                                              message:
+                                                  "Contest is not live now.",
+                                              title: 'Info',
+                                              context: context,
+                                              dialogType: DialogType.INFO);
+                                        }
+                                        if (widget.isContestOpen == true &&
+                                            !(contestService.userBooked)) {
+                                          DialogUtil.showInfoDialog(
+                                              message:
+                                                  "You're not booked for this contest.",
+                                              context: context,
+                                              title: 'Not Booked Yet',
+                                              dialogType: DialogType.ERROR);
+                                        }
+                                      });
+                                      positions = SlidableButtonPosition.left;
+                                    });
+                                  },
+                                  child: (userDataService.walletAmount ==
+                                          "null")
+                                      ? const TextWithUnderline(text: '₹ 0')
+                                      : TextWithUnderline(
+                                          lineHeight: 0,
+                                          underlineHeight: 0.5,
+                                          text:
+                                              '₹ ${userDataService.walletAmount}')),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const BuyTickets()));
+                                },
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4.0, vertical: 2),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                userDataService.totalTickets,
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              RotatedBox(
+                                                quarterTurns: 0,
+                                                child: Image.asset(
+                                                    "assets/tokens.png",
+                                                    height: 30,
+                                                    width: 30),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                      RotatedBox(
-                                        quarterTurns: 0,
-                                        child: Image.asset("assets/tokens.png",
-                                            height: 30, width: 30),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    Positioned(
+                                        right: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Container(
+                                                width: 17,
+                                                height: 17,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.yellow,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                    border: Border.all(
+                                                      color: Colors.black,
+                                                      width: 2,
+                                                    )),
+                                              ),
+                                              const Text('+',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                            ],
+                                          ),
+                                        ))
+                                  ],
                                 ),
                               ),
-                            ),
-                            Positioned(
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Container(
-                                        width: 17,
-                                        height: 17,
-                                        decoration: BoxDecoration(
-                                            color: Colors.yellow,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                              color: Colors.black,
-                                              width: 2,
-                                            )),
-                                      ),
-                                      const Text('+',
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                    ],
-                                  ),
-                                ))
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (context, animation1, animation2) =>
-                                const ProfileScreen(),
-                            transitionDuration: Duration.zero,
+                            ],
                           ),
-                        );
-                      },
-                      child: SizedBox(
-                          height: 66.h,
-                          width: 66.w,
-                          child: Image.asset("assets/accountMan.png")),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation1, animation2) =>
+                                          const ProfileScreen(),
+                                  transitionDuration: Duration.zero,
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                                height: 65.h,
+                                width: 65.w,
+                                child: Image.asset("assets/accountMan.png")),
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
+                  ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
                       children: [
                         const TextWithUnderline(
                           text: 'Rules',
@@ -479,9 +500,9 @@ class _HomeState extends State<HomeStateful> {
                         ),
                       ],
                     ),
-                  ],
-                )
-              ]),
+                  ),
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

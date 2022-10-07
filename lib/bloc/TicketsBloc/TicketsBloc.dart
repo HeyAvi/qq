@@ -108,7 +108,7 @@ class TicketsBloc extends Bloc<TicketsEvent, TicketsState> {
             serverAPIResponseDto.data!["messages"]['erroe'].toString() ==
                 "Already registered for contest") {
           DateTime startDate =
-              DateTime.parse(exampleService.contestdata!.start_date);
+              DateTime.parse(contestService.contestdata!.start_date);
           print('dtt ${DateTime.now().isAfter(startDate)}');
           if (!contestService.participated &&
               event.contestId ==
