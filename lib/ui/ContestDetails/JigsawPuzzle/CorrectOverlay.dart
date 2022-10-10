@@ -5,7 +5,7 @@ class CorrectOverlay extends StatefulWidget {
   final bool _isCorrect;
   final VoidCallback _onTap;
 
-  CorrectOverlay(this._isCorrect, this._onTap);
+  const CorrectOverlay(this._isCorrect, this._onTap, {Key? key}) : super(key: key);
 
   @override
   State createState() => CorrectOverlayState();

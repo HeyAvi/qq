@@ -69,7 +69,6 @@ class _BoardState extends State<Board> {
         body: SafeArea(
           child: Container(
             height: size.height,
-            color: Colors.grey,
             child: Column(
               children: <Widget>[
                 MyTitle(size),

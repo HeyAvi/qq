@@ -16,7 +16,7 @@ class Time extends StatelessWidget {
         style: TextStyle(
           fontSize: 18,
           decoration: TextDecoration.none,
-          color: Colors.white,
+          // color: Colors.white,
         ),
       ),
     );

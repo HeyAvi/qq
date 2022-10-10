@@ -75,10 +75,6 @@ class _ContestMainState extends State<ContestMainSateful>
   }
 
   void h() {
-    value = double.parse(DateFormatter.getUTCRemainingTimeInMills(
-            widget.contestExampleService?.contestdata?.start_date.toString() ??
-                contestService.contestdata!.start_date)
-        .toString());
     BlocProvider.of<ContestBloc>(context).add(GetContestQuestionDataEvent(
         context: context,
         contestId: widget.contestExampleService?.contestdata?.contest_id ??
@@ -103,121 +99,112 @@ class _ContestMainState extends State<ContestMainSateful>
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _willPopCallback,
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            h();
-            print('hhh');
-          });
-        },
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50.0),
-            child: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 0,
-                leadingWidth: 60,
-                toolbarHeight: 500,
-                leading: Container(
-                  width: 500,
-                  padding: const EdgeInsets.only(left: 20),
-                  child: InkWell(
-                    onTap: () {
-                      if (_cardController == null) {
-                        _willPopCallback();
-                        return;
-                      }
-                      if (isSubmit) {
-                        _cardController?.animateTo(
-                            (currentIndex + 1) %
-                                contestQuestiondataDataList.length,
-                            duration: const Duration(seconds: 10));
-                        return;
-                      }
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: AppBar(
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leadingWidth: 60,
+              toolbarHeight: 500,
+              centerTitle: true,
+              leading: Container(
+                width: 500,
+                padding: const EdgeInsets.only(left: 20),
+                child: InkWell(
+                  onTap: () {
+                    if (_cardController == null) {
+                      _willPopCallback();
+                      return;
+                    }
+                    if (isSubmit) {
+                      _cardController?.animateTo(
+                          (currentIndex + 1) %
+                              contestQuestiondataDataList.length,
+                          duration: const Duration(seconds: 10));
+                      return;
+                    }
 
-                      if (_cardController?.index == 0) {
-                        _willPopCallback();
-                      }
-                    },
-                    child: Row(
-                      children: const [
-                        ImageIcon(
-                          AssetImage(
-                            "assets/left-arrow.png",
-                          ),
-                          color: Colors.black,
-                          size: 20,
+                    if (_cardController?.index == 0) {
+                      _willPopCallback();
+                    }
+                  },
+                  child: Row(
+                    children: const [
+                      ImageIcon(
+                        AssetImage(
+                          "assets/left-arrow.png",
                         ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                      ],
-                    ),
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                    ],
                   ),
                 ),
-                title: Row(
-                  children: [
-                    Text(
-                      widget.contestExampleService == null
-                          ? "Contest Questions "
-                          : "Practice Questions ",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Color(0xff3E3C3C),
-                      ),
-                    ),
-                  ],
-                )),
-          ),
-          body: BlocListener<ContestBloc, ContestState>(
-            listener: (context, state) {
-              if (state is ContestCompleteState) {
-                if (state.isContestCompleted) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Home(true, false)));
-                  });
+              ),
+              title: Text(
+                widget.contestExampleService == null
+                    ? "Solve the Puzzle"
+                    : "Practice Questions ",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Color(0xff3E3C3C),
+                ),
+              )),
+        ),
+        body: BlocListener<ContestBloc, ContestState>(
+          listener: (context, state) {
+            if (state is ContestCompleteState) {
+              if (state.isContestCompleted) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Home(true, false)));
+                });
+              }
+              if (state.isCurrentIndexChanged == false) {
+                _cardController = TabController(
+                    vsync: this,
+                    length: state.contestQuestiondataDataList?.length ?? 0);
+                _tabPageSelector = TabPageSelector(controller: _cardController);
+                contestQuestiondataDataList =
+                    state.contestQuestiondataDataList ?? [];
+                isSubmit = state.isSubmit;
+                currentIndex = state.currentIndex;
+                if (currentIndex < contestQuestiondataDataList.length - 1) {
+                  BlocProvider.of<ContestBloc>(context).add(
+                      GetContestQuestionDataEvent(
+                          context: context,
+                          contestId: widget.contestExampleService?.contestdata
+                                  ?.contest_id ??
+                              contestService.contestdata!.contest_id,
+                          userId: userDataService.userData.user_id));
                 }
-                if (state.isCurrentIndexChanged == false) {
-                  _cardController = TabController(
-                      vsync: this,
-                      length: state.contestQuestiondataDataList?.length ?? 0);
-                  _tabPageSelector =
-                      TabPageSelector(controller: _cardController);
-                  contestQuestiondataDataList =
-                      state.contestQuestiondataDataList ?? [];
-                  isSubmit = state.isSubmit;
+                setState(() {});
+              } else if (state.isCurrentIndexChanged == true) {
+                {
                   currentIndex = state.currentIndex;
-                  if (currentIndex < contestQuestiondataDataList.length - 1) {
-                    BlocProvider.of<ContestBloc>(context).add(
-                        GetContestQuestionDataEvent(
-                            context: context,
-                            contestId: widget.contestExampleService?.contestdata
-                                    ?.contest_id ??
-                                contestService.contestdata!.contest_id,
-                            userId: userDataService.userData.user_id));
-                  }
                   setState(() {});
-                } else if (state.isCurrentIndexChanged == true) {
-                  {
-                    currentIndex = state.currentIndex;
-                    setState(() {});
-                  }
                 }
               }
-            },
-            child: Column(
-              children: [
-                (contestQuestiondataDataList.isNotEmpty)
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 10.w, right: 10.w),
-                        child: SizedBox(
-                          height: 80.h,
+            }
+          },
+          child: Column(
+            children: [
+              (contestQuestiondataDataList.isNotEmpty)
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                      child: SizedBox(
+                        height: 60.h,
+                        child: Center(
                           child: ListView.builder(
+                              shrinkWrap: true,
                               itemCount: contestQuestiondataDataList.length,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
@@ -225,7 +212,7 @@ class _ContestMainState extends State<ContestMainSateful>
                                     padding: EdgeInsets.only(top: 10.h),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Column(
                                           mainAxisAlignment:
@@ -244,16 +231,16 @@ class _ContestMainState extends State<ContestMainSateful>
                                                                 .start,
                                                         children: [
                                                           SizedBox(
-                                                            width: 50.w,
+                                                            width: 30.w,
                                                             child: Container(
-                                                              width: 40,
-                                                              height: 40,
+                                                              width: 20,
+                                                              height: 20,
                                                               child: Center(
                                                                 child:
                                                                     Image.asset(
                                                                   "assets/jigsawpuzzle.png",
-                                                                  height: 18.h,
-                                                                  width: 18.w,
+                                                                  height: 10.h,
+                                                                  width: 10.w,
                                                                   color: Colors
                                                                       .white,
                                                                 ),
@@ -284,16 +271,16 @@ class _ContestMainState extends State<ContestMainSateful>
                                                                 .start,
                                                         children: [
                                                           SizedBox(
-                                                            width: 50.w,
+                                                            width: 30.w,
                                                             child: Container(
-                                                              width: 40,
-                                                              height: 40,
+                                                              width: 20,
+                                                              height: 20,
                                                               child: Center(
                                                                 child: Image.asset(
                                                                     "assets/audio.png",
                                                                     height:
-                                                                        18.h,
-                                                                    width: 18.w,
+                                                                        10.h,
+                                                                    width: 10.w,
                                                                     color: Colors
                                                                         .white),
                                                               ),
@@ -320,16 +307,16 @@ class _ContestMainState extends State<ContestMainSateful>
                                                     ? Row(
                                                         children: [
                                                           SizedBox(
-                                                            width: 50.w,
+                                                            width: 30.w,
                                                             child: Container(
-                                                              width: 40,
-                                                              height: 40,
+                                                              width: 20,
+                                                              height: 20,
                                                               child: Center(
                                                                 child: Image.asset(
                                                                     "assets/slide_puzzle.png",
                                                                     height:
-                                                                        18.h,
-                                                                    width: 18.w,
+                                                                        10.h,
+                                                                    width: 10.w,
                                                                     color: Colors
                                                                         .white),
                                                               ),
@@ -361,34 +348,32 @@ class _ContestMainState extends State<ContestMainSateful>
                                                               .is_submitted)
                                                           ? Colors.green
                                                           : Colors.grey,
-                                                  elevation: 2,
+                                                  elevation: 0,
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10),
                                                   ),
                                                   child: Container(
-                                                    width: 80,
-                                                    padding:
-                                                        const EdgeInsets.all(2),
-                                                    child: SizedBox(
-                                                        height: 20,
-                                                        child: Text(
-                                                          contestQuestiondataDataList[
-                                                                  index]
-                                                              .question![
-                                                                  "puzzle_type"]
-                                                              .toString(),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 12.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        )),
+                                                    // width: 40.w,
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 3),
+                                                    child: Text(
+                                                      contestQuestiondataDataList[
+                                                              index]
+                                                          .question![
+                                                              "puzzle_type"]
+                                                          .toString(),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
                                                   ),
                                                 ),
                                                 //SizedBox(width: 35.w,)
@@ -422,77 +407,85 @@ class _ContestMainState extends State<ContestMainSateful>
                                     ));
                               }),
                         ),
-                      )
-                    : const Text(""),
-                /*SizedBox(
-                   height: 100.h,
-                   width: 120.w,
-                   child: CountDownProgressIndicator(
-                     //controller: _controller,
-                     valueColor: Colors.red,
-                     backgroundColor: Colors.grey,
-                     initialPosition: 0,
-                     duration: DateFormatter.getUTCRemainingTimeInSeconds(contestService.contestdata!.end_date),
-                     timeFormatter: (seconds) {
-                       return Duration(seconds: seconds)
-                           .toString()
-                           .split('.')[0]
-                           .padLeft(8, '0');
-                     },
-                     text: 'hh:mm:ss',
-                     onComplete: () => null,
-                   ),
-                 ),*/
-
-                SizedBox(
-                  //height: 50.h,
-                  width: MediaQuery.of(context).size.width.w,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/timer.png",
-                        height: 30.h,
-                        width: 30.w,
                       ),
-                      SizedBox(width: 10.w),
-                      (contestService.contestdata != null)
-                          ? CountdownTimer(
-                              endTime: DateFormatter.getUTCRemainingTimeInMills(
-                                  widget.contestExampleService?.contestdata
-                                          ?.end_date ??
-                                      contestService.contestdata!.end_date),
-                              widgetBuilder: (_, time) {
-                                _progress += double.parse(DateFormatter
-                                            .getUTCRemainingTimeInMills(widget
-                                                    .contestExampleService
-                                                    ?.contestdata
-                                                    ?.end_date ??
-                                                contestService
-                                                    .contestdata!.end_date)
-                                        .toString()) /
-                                    100;
-                                if (time == null) {
-                                  _progress = 1;
-                                  isTimeFinished = true;
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Home(false, false)));
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 20.h, bottom: 20.h),
-                                    child: Text('CLOSED',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.sp,
-                                            fontFamily: "SL",
-                                            fontWeight: FontWeight.bold)),
-                                  );
-                                }
-                                return Row(
+                    )
+                  : const Text(""),
+              /*SizedBox(
+                 height: 100.h,
+                 width: 120.w,
+                 child: CountDownProgressIndicator(
+                   //controller: _controller,
+                   valueColor: Colors.red,
+                   backgroundColor: Colors.grey,
+                   initialPosition: 0,
+                   duration: DateFormatter.getUTCRemainingTimeInSeconds(contestService.contestdata!.end_date),
+                   timeFormatter: (seconds) {
+                     return Duration(seconds: seconds)
+                         .toString()
+                         .split('.')[0]
+                         .padLeft(8, '0');
+                   },
+                   text: 'hh:mm:ss',
+                   onComplete: () => null,
+                 ),
+               ),*/
+
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (contestService.contestdata != null)
+                        ? CountdownTimer(
+                            endTime: DateFormatter.getUTCRemainingTimeInMills(
+                                widget.contestExampleService?.contestdata
+                                        ?.end_date ??
+                                    contestService.contestdata!.end_date),
+                            widgetBuilder: (_, time) {
+                              DateTime endTime = DateTime.parse(widget
+                                      .contestExampleService
+                                      ?.contestdata
+                                      ?.end_date ??
+                                  contestService.contestdata!.end_date);
+                              DateTime now = DateTime.now();
+                              DateTime startTime = DateTime.parse(widget
+                                      .contestExampleService
+                                      ?.contestdata
+                                      ?.start_date ??
+                                  contestService.contestdata!.start_date);
+                              double total = endTime
+                                  .difference(startTime)
+                                  .inSeconds
+                                  .toDouble();
+                              double remaining =
+                                  endTime.difference(now).inSeconds.toDouble();
+                              _progress = (total - remaining) / total;
+                              print('${_progress * 100}% <<< progress');
+                              if (time == null) {
+                                _progress = 1;
+                                isTimeFinished = true;
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Home(false, false)));
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 20.h, bottom: 20.h),
+                                  child: Text('CLOSED',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.sp,
+                                          fontFamily: "SL",
+                                          fontWeight: FontWeight.bold)),
+                                );
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 4.0, left: 2, top: 10),
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     (time.hours.toString() != "null")
                                         ? Text(
@@ -500,14 +493,14 @@ class _ContestMainState extends State<ContestMainSateful>
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           )
                                         : Text(
                                             "00 hours",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           ),
                                     SizedBox(width: 3.w),
                                     (time.min.toString() != "null")
@@ -516,14 +509,14 @@ class _ContestMainState extends State<ContestMainSateful>
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           )
                                         : Text(
                                             "00 min",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           ),
                                     SizedBox(width: 3.w),
                                     (time.sec.toString() != "null")
@@ -532,36 +525,47 @@ class _ContestMainState extends State<ContestMainSateful>
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           )
                                         : Text(
                                             "00 sec",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15.sp),
+                                                fontSize: 10.sp),
                                           ),
                                     Text(
                                       " Remaining",
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 15.sp),
+                                          color: Colors.black, fontSize: 10.sp),
                                     )
                                   ],
-                                );
-                              },
-                            )
-                          : const Text(""),
-                    ],
-                  ),
+                                ),
+                              );
+                            },
+                          )
+                        : const Text(""),
+                    Container(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                      height: 6.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: LinearProgressIndicator(
+                        value: _progress,
+                        backgroundColor: Colors.grey[300],
+                        valueColor:
+                            const AlwaysStoppedAnimation<Color>(Colors.green),
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Expanded(
-                    child: contestQuestionsView(contestQuestiondataDataList))
-              ],
-            ),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Expanded(child: contestQuestionsView(contestQuestiondataDataList))
+            ],
           ),
         ),
       ),
@@ -651,6 +655,6 @@ class _ContestMainState extends State<ContestMainSateful>
   @override
   void dispose() {
     super.dispose();
-    // _cardController.dispose();
+    _cardController?.dispose();
   }
 }

@@ -451,7 +451,7 @@ class _PracticePlayState extends State<PracticePlay>
                                   vertical: 10, horizontal: 20),
                               child: SlidableButton(
                                 tristate: true,
-                                onChanged: isChecked
+                                onChanged: true
                                     ? (position) {
                                         setState(() {
                                           if (position ==

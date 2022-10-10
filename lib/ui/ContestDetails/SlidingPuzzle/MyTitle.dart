@@ -11,8 +11,8 @@ class MyTitle extends StatelessWidget {
     return Container(
       height: 50,
       padding: EdgeInsets.all(5.0),
-      child: Text(
-        "Sliding Puzzle",
+      child: const Text(
+        "",
         style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 30,

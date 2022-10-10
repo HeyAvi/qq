@@ -203,18 +203,32 @@ class _SoundPuzzleState extends State<SoundPuzzle> {
               const SizedBox(
                 height: 30,
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 15, right: 15, bottom: 5, top: 30),
-                child: TextField(
-                  keyboardType: TextInputType.text,
-                  //controller: walletController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    labelText: "Name of the Song",
-                    hintText: "Name of the Song",
-                    //suffixIcon: Icon(Icons.wallet_giftcard_sharp, color: ColorConstants.primaryColor3)
+              Center(
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: const Center(
+                    child: SizedBox(
+                      child: TextField(
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          // border: OutlineInputBorder(
+                          //     borderRadius: BorderRadius.circular(10.0)),
+                          // labelText: "Name of the Song",
+                          hintText: "Name of the Song",
+                          hintStyle: TextStyle(
+                            fontSize: 12,
+                          ),
+                          //suffixIcon: Icon(Icons.wallet_giftcard_sharp, color: ColorConstants.primaryColor3)
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

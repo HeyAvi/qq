@@ -12,7 +12,7 @@ class ResetButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: reset,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),

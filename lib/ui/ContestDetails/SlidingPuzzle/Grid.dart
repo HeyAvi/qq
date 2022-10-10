@@ -12,25 +12,22 @@ class Grid extends StatelessWidget {
   Widget build(BuildContext context) {
     var height = size.height;
 
-    return Container(
-      //height: height - 100 ,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 5,
-            crossAxisSpacing: 5,
-          ),
-          itemCount: numbers.length,
-          itemBuilder: (context, index) {
-            return numbers[index] != 0
-                ? GridButton("${numbers[index]}", () {
-                    clickGrid(index);
-                  })
-                : SizedBox.shrink();
-          },
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          mainAxisSpacing: 15,
+          crossAxisSpacing: 15,
         ),
+        itemCount: numbers.length,
+        itemBuilder: (context, index) {
+          return numbers[index] != 0
+              ? GridButton("${numbers[index]}", () {
+                  clickGrid(index);
+                })
+              : const SizedBox.shrink();
+        },
       ),
     );
   }
