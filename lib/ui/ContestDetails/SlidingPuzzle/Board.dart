@@ -12,6 +12,8 @@ import 'package:qq/ui/ContestDetails/SlidingPuzzle/Menu.dart';
 import 'package:qq/ui/ContestDetails/SlidingPuzzle/MyTitle.dart';
 import 'package:qq/utils/ColorConstants.dart';
 
+import '../../live_player_layout.dart';
+
 class Board extends StatefulWidget {
   Map<String, dynamic>? dynamicContent;
   final VoidCallback onIndexChanged;
@@ -21,7 +23,10 @@ class Board extends StatefulWidget {
 
   Board(Map<String, dynamic>? _dynamicContent,
       List<ParentContestQuestiondata>? contestQuestiondataDataList, int index,
-      {required this.onIndexChanged, required this.contestExampleService}) {
+      {Key? key,
+      required this.onIndexChanged,
+      required this.contestExampleService})
+      : super(key: key) {
     dynamicContent = _dynamicContent;
     contestQuestiondataDataLists = contestQuestiondataDataList;
     indexs = index;
@@ -46,12 +51,9 @@ class _BoardState extends State<Board> {
   @override
   void initState() {
     super.initState();
-
     var arr = jsonDecode(widget.dynamicContent!["content"]) as List;
-
     startNumber = int.parse(arr[0].toString());
     endNumber = int.parse(arr[1].toString());
-
     for (int i = startNumber; i <= endNumber; i++) {
       numbers.add(i);
     }
@@ -66,56 +68,53 @@ class _BoardState extends State<Board> {
     });
 
     return Scaffold(
-        body: SafeArea(
-          child: Container(
-            height: size.height,
-            child: Column(
-              children: <Widget>[
-                MyTitle(size),
-                Expanded(
-                  child: Grid(numbers, size, clickGrid),
-                ),
-                Menu(reset, move, secondsPassed, size),
-              ],
-            ),
-          ),
-        ),
-        floatingActionButton: Row(children: [
-          Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 80,
+      body: SafeArea(
+        child: SizedBox(
+          height: size.height,
+          child: Column(
+            children: <Widget>[
+              MyTitle(size),
+              Expanded(
+                child: Grid(numbers, size, clickGrid),
               ),
-              SizedBox(
-                width: 150,
-                child: FloatingActionButton.extended(
-                  backgroundColor: ColorConstants.primaryColor3,
-                  onPressed: () => {
-                    BlocProvider.of<ContestBloc>(context).add(
-                      SubmitQuestionDataEvent(
-                          context: context,
-                          contestId: widget.contestExampleService?.contestdata
-                                  ?.contest_id ??
-                              contestService.contestdata!.contest_id,
-                          questionId: widget.dynamicContent!["question_id"],
-                          answerGiven: "yes",
-                          isAnswerTrue: "true".toString(),
-                          moves: "1",
-                          timeTaken: secondsPassed.toString(),
-                          contestQuestiondataDataList:
-                              widget.contestQuestiondataDataLists,
-                          currentIndex: widget.indexs!),
-                    )
-                  },
-                  heroTag: null,
-                  label: const Text("SUBMIT"),
-                ),
+              // Menu(reset, move, secondsPassed, size),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorConstants.primaryColor3,
+                      maximumSize: const Size(200, 50),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                    ),
+                    onPressed: () => {
+                          BlocProvider.of<ContestBloc>(context).add(
+                            SubmitQuestionDataEvent(
+                                context: context,
+                                contestId: widget.contestExampleService
+                                        ?.contestdata?.contest_id ??
+                                    contestService.contestdata!.contest_id,
+                                questionId:
+                                    widget.dynamicContent!["question_id"],
+                                answerGiven: "yes",
+                                isAnswerTrue: "true".toString(),
+                                moves: "1",
+                                timeTaken: secondsPassed.toString(),
+                                contestQuestiondataDataList:
+                                    widget.contestQuestiondataDataLists,
+                                currentIndex: widget.indexs!),
+                          )
+                        },
+                    child: Text('Submit')),
               )
             ],
-          )),
-        ]));
+          ),
+        ),
+      ),
+      bottomNavigationBar: const LivePlayerLayout(),
+    );
   }
 
   void clickGrid(index) {

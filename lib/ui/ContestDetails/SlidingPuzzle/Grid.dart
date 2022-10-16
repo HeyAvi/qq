@@ -6,19 +6,19 @@ class Grid extends StatelessWidget {
   var size;
   Function clickGrid;
 
-  Grid(this.numbers, this.size, this.clickGrid);
+  Grid(this.numbers, this.size, this.clickGrid, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var height = size.height;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(20.0),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          mainAxisSpacing: 15,
-          crossAxisSpacing: 15,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
         ),
         itemCount: numbers.length,
         itemBuilder: (context, index) {
