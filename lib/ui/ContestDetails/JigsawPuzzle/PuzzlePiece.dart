@@ -26,7 +26,7 @@ class PuzzlePiece extends StatefulWidget {
     );
   }
 
-  PuzzlePiece(
+  const PuzzlePiece(
       {Key? key,
         required this.image,
         required this.imageSize,
@@ -44,10 +44,10 @@ class PuzzlePiece extends StatefulWidget {
 
 class _PuzzlePieceState extends State<PuzzlePiece> {
   // the piece initial top offset
-  double? top = null;
+  double? top;
   // the piece initial left offset
-  double? left = null;
-  // can we move the pice ?
+  double? left;
+  // can we move the piece ?
   bool isMovable = true;
 
   @override
@@ -110,7 +110,13 @@ class _PuzzlePieceState extends State<PuzzlePiece> {
             child: CustomPaint(
                 foregroundPainter: PuzzlePiecePainter(
                     widget.row, widget.col, widget.maxRow, widget.maxCol),
-                child: widget.image),
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: widget.image,
+                  ),
+                )),
             clipper: PuzzlePieceClipper(
                 widget.row, widget.col, widget.maxRow, widget.maxCol),
           ),
@@ -148,7 +154,7 @@ class PuzzlePiecePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Color(0x80FFFFFF)
+      ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 

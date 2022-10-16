@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,8 +47,8 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
   String? _imagePath;
   List<Widget> pieces = [];
   late SharedPreferences prefs;
-  final int rows = 3;
-  final int cols = 3;
+  final int rows = 4;
+  final int cols = 4;
   String imageUrl = "";
   Uint8List? bytes;
 
@@ -183,41 +182,41 @@ class _JigsawPuzzleTwoState extends State<JigsawPuzzleTwo> {
   Widget build(BuildContext context) {
     bool isAnswerTrue;
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                // clipBehavior: Clip.antiAliasWithSaveLayer,
-                height: 400,
-                width: 400,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.black),
-                ),
-                child: _image == null
-                    ? const Center(child: Text(''))
-                    : ScoreWidget.of(context).allInPlaceCount == rows * cols
-                        ? Overlay(
-                            initialEntries: [
-                              OverlayEntry(builder: (context) {
-                                //widget.onIndexChanged();
-                                return CorrectOverlay(true, () {
-                                  if (mounted) {
-                                    setState(() {
-                                      ScoreWidget.of(context).allInPlaceCount = 0;
-                                    });
-                                  }
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            // clipBehavior: Clip.antiAliasWithSaveLayer,
+            // height: 400,
+            // width: 400,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.black),
+            ),
+            child: _image == null
+                ? const Center(child: Text(''))
+                : ScoreWidget.of(context).allInPlaceCount == rows * cols
+                    ? Overlay(
+                        initialEntries: [
+                          OverlayEntry(builder: (context) {
+                            //widget.onIndexChanged();
+                            return CorrectOverlay(true, () {
+                              if (mounted) {
+                                setState(() {
+                                  ScoreWidget.of(context).allInPlaceCount = 0;
                                 });
-                              })
-                            ],
-                          )
-                        : Stack(
-                            children: pieces,
-                          ),
-              ),
-            )),
+                              }
+                            });
+                          })
+                        ],
+                      )
+                    : Stack(
+                        children: pieces,
+                      ),
+          ),
+        )),
         floatingActionButton: Row(children: [
           Expanded(
               child: Row(
