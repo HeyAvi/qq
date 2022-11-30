@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,12 +16,11 @@ import 'package:qq/repository/ProfileRepository.dart';
 import 'package:qq/services/ContestServcie.dart';
 import 'package:qq/services/ServicesLocator.dart';
 import 'package:qq/services/UserDataServcie.dart';
-import 'package:qq/ui/ContestDetails/ContestMainPage.dart';
 import 'package:qq/ui/ContestPlay.dart';
-import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/ui/customerSupport.dart';
 import 'package:qq/ui/home.dart';
 import 'package:qq/ui/notificationScreen.dart';
+import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/DateTimeFormatter.dart';
 
@@ -52,7 +52,7 @@ class BottomNavigationWidgetStateful extends StatefulWidget {
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
     with SingleTickerProviderStateMixin {
-  bool isMove = false;
+  bool isMove = true;
   ContestService contestService = getIt<ContestService>();
   ContestExampleService contestExampleService = getIt<ContestExampleService>();
   int? _page;
@@ -104,6 +104,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                   endTime: DateFormatter.getUTCRemainingTimeInMills(
                       contestService.contestdata!.start_date),
                   widgetBuilder: (_, time) {
+                    isMove = false;
                     print('date ${contestService.contestdata!.start_date}');
                     if (time == null) {
                       isMove = true;
@@ -132,19 +133,14 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                 color: Colors.black,
                 size: 20.sp,
               ),
-              (isMove)
-                  ? Image.asset(
-                      "assets/qqLogo.png",
-                      height: 36.h,
-                      width: 36.w,
-                    )
-                  : Stack(
+              (!isMove)
+                  ? Stack(
                       alignment: Alignment.center,
                       children: [
                         Image.asset(
                           "assets/qqLogo.png",
-                          height: 36.h,
                           width: 36.w,
+                          height: 36.h,
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 44.w, bottom: 28.h),
@@ -154,6 +150,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                               size: 18.sp,
                             )),
                       ],
+                    )
+                  : Image.asset(
+                      "assets/qqLogo.png",
+                      height: 36.h,
+                      width: 36.w,
                     ),
               ImageIcon(
                 const AssetImage(

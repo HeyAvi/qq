@@ -135,7 +135,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                           ),
                           Positioned(
                             bottom: 0,
-                            left: 15,
+                            left: 18,
                             child: GestureDetector(
                               onTap: () {},
                               child: const CircleAvatar(
@@ -163,7 +163,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      top: 8.0, right: 15.0),
+                                      top: 15.0, right: 20.0),
                                   child: (userData.name.isNotEmpty)
                                       ? Text(
                                           ' ' +
@@ -186,15 +186,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                         valueType: UserValueType.name,
                                         value: userData.name);
                                   },
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 8,
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 10,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
+                                  child: pencilIcon(),
                                 ),
                               ],
                             ),
@@ -270,6 +262,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
             child: Column(
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Flexible(
@@ -282,6 +275,9 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                             userDataService.totalParticipation,
                             style: const TextStyle(
                                 fontSize: 30, color: Colors.white),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 5),
                           ),
                           const Text(
                             'Total Entries',
@@ -347,7 +343,6 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: const [
-                            Padding(padding: EdgeInsets.all(2)),
                             CircleAvatar(
                                 backgroundColor: Colors.white,
                                 child: RotatedBox(
@@ -391,33 +386,26 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                           fontSize: 20, color: Colors.white)),
                                 ),
                                 GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        showDatePicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(1900),
-                                                lastDate: DateTime.now())
-                                            .then((date) {
-                                          if (date != null) {
-                                            setState(() {
-                                              updateUser(
-                                                  value: '$date',
-                                                  valueType: UserValueType.dob);
-                                            });
-                                          }
-                                        });
+                                  onTap: () {
+                                    setState(() {
+                                      showDatePicker(
+                                              context: context,
+                                              initialDate: DateTime.now(),
+                                              firstDate: DateTime(1900),
+                                              lastDate: DateTime.now())
+                                          .then((date) {
+                                        if (date != null) {
+                                          setState(() {
+                                            updateUser(
+                                                value: '$date',
+                                                valueType: UserValueType.dob);
+                                          });
+                                        }
                                       });
-                                    },
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 8,
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 10,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ))
+                                    });
+                                  },
+                                  child: pencilIcon(),
+                                )
                               ],
                             ),
                             Text(dob(),
@@ -432,7 +420,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.only(
-                                    right: 20,
+                                    right: 25,
                                   ),
                                   child: Text('E-mail',
                                       style: TextStyle(
@@ -444,15 +432,7 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                                           value: userData.email,
                                           valueType: UserValueType.email);
                                     },
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      radius: 8,
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 10,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ))
+                                    child: pencilIcon())
                               ],
                             ),
                             Text(userData.email,
@@ -529,6 +509,36 @@ class _ProfileScreenStateFulState extends State<ProfileScreenStateFul> {
                       ]),
                 )
               ],
+            ),
+          ),
+        ],
+      );
+
+  Widget pencilIcon() => Stack(
+        children: [
+          Positioned(
+            left: 5,
+            bottom: 5,
+            child: CircleAvatar(
+              backgroundColor: Colors.grey,
+              radius: 8,
+              child: Icon(
+                Icons.edit,
+                size: 10,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 8,
+              child: Icon(
+                Icons.edit,
+                size: 10,
+                color: Colors.grey[600],
+              ),
             ),
           ),
         ],
