@@ -23,6 +23,7 @@ import 'package:qq/ui/notificationScreen.dart';
 import 'package:qq/ui/profile_screen.dart';
 import 'package:qq/utils/ColorConstants.dart';
 import 'package:qq/utils/DateTimeFormatter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomNavigationWidget extends StatelessWidget {
   final int bottomIndex;
@@ -52,7 +53,7 @@ class BottomNavigationWidgetStateful extends StatefulWidget {
 
 class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
     with SingleTickerProviderStateMixin {
-  bool isMove = true;
+  bool isMove = false;
   ContestService contestService = getIt<ContestService>();
   ContestExampleService contestExampleService = getIt<ContestExampleService>();
   int? _page;
@@ -62,9 +63,20 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
   Contestdata? contestdata;
   Userdata? userData;
 
+  void setLockIcon({bool isMove = true}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isMove', isMove);
+  }
+
+  void getLockIcon() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isMove = prefs.getBool('isMove') ?? false;
+  }
+
   @override
   void initState() {
     super.initState();
+    getLockIcon();
     BlocProvider.of<ProfileBloc>(context)
         .add(GetProfileDataEvent(context: context));
     BlocProvider.of<ProfileBloc>(context).stream.listen((event) {
@@ -104,10 +116,10 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidgetStateful>
                   endTime: DateFormatter.getUTCRemainingTimeInMills(
                       contestService.contestdata!.start_date),
                   widgetBuilder: (_, time) {
-                    isMove = false;
                     print('date ${contestService.contestdata!.start_date}');
                     if (time == null) {
                       isMove = true;
+                      setLockIcon(isMove: true);
                       return const SizedBox();
                     }
                     return const SizedBox();
